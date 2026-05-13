@@ -248,6 +248,6 @@ export {
   ok,
   unwrap,
 } from './control/index.js'
-export type { Err, Ok, Result } from './control/index.js'
+export type { Result } from './control/index.js'
 
-export { isMatching, match, NonExhaustiveError, P, Pattern } from './pattern/index.js'
+export { Err, isMatching, match, NonExhaustiveError, Ok, P, Pattern } from './match/index.js'
