@@ -12,12 +12,11 @@
 
 ## Features
 
-- **Result-style error handling** — `attempt` / `ok` / `err` / `isOk` / `isErr` / `unwrap`. Never throw across a boundary again.
-- **Pattern matching** — Full [ts-pattern](https://github.com/gvergnaud/ts-pattern) re-exported under `massaman/pattern`.
-- **Variadic-narrowing predicates** — `allPass([isString, isNotEmpty])` returns a guard that narrows to `string`.
-- **Async-aware composition** — `flowAsync` chains promise-returning functions with end-to-end type inference (up to 7 steps).
-- **Curated FP surface** — Array, object, string, function, math, predicate, promise. 12 subpath exports, ESM-only, tree-shakeable.
-- **100% test coverage** — Enforced by CI on every commit.
+- **Functional-esque toolkit** — write close to pure FP in TypeScript.
+- **Standing on giants** — curated wrappers over [es-toolkit](https://es-toolkit.slash.page) and [ts-pattern](https://github.com/gvergnaud/ts-pattern).
+- **Result-style errors** — `attempt`/`ok`/`err`, never throw across a boundary.
+- **Variadic-narrowing predicates** — `allPass([isString, isNotEmpty])` narrows to `string`.
+- **100% test coverage** — enforced by CI on every commit.
 
 ## Packages
 
