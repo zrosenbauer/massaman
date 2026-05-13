@@ -7,7 +7,9 @@
  * isArray('hello') // false
  * ```
  */
-export const isArray = Array.isArray
+export function isArray(value: unknown): value is unknown[] {
+  return Array.isArray(value)
+}
 
 /**
  * Checks if a value is a non-null object.
@@ -73,7 +75,9 @@ export function isNotEmpty(value: string | object): boolean {
  * isFiniteNumber(Infinity) // false
  * ```
  */
-export const isFiniteNumber: (value: unknown) => boolean = Number.isFinite
+export function isFiniteNumber(value: unknown): value is number {
+  return Number.isFinite(value)
+}
 
 /**
  * Checks if a value is an integer.
@@ -84,7 +88,9 @@ export const isFiniteNumber: (value: unknown) => boolean = Number.isFinite
  * isInteger(4.2) // false
  * ```
  */
-export const isInteger: (value: unknown) => boolean = Number.isInteger
+export function isInteger(value: unknown): value is number {
+  return Number.isInteger(value)
+}
 
 /**
  * Checks if a value is NaN.
@@ -95,4 +101,6 @@ export const isInteger: (value: unknown) => boolean = Number.isInteger
  * isNaN(42) // false
  * ```
  */
-export const isNaN: (value: unknown) => boolean = Number.isNaN
+export function isNaN(value: unknown): value is number {
+  return Number.isNaN(value)
+}

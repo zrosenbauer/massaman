@@ -1,4 +1,3 @@
-// Array
 export {
   adjust,
   ascend,
@@ -76,10 +75,8 @@ export {
   zipWith,
 } from './array/index.js'
 
-// Error
 export { AbortError, TimeoutError } from './error/index.js'
 
-// Function
 export {
   after,
   ary,
@@ -118,7 +115,6 @@ export type {
   ThrottleOptions,
 } from './function/index.js'
 
-// Math
 export {
   clamp,
   inRange,
@@ -135,7 +131,6 @@ export {
   sumBy,
 } from './math/index.js'
 
-// Object
 export {
   clone,
   cloneDeep,
@@ -157,7 +152,6 @@ export {
   toSnakeCaseKeys,
 } from './object/index.js'
 
-// Predicate
 export {
   allPass,
   anyPass,
@@ -206,7 +200,6 @@ export {
   isWeakSet,
 } from './predicate/index.js'
 
-// Conversion
 export {
   stringify,
   toArray,
@@ -218,10 +211,8 @@ export {
   toString,
 } from './conversion/index.js'
 
-// Promise
 export { delay, Mutex, Semaphore, timeout, withTimeout } from './promise/index.js'
 
-// String
 export {
   camelCase,
   capitalize,
@@ -246,7 +237,6 @@ export {
   words,
 } from './string/index.js'
 
-// Control flow
 export {
   assert,
   attempt,
@@ -260,5 +250,4 @@ export {
 } from './control/index.js'
 export type { Err, Ok, Result } from './control/index.js'
 
-// Pattern matching
 export { isMatching, match, NonExhaustiveError, P, Pattern } from './pattern/index.js'

@@ -1,35 +1,6 @@
 import type { DangerouslyAllowAny } from '../types/internal.js'
 
 /**
- * Extracts the narrowed target type from a type-guard predicate.
- * Returns `never` for plain `boolean` predicates so they don't pollute
- * the union/intersection downstream.
- *
- * `DangerouslyAllowAny` is required here: this conditional needs to match
- * predicate signatures with arbitrary input types (`(n: number) => …`,
- * `(s: string) => …`, etc.). `unknown` would reject those by contravariance.
- */
-type Guarded<P> = P extends ((value: DangerouslyAllowAny) => value is infer X) ? X : never
-
-/**
- * Extracts the input type from a tuple of predicates. Uses `infer V` in
- * contravariant position so multiple predicates with the same input type
- * collapse to that type. Return-position is `unknown` (covariant, accepts
- * any return value).
- */
-type InferInput<Ps> = Ps extends ReadonlyArray<(value: infer V) => unknown> ? V : never
-
-/**
- * Converts a union `A | B | C` to an intersection `A & B & C`.
- * Standard contravariant-position trick.
- */
-type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) extends (
-  k: infer I
-) => void
-  ? I
-  : never
-
-/**
  * Returns a predicate that checks if a value satisfies ALL predicates.
  *
  * When every input is a type guard, the result narrows to the intersection
@@ -128,3 +99,21 @@ export function either<T>(
 ): (value: T) => boolean {
   return (value: T) => f(value) || g(value)
 }
+
+/**
+ * `DangerouslyAllowAny` is required: this conditional needs to match predicate
+ * signatures with arbitrary input types. `unknown` would reject them by contravariance.
+ */
+type Guarded<P> = P extends ((value: DangerouslyAllowAny) => value is infer X) ? X : never
+
+/**
+ * `infer V` is contravariant here, so multiple predicates with the same input
+ * type collapse to that single type.
+ */
+type InferInput<Ps> = Ps extends ReadonlyArray<(value: infer V) => unknown> ? V : never
+
+type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) extends (
+  k: infer I
+) => void
+  ? I
+  : never

@@ -63,10 +63,6 @@ export function stringify(value: unknown): string {
   }
 }
 
-// ---------------------------------------------------------------------------
-// private helpers
-// ---------------------------------------------------------------------------
-
 /**
  * Convert types that `JSON.stringify` handles poorly into
  * serializable equivalents, recursively walking objects and arrays.

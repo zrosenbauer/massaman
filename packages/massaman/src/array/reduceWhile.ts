@@ -1,5 +1,3 @@
-/* oxlint-disable functional/no-let -- iterative impl avoids stack overflow on large arrays */
-
 /**
  * Like `reduce` but stops early when the predicate returns `false`.
  *
@@ -25,7 +23,9 @@ export function reduceWhile<T, R>(
   fn: (accumulator: R, value: T, index: number) => R,
   initial: R
 ): R {
+  // oxlint-disable-next-line functional/no-let -- iterative impl avoids stack overflow on large arrays
   let acc = initial
+  // oxlint-disable-next-line functional/no-let -- iterative impl avoids stack overflow on large arrays
   for (let index = 0; index < array.length; index += 1) {
     // oxlint-disable-next-line security/detect-object-injection -- Locally computed numeric array index
     const value = array[index]

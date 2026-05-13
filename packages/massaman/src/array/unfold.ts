@@ -1,5 +1,3 @@
-/* oxlint-disable functional/no-let -- iterative impl avoids stack overflow on large outputs */
-
 /**
  * Builds an array from a seed value using an iterator function.
  *
@@ -21,7 +19,9 @@
  */
 export function unfold<T, R>(fn: (seed: T) => [R, T] | false, seed: T): R[] {
   const result: R[] = []
+  // oxlint-disable-next-line functional/no-let -- iterative impl avoids stack overflow on large outputs
   let current = seed
+  // oxlint-disable-next-line functional/no-let -- iterative impl avoids stack overflow on large outputs
   let pair = fn(current)
   while (pair !== false) {
     result.push(pair[0])

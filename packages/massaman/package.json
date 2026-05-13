@@ -1,6 +1,6 @@
 {
   "name": "massaman",
-  "version": "0.0.1-rc.2",
+  "version": "0.0.1-rc.3",
   "description": "A comprehensive functional programming library and utilities for TypeScript",
   "keywords": [
     "es-toolkit",

@@ -2,10 +2,6 @@ import { describe, expect, it } from 'vitest'
 
 import { err, isErr, isOk, ok, unwrap } from './result.js'
 
-// ---------------------------------------------------------------------------
-// Runtime tests
-// ---------------------------------------------------------------------------
-
 describe('ok', () => {
   it('creates an Ok result with a value', () => {
     const result = ok(42)

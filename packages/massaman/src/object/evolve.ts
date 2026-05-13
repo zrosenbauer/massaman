@@ -1,5 +1,3 @@
-/* oxlint-disable security/detect-object-injection -- keys sourced from Object.keys(spec), not user input */
-
 /**
  * Applies a spec of transformation functions to matching keys of an object,
  * returning a new object. Keys not in the spec are copied as-is.
@@ -19,8 +17,10 @@ export function evolve<T extends Record<string, unknown>>(
 ): T {
   const result = { ...obj }
   for (const key of Object.keys(spec) as Array<keyof T>) {
+    // oxlint-disable-next-line security/detect-object-injection -- key sourced from Object.keys(spec), not user input
     const transform = spec[key]
     if (transform != null && key in result) {
+      // oxlint-disable-next-line security/detect-object-injection -- key sourced from Object.keys(spec), not user input
       result[key] = transform(result[key])
     }
   }

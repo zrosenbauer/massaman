@@ -1,5 +1,3 @@
-/* oxlint-disable typescript/no-explicit-any -- centralized escape hatch: this is the ONLY place `any` is allowed */
-
 /**
  * Explicit alias for `any` that makes dangerous intent visible at the call site.
  *
@@ -17,4 +15,5 @@
  * type Guarded<P> = P extends (value: DangerouslyAllowAny) => value is infer X ? X : never
  * ```
  */
+// oxlint-disable-next-line typescript/no-explicit-any -- centralized escape hatch: this is the ONLY place `any` is allowed
 export type DangerouslyAllowAny = any
