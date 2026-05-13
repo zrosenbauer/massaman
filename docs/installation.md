@@ -52,4 +52,4 @@ ESM-only. `massaman` does not ship a CommonJS build.
 
 `massaman` is built with [tsdown](https://tsdown.dev), produces per-subpath `.mjs` and `.d.mts` files, and is marked `"sideEffects": false`. Imports are tree-shaken aggressively — the cost of `import { chunk } from 'massaman'` is the cost of `chunk` plus the cost of importing it from `es-toolkit/array`.
 
-For raw size numbers per function, see the upstream pages — bundle sizes for proxied functions are inherited from es-toolkit.
+For raw size numbers per function, see each function's reference page.

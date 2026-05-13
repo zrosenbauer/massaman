@@ -30,4 +30,4 @@ const message = match(result)
   - [Coercion](./concepts/coercion.md)
 - **Reference** — every export, by area:
   - [array](./reference/array/) · [object](./reference/object/) · [function](./reference/function/) · [math](./reference/math/) · [string](./reference/string/) · [promise](./reference/promise/) · [error](./reference/error/)
-  - [predicate](./reference/predicate/) · [control](./reference/control/) · [conversion](./reference/conversion/) · [pattern](./reference/match/)
+  - [predicate](./reference/predicate/) · [control](./reference/control/) · [conversion](./reference/conversion/) · [match](./reference/match/)

@@ -1,15 +1,14 @@
 # Attribution
 
-`massaman` builds on top of, and re-uses material from, the following projects. Their licenses apply to the parts of `massaman` derived from them.
+`massaman` builds on the following projects.
 
 ## es-toolkit
 
-- **Project** — [github.com/toss/es-toolkit](https://github.com/toss/es-toolkit)
-- **Site** — [es-toolkit.dev](https://es-toolkit.dev)
+- **Project** — [github.com/toss/es-toolkit](https://github.com/toss/es-toolkit) · [es-toolkit.dev](https://es-toolkit.dev)
 - **Author** — Viva Republica, Inc.
 - **License** — MIT
 
-`massaman/array`, `massaman/object`, `massaman/function`, `massaman/math`, `massaman/string`, `massaman/promise`, `massaman/error`, `massaman/predicate`, and the `assert`/`invariant` exports of `massaman/control` are re-exported from `es-toolkit`. The reference documentation for those symbols is mirrored verbatim from `es-toolkit`'s `docs/reference/` directory at the pinned version, with a "Direct proxy" callout indicating the source.
+`massaman/array`, `massaman/object`, `massaman/function`, `massaman/math`, `massaman/string`, `massaman/promise`, `massaman/error`, `massaman/predicate`, and the `assert` / `invariant` exports of `massaman/control` re-export `es-toolkit`. Their reference documentation is mirrored from `es-toolkit`'s upstream pages.
 
 ## ts-pattern
 
@@ -17,12 +16,8 @@
 - **Author** — Gabriel Vergnaud
 - **License** — MIT
 
-`massaman/match` is a full re-export of `ts-pattern`'s public API. The reference pages under `docs/reference/match/` are hand-written by the `massaman` maintainers — `ts-pattern` doesn't ship per-symbol `.md` documentation.
+`massaman/match` re-exports `ts-pattern`'s public API and extends `P` with `P.ok` / `P.err` for matching `Result` values.
 
-## License of derived material
+## License
 
-Mirrored upstream documentation retains the upstream license (MIT for both `es-toolkit` and `ts-pattern`). `massaman`'s own contributions — original utilities, hand-written reference pages, prose guides, and tooling — are also MIT-licensed. See [LICENSE](https://github.com/zrosenbauer/massaman/blob/main/LICENSE).
-
-## Pinned versions
-
-See [`_meta/upstream-versions.json`](./_meta/upstream-versions.json) for the upstream versions the current proxy docs were generated from.
+Mirrored material retains its upstream MIT license. `massaman`'s own additions are MIT-licensed too. See [LICENSE](https://github.com/zrosenbauer/massaman/blob/main/LICENSE).

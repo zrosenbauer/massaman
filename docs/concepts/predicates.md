@@ -53,7 +53,7 @@ The built-in `Array.isArray` would narrow to `any[]`, losing the item type. `mas
 Build predicates from predicates.
 
 ```typescript
-import { both, either, allPass, anyPass, not } from 'massaman/predicate'
+import { both, either, allPass, anyPass } from 'massaman/predicate'
 import { isString, isNumber, isNil } from 'massaman/predicate'
 
 // both — true when BOTH predicates pass

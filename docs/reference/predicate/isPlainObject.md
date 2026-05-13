@@ -66,7 +66,7 @@ function processConfig(config: unknown) {
 
 ## Performance Comparison
 
-|                   | [Bundle Size](../../bundle-size.md) | [Runtime Performance](../../performance.md) |
+|                   | [Bundle Size](https://es-toolkit.dev/bundle-size.html) | [Runtime Performance](https://es-toolkit.dev/performance.html) |
 | ----------------- | ----------------------------------- | ------------------------------------------- |
 | es-toolkit        | 279 bytes (82.4% smaller)           | 1,505,684 times (1.70× faster)              |
 | es-toolkit/compat | 435 bytes (72.5% smaller)           | 2,013,760 times (2.28× faster)              |

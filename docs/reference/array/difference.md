@@ -54,7 +54,7 @@ difference([], [1, 2, 3]); // []
 
 ## Performance Comparison
 
-|            | [Bundle Size](../../bundle-size.md) | [Performance](../../performance.md) |
+|            | [Bundle Size](https://es-toolkit.dev/bundle-size.html) | [Performance](https://es-toolkit.dev/performance.html) |
 | ---------- | ----------------------------------- | ----------------------------------- |
 | es-toolkit | 90 bytes (92.4% smaller)            | 9,317,227 times (85% faster)        |
 | lodash-es  | 7,958 bytes                         | 5,030,861 times                     |

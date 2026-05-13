@@ -77,7 +77,7 @@ chunk([1, 2, 3], 0); // Returns []
 
 ## Performance Comparison
 
-|                   | [Bundle Size](../../bundle-size.md) | [Runtime Performance](../../performance.md) |
+|                   | [Bundle Size](https://es-toolkit.dev/bundle-size.html) | [Runtime Performance](https://es-toolkit.dev/performance.html) |
 | ----------------- | ----------------------------------- | ------------------------------------------- |
 | es-toolkit        | 238 bytes (92.4% smaller)           | 9,338,821 times (11% slower)                |
 | es-toolkit/compat | 307 bytes (90.2% smaller)           | 9,892,157 times (5% slower)                 |

@@ -27,7 +27,7 @@ import {
 
 | Function | Returns | Notes |
 |---|---|---|
-| `toNumber(x)` | `number` | `NaN` for non-numeric strings; uses `parseFloat`-style rules |
+| `toNumber(x)` | `number` | `parseFloat`-style: `'42'` → `42`, `'42px'` → `NaN`, `null`/`undefined` → `0` |
 | `toInteger(x)` | `number` | Truncates toward zero; `0` for `NaN` |
 | `toFinite(x)` | `number` | `MAX_VALUE` / `MIN_VALUE` for `Infinity`; `0` for `NaN` |
 | `toBoolean(x)` | `boolean` | `true` for "true", "1", `1`, `true`; `false` for everything else |

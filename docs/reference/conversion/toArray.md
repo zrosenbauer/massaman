@@ -33,6 +33,3 @@ toArray(/* … */)
 // realistic, end-to-end example
 ```
 
-## See also
-
-- [`relatedFunction`](./relatedFunction.md)

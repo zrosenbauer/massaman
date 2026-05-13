@@ -221,9 +221,20 @@ function injectProxyCallout(content, upstreamUrl) {
     `${CALLOUT_MARKER} — re-exported verbatim from [\`es-toolkit\`](${upstreamUrl}).\n` +
     `> Implementation, edge cases, and performance behavior are owned upstream.\n` +
     `> This page mirrors the upstream documentation at the pinned version; see the linked source for the authoritative copy.\n\n`
-  return content.replace(/^(#\s+\S[^\n]*\n)(\s*\n)?/m, (_match, h1, blank) => {
+  const withCallout = content.replace(/^(#\s+\S[^\n]*\n)(\s*\n)?/m, (_match, h1, blank) => {
     return `${h1}${blank || '\n'}${callout}`
   })
+  return rewriteUpstreamCrossRefs(withCallout)
+}
+
+// Upstream pages reference site-level docs (bundle-size, performance) via
+// relative .md paths that exist on es-toolkit.dev but not in our docs tree.
+// Rewrite them to absolute URLs so the links resolve.
+function rewriteUpstreamCrossRefs(content) {
+  return content.replace(
+    /\(((?:\.\.\/)+)(bundle-size|performance)\.md(#[^)]*)?\)/g,
+    (_match, _depth, page, anchor) => `(https://es-toolkit.dev/${page}.html${anchor ?? ''})`
+  )
 }
 
 function relRef(c) {

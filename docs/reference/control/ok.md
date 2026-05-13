@@ -23,7 +23,7 @@ function divide(a: number, b: number): Result<number> {
 
 #### Parameters
 
-- `value` (`T`): the success value. Can be `null`, `undefined`, or any other type — `Result.ok` is determined by the discriminant, not the value.
+- `value` (`T`): the success value. Can be `null`, `undefined`, or any other type — the `ok: true` discriminant determines success, not the value's truthiness.
 
 #### Returns
 
