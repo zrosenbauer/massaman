@@ -1,12 +1,23 @@
-# massaman
+<div align="center">
+  <img src="packages/massaman/assets/banner.svg" alt="massaman" width="90%" />
+  <p><strong>Functional programming utilities for TypeScript — Result types, pattern matching, async pipelines. Fully typed.</strong></p>
 
-[![npm](https://img.shields.io/npm/v/massaman/rc?label=npm%40rc&color=B45309)](https://www.npmjs.com/package/massaman)
-[![types](https://img.shields.io/npm/types/massaman?color=3178c6)](https://www.typescriptlang.org/)
-[![license](https://img.shields.io/npm/l/massaman?color=475569)](./LICENSE)
+<a href="https://github.com/zrosenbauer/massaman/actions/workflows/ci.yml"><img src="https://github.com/zrosenbauer/massaman/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI" /></a>
+<a href="https://www.npmjs.com/package/massaman"><img src="https://img.shields.io/npm/v/massaman/rc?label=npm%40rc" alt="npm version" /></a>
+<a href="https://github.com/zrosenbauer/massaman/blob/main/LICENSE"><img src="https://img.shields.io/github/license/zrosenbauer/massaman" alt="License" /></a>
 
-Monorepo for `massaman` — functional programming utilities for TypeScript. Curated wrapper over [es-toolkit](https://es-toolkit.slash.page) and [ts-pattern](https://github.com/gvergnaud/ts-pattern), with Result-style error handling, variadic-narrowing predicates, async-aware composition, and pattern matching.
+<a href="./packages/massaman/README.md">📖 Library docs</a> &nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp; <a href="https://github.com/zrosenbauer/massaman/issues">🐛 Issues</a>
 
-> Full API docs and usage examples live in [`packages/massaman/README.md`](./packages/massaman/README.md) — that's what ships to npm.
+</div>
+
+## Features
+
+- **Result-style error handling** — `attempt` / `ok` / `err` / `isOk` / `isErr` / `unwrap`. Never throw across a boundary again.
+- **Pattern matching** — Full [ts-pattern](https://github.com/gvergnaud/ts-pattern) re-exported under `massaman/pattern`.
+- **Variadic-narrowing predicates** — `allPass([isString, isNotEmpty])` returns a guard that narrows to `string`.
+- **Async-aware composition** — `flowAsync` chains promise-returning functions with end-to-end type inference (up to 7 steps).
+- **Curated FP surface** — Array, object, string, function, math, predicate, promise. 12 subpath exports, ESM-only, tree-shakeable.
+- **100% test coverage** — Enforced by CI on every commit.
 
 ## Packages
 
@@ -22,8 +33,6 @@ pnpm install
 pnpm validate    # typecheck + test + lint + format:check
 pnpm build       # build all packages via turborepo
 ```
-
-## Scripts
 
 | Script           | Description                                |
 | ---------------- | ------------------------------------------ |
@@ -50,11 +59,6 @@ pnpm build       # build all packages via turborepo
 | [changesets](https://github.com/changesets/changesets)                                                          | Versioning + publishing               |
 | [lefthook](https://lefthook.dev) + [commitlint](https://commitlint.js.org)                                      | Git hooks + conventional commits      |
 
-## Requirements
-
-- Node.js >= 24.0.0
-- pnpm >= 10.32.1
-
 ## Contributing
 
 Conventional Commits are enforced via commitlint. Pre-commit runs format, lint, and typecheck via lefthook. Pre-push runs the full test suite. Don't bypass hooks.
@@ -66,4 +70,4 @@ git commit -m "feat(massaman): add new utility"
 
 ## License
 
-MIT © Zac Rosenbauer
+[MIT](LICENSE)
