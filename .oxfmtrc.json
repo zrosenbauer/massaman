@@ -17,6 +17,7 @@
     "out",
     ".turbo",
     "coverage",
+    "docs",
     "**/.generated/**",
     "**/*.gen.ts",
     "**/*.d.ts",
