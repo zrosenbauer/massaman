@@ -1,20 +1,22 @@
 <div align="center">
-  <img src="assets/banner.svg" alt="massaman" width="90%" />
-  <p><strong>Functional programming utilities for TypeScript — Result types, pattern matching, async pipelines. Fully typed.</strong></p>
+  <img src="https://raw.githubusercontent.com/zrosenbauer/massaman/main/.github/assets/banner.png" alt="massaman" width="90%" />
+  <p><strong>Functional programming utilities for TypeScript. Result types, pattern matching, async pipelines. Fully typed.</strong></p>
 
 <a href="https://github.com/zrosenbauer/massaman/actions/workflows/ci.yml"><img src="https://github.com/zrosenbauer/massaman/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI" /></a>
 <a href="https://www.npmjs.com/package/massaman"><img src="https://img.shields.io/npm/v/massaman/rc?label=npm%40rc" alt="npm version" /></a>
 <a href="https://github.com/zrosenbauer/massaman/blob/main/LICENSE"><img src="https://img.shields.io/github/license/zrosenbauer/massaman" alt="License" /></a>
 
+<a href="https://github.com/zrosenbauer/massaman/issues">🐛 Issues</a>
+
 </div>
 
 ## Features
 
-- **Functional-esque toolkit** — write close to pure FP in TypeScript.
-- **Standing on giants** — curated wrappers over [es-toolkit](https://es-toolkit.slash.page) and [ts-pattern](https://github.com/gvergnaud/ts-pattern).
-- **Result-style errors** — `attempt`/`ok`/`err`, never throw across a boundary.
-- **Variadic-narrowing predicates** — `allPass([isString, isNotEmpty])` narrows to `string`.
-- **100% test coverage** — enforced by CI on every commit.
+- Functional-esque toolkit for writing close to pure FP in TypeScript.
+- Built on two great libraries: [es-toolkit](https://es-toolkit.slash.page) and [ts-pattern](https://github.com/gvergnaud/ts-pattern).
+- Result-style errors with `attempt`/`ok`/`err`. Never throw across a boundary.
+- Variadic-narrowing predicates: `allPass([isString, isNotEmpty])` narrows to `string`.
+- 100% test coverage, enforced by CI on every commit.
 
 ## Install
 
@@ -24,72 +26,39 @@ npm install massaman@rc
 
 ## Usage
 
-### Compose
+### Pure proxy to es-toolkit
 
 ```ts
-import { flow, compact, uniq, toArray } from 'massaman'
+import { chunk, groupBy } from 'massaman'
 
-const normalize = flow(toArray, compact, uniq)
-normalize([1, null, 2, 1, null]) // [1, 2]
+chunk([1, 2, 3, 4, 5], 2)
+// [[1, 2], [3, 4], [5]]
+
+groupBy(['apple', 'avocado', 'banana', 'blueberry'], (s) => s[0])
+// { a: ['apple', 'avocado'], b: ['banana', 'blueberry'] }
 ```
 
-### Match
+### Result and pattern matching together
 
 ```ts
-import { match, P } from 'massaman/pattern'
+import { attempt } from 'massaman/control'
+import { match } from 'massaman/pattern'
 
-const label = match(status)
-  .with('active', () => 'Live')
-  .with('draft', () => 'Draft')
-  .with(P._, () => 'N/A')
+const parsed = attempt(() => JSON.parse(rawInput))
+
+const message = match(parsed)
+  .with({ ok: true }, ({ value }) => `Got: ${value.name}`)
+  .with({ ok: false }, ({ error }) => `Failed: ${error.message}`)
   .exhaustive()
 ```
 
-### Handle errors safely
+## Why?
 
-```ts
-import { attempt, isOk } from 'massaman/control'
-
-const result = attempt(() => JSON.parse(raw))
-if (isOk(result)) {
-  console.log(result.value)
-} else {
-  console.error(result.error)
-}
-```
-
-### Narrow with predicates
-
-```ts
-import { allPass, isNotEmpty } from 'massaman/predicate'
-import { isString } from 'es-toolkit/predicate'
-
-const isNonEmptyString = allPass([isString, isNotEmpty])
-if (isNonEmptyString(x)) {
-  // x narrowed to string
-}
-```
-
-## Modules
-
-| Subpath               | Description                                                      |
-| --------------------- | ---------------------------------------------------------------- |
-| `massaman`            | Root barrel — re-exports everything below                        |
-| `massaman/array`      | `chunk`, `groupBy`, `sortWith`, `scan`, `unfold`, …              |
-| `massaman/object`     | `evolve`, `pick`, `omit`, `merge`, `mapKeys`, …                  |
-| `massaman/function`   | `flow`, `flowAsync`, `tap`, `call`, `curry`, `when`, `unless`, … |
-| `massaman/predicate`  | Type guards + variadic-narrowing combinators                     |
-| `massaman/conversion` | `toError`, `stringify`, `toNumber`, `toArray`, …                 |
-| `massaman/string`     | `camelCase`, `kebabCase`, `trim`, …                              |
-| `massaman/math`       | `clamp`, `sum`, `mean`, `range`, …                               |
-| `massaman/promise`    | `delay`, `timeout`, `Mutex`, `Semaphore`                         |
-| `massaman/control`    | `attempt`, `ok`, `err`, `isOk`, `isErr`, `unwrap`                |
-| `massaman/pattern`    | `match`, `P`, `isMatching`                                       |
-| `massaman/error`      | `AbortError`, `TimeoutError`                                     |
+TypeScript needs more functional programming than the standard library provides, but less than `fp-ts` demands. `massaman` is a small curated surface over `es-toolkit` and `ts-pattern` (two best-in-class FP libraries in the ecosystem), plus a thin layer of utilities filling the gaps: Result-style error handling, async-aware composition, and variadic-narrowing predicates. Everything lives under focused subpaths so you import exactly what you need.
 
 ## Contributing
 
-Issues and PRs welcome at [github.com/zrosenbauer/massaman](https://github.com/zrosenbauer/massaman). Conventional Commits required; run `pnpm changeset` to describe your change for the next release.
+See [CONTRIBUTING.md](https://github.com/zrosenbauer/massaman/blob/main/CONTRIBUTING.md) for development setup, conventions, and PR process.
 
 ## License
 

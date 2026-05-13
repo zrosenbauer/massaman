@@ -1,71 +1,64 @@
 <div align="center">
-  <img src="packages/massaman/assets/banner.svg" alt="massaman" width="90%" />
-  <p><strong>Functional programming utilities for TypeScript — Result types, pattern matching, async pipelines. Fully typed.</strong></p>
+  <img src="https://raw.githubusercontent.com/zrosenbauer/massaman/main/.github/assets/banner.png" alt="massaman" width="90%" />
+  <p><strong>Functional programming utilities for TypeScript. Result types, pattern matching, async pipelines. Fully typed.</strong></p>
 
 <a href="https://github.com/zrosenbauer/massaman/actions/workflows/ci.yml"><img src="https://github.com/zrosenbauer/massaman/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI" /></a>
 <a href="https://www.npmjs.com/package/massaman"><img src="https://img.shields.io/npm/v/massaman/rc?label=npm%40rc" alt="npm version" /></a>
 <a href="https://github.com/zrosenbauer/massaman/blob/main/LICENSE"><img src="https://img.shields.io/github/license/zrosenbauer/massaman" alt="License" /></a>
 
-<a href="./packages/massaman/README.md">📖 Library docs</a> &nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp; <a href="https://github.com/zrosenbauer/massaman/issues">🐛 Issues</a>
+<a href="https://github.com/zrosenbauer/massaman/issues">🐛 Issues</a>
 
 </div>
 
 ## Features
 
-- **Functional-esque toolkit** — write close to pure FP in TypeScript.
-- **Standing on giants** — curated wrappers over [es-toolkit](https://es-toolkit.slash.page) and [ts-pattern](https://github.com/gvergnaud/ts-pattern).
-- **Result-style errors** — `attempt`/`ok`/`err`, never throw across a boundary.
-- **Variadic-narrowing predicates** — `allPass([isString, isNotEmpty])` narrows to `string`.
-- **100% test coverage** — enforced by CI on every commit.
+- Functional-esque toolkit for writing close to pure FP in TypeScript.
+- Built on two great libraries: [es-toolkit](https://es-toolkit.slash.page) and [ts-pattern](https://github.com/gvergnaud/ts-pattern).
+- Result-style errors with `attempt`/`ok`/`err`. Never throw across a boundary.
+- Variadic-narrowing predicates: `allPass([isString, isNotEmpty])` narrows to `string`.
+- 100% test coverage, enforced by CI on every commit.
 
-## Packages
-
-| Package                                     | Description                                | Status                                                                           |
-| ------------------------------------------- | ------------------------------------------ | -------------------------------------------------------------------------------- |
-| [`massaman`](./packages/massaman)           | Main library — FP primitives and utilities | ![rc](https://img.shields.io/badge/release%20candidate-B45309?style=flat-square) |
-| [`@massaman/tsconfig`](./packages/tsconfig) | Shared TypeScript configs (private)        | ![internal](https://img.shields.io/badge/internal-475569?style=flat-square)      |
-
-## Development
+## Install
 
 ```bash
-pnpm install
-pnpm validate    # typecheck + test + lint + format:check
-pnpm build       # build all packages via turborepo
+npm install massaman@rc
 ```
 
-| Script           | Description                                |
-| ---------------- | ------------------------------------------ |
-| `pnpm build`     | Build all packages via turborepo           |
-| `pnpm test`      | Run vitest across all packages             |
-| `pnpm typecheck` | Type-check via tsgo (Go-based TS compiler) |
-| `pnpm lint`      | Lint with oxlint                           |
-| `pnpm format`    | Format with oxfmt                          |
-| `pnpm fix`       | Auto-fix lint + format issues              |
-| `pnpm validate`  | typecheck + test + lint + format:check     |
-| `pnpm changeset` | Add a changeset entry for the next release |
-| `pnpm release`   | Build and publish via changesets           |
-| `pnpm clean`     | Remove build artifacts and `node_modules`  |
+## Usage
 
-## Stack
+### Pure proxy to es-toolkit
 
-| Tool                                                                                                            | Purpose                               |
-| --------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
-| [pnpm workspaces](https://pnpm.io/workspaces) + [turborepo](https://turbo.build)                                | Monorepo + task orchestration         |
-| [TypeScript](https://www.typescriptlang.org/) (via [`tsgo`](https://github.com/microsoft/typescript-go))        | Types + Go-based typechecking         |
-| [tsdown](https://tsdown.dev)                                                                                    | Build                                 |
-| [vitest](https://vitest.dev)                                                                                    | Test runner — 100% coverage threshold |
-| [oxlint](https://oxc.rs/docs/guide/usage/linter.html) + [oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) | Lint + format                         |
-| [changesets](https://github.com/changesets/changesets)                                                          | Versioning + publishing               |
-| [lefthook](https://lefthook.dev) + [commitlint](https://commitlint.js.org)                                      | Git hooks + conventional commits      |
+```ts
+import { chunk, groupBy } from 'massaman'
+
+chunk([1, 2, 3, 4, 5], 2)
+// [[1, 2], [3, 4], [5]]
+
+groupBy(['apple', 'avocado', 'banana', 'blueberry'], (s) => s[0])
+// { a: ['apple', 'avocado'], b: ['banana', 'blueberry'] }
+```
+
+### Result and pattern matching together
+
+```ts
+import { attempt } from 'massaman/control'
+import { match } from 'massaman/pattern'
+
+const parsed = attempt(() => JSON.parse(rawInput))
+
+const message = match(parsed)
+  .with({ ok: true }, ({ value }) => `Got: ${value.name}`)
+  .with({ ok: false }, ({ error }) => `Failed: ${error.message}`)
+  .exhaustive()
+```
+
+## Why?
+
+TypeScript needs more functional programming than the standard library provides, but less than `fp-ts` demands. `massaman` is a small curated surface over `es-toolkit` and `ts-pattern` (two best-in-class FP libraries in the ecosystem), plus a thin layer of utilities filling the gaps: Result-style error handling, async-aware composition, and variadic-narrowing predicates. Everything lives under focused subpaths so you import exactly what you need.
 
 ## Contributing
 
-Conventional Commits are enforced via commitlint. Pre-commit runs format, lint, and typecheck via lefthook. Pre-push runs the full test suite. Don't bypass hooks.
-
-```bash
-pnpm changeset       # describe your change for the next release
-git commit -m "feat(massaman): add new utility"
-```
+See [CONTRIBUTING.md](https://github.com/zrosenbauer/massaman/blob/main/CONTRIBUTING.md) for development setup, conventions, and PR process.
 
 ## License
 
