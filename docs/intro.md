@@ -2,8 +2,8 @@
 
 `massaman` is a functional programming library for TypeScript. It gives you:
 
-- **Pattern matching** with full TypeScript inference, via [`ts-pattern`](https://github.com/gvergnaud/ts-pattern).
-- **A `Result` type** for errors that compose — `attempt`, `ok`, `err`, `isOk`, `unwrap`, plus `Ok`/`Err` patterns.
+- **Pattern matching** with full TypeScript inference, via [`ts-pattern`](https://github.com/gvergnaud/ts-pattern), extended with `P.ok` / `P.err` for matching `Result`.
+- **A `Result` type** for errors that compose — `attempt`, `ok`, `err`, `isOk`, `unwrap`.
 - **Array, object, function, string, math, and predicate utilities** layered over [`es-toolkit`](https://es-toolkit.dev).
 - **Async-aware composition** — `flowAsync`, `tap`, `when`, `ifElse`, and other point-free combinators.
 - **Variadic-narrowing predicates** and consistent error normalization for the gaps between the two upstream libraries.
@@ -24,7 +24,7 @@ ESM-only. Tree-shakeable. Fully typed. No `compat` layer.
 | `massaman/promise` | async primitives: `delay`, `withTimeout`, `Semaphore`, … |
 | `massaman/error` | error classes: `AbortError`, `TimeoutError` |
 | `massaman/predicate` | type guards + combinators: `isString`, `isEmpty`, `isObject`, `both`, `either`, … |
-| `massaman/match` | pattern matching: `match`, `isMatching`, `P`, `Pattern`, `Ok`, `Err` |
+| `massaman/match` | pattern matching: `match`, `isMatching`, `P` (extended with `P.ok` / `P.err`), `Pattern` |
 | `massaman/control` | Result + control flow: `attempt`, `ok`, `err`, `isOk`, `unwrap`, `assert`, `invariant` |
 | `massaman/conversion` | safe coercion: `toNumber`, `toInteger`, `toError`, `stringify`, … |
 
@@ -35,14 +35,14 @@ The full per-symbol reference is under [Reference](./reference/) — each functi
 Flat barrel (recommended in most code):
 
 ```typescript
-import { chunk, match, attempt, Ok, Err } from 'massaman'
+import { chunk, match, P, attempt } from 'massaman'
 ```
 
 Subpath (matches the conceptual area, helps with code navigation):
 
 ```typescript
 import { chunk } from 'massaman/array'
-import { match, P, Ok, Err } from 'massaman/match'
+import { match, P } from 'massaman/match'
 import { attempt } from 'massaman/control'
 ```
 
@@ -50,7 +50,7 @@ Both are tree-shakeable. Pick whichever reads better in your codebase.
 
 ## Why not just use es-toolkit + ts-pattern directly?
 
-You can. `massaman` is what you'd build on top anyway: a single import surface, plus the connective tissue — `Result`, async composition, narrowing predicates — that ties them together. If you don't need the additions, use the originals directly. If you want them in one place, use `massaman`.
+You can. If you don't need the `Result` type, async composition, or `P.ok` / `P.err` Result patterns, use the originals directly. `massaman` is what you'd build on top anyway — a single import surface plus the connective tissue.
 
 ## Where to go next
 

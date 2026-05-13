@@ -250,4 +250,5 @@ export {
 } from './control/index.js'
 export type { Result } from './control/index.js'
 
-export { Err, isMatching, match, NonExhaustiveError, Ok, P, Pattern } from './match/index.js'
+export { isMatching, match, NonExhaustiveError, P, Pattern } from './match/index.js'
+export type { Err, Ok } from './match/index.js'

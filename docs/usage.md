@@ -6,7 +6,7 @@
 
 ```typescript
 // flat barrel — everything
-import { chunk, match, attempt, isEmpty } from 'massaman'
+import { chunk, match, P, attempt, isEmpty } from 'massaman'
 
 // subpath — same exports, narrower import surface
 import { chunk } from 'massaman/array'
@@ -29,7 +29,7 @@ Both forms are equivalent at runtime and tree-shakeable. Pick what reads better 
 | `massaman/promise` | promise utilities (delay, withTimeout, Semaphore, …) |
 | `massaman/error` | error classes (AbortError, TimeoutError) |
 | `massaman/predicate` | type guards (isString, isEmpty, isObject, both, either, …) |
-| `massaman/match` | pattern matching (match, isMatching, P, Pattern) |
+| `massaman/match` | pattern matching (`match`, `isMatching`, `P` with `P.ok` / `P.err`, `Pattern`) |
 | `massaman/control` | Result type + control flow (attempt, ok, err, isOk, …) |
 | `massaman/conversion` | safe coercion (toNumber, toInteger, toError, …) |
 
@@ -74,4 +74,4 @@ This isn't tested as a primary delivery mechanism. For production, use a bundler
 - `patch` — bug fixes, additive non-breaking changes.
 - `minor` — anything that could surprise existing users (rename, signature change, removed export). After 1.0, this becomes `major`.
 
-See [versioning](./versioning.md) for details and [the changeset workflow](https://github.com/zrosenbauer/massaman/blob/main/CONTRIBUTING.md).
+See [versioning](./versioning.md) for the full policy.

@@ -25,7 +25,7 @@ if (isOk(parsed)) {
 }
 ```
 
-For pattern matching across both branches, prefer [`match`](../pattern/match.md) with [`Ok`](../pattern/Ok.md) / [`Err`](../pattern/Err.md) — it's exhaustive and reads better with multi-arm logic.
+For pattern matching across both branches, prefer [`match`](../match/match.md) with [`P.ok`](../match/P.md#pok) / [`P.err`](../match/P.md#perr) — it's exhaustive and reads better with multi-arm logic.
 
 #### Parameters
 
@@ -39,5 +39,5 @@ For pattern matching across both branches, prefer [`match`](../pattern/match.md)
 
 - [`isErr`](./isErr.md) — the inverse guard
 - [`unwrap`](./unwrap.md) — extract the value or throw
-- [`Ok`](../pattern/Ok.md) — pattern value for `match`
+- [`P.ok`](../match/P.md#pok) — pattern value for `match`
 - [Result type concept guide](../../concepts/result.md)

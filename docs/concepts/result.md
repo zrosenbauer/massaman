@@ -2,7 +2,7 @@
 
 A `Result<T>` is the value returned by a function that might fail. Instead of throwing, the function returns either an `Ok<T>` (success, with a value) or an `Err` (failure, with an `Error`). Callers discriminate on the `ok` field and read either `value` or `error`.
 
-This is Rust's `Result<T, E>` in TypeScript — with one simplification: errors are always `Error`. The normalization is done for you by `attempt` and `err`.
+This is Rust's `Result<T, E>` in TypeScript — with one simplification: errors are always `Error`. The normalization is done for you by `attempt`, `attemptAsync`, and `err`.
 
 ## The shape
 
@@ -34,7 +34,7 @@ function divide(a: number, b: number): Result<number> {
 ## Three ways to consume one
 
 ```typescript
-import { isOk, isErr, unwrap, match, Ok, Err } from 'massaman'
+import { isOk, isErr, unwrap, match, P } from 'massaman'
 
 // 1. Type guards (good for early-return)
 if (isErr(result)) {
@@ -44,25 +44,32 @@ useValue(result.value) // narrowed to T
 
 // 2. Pattern matching (good for multi-arm logic)
 return match(result)
-  .with(Ok, ({ value }) => render(value))
-  .with(Err, ({ error }) => renderError(error))
+  .with(P.ok, ({ value }) => render(value))
+  .with(P.err, ({ error }) => renderError(error))
   .exhaustive()
 
 // 3. Unwrap (escape hatch — throws on Err)
 const value = unwrap(result, 'value required')
 ```
 
-## `Ok` and `Err` as patterns
+## `P.ok` and `P.err` for matching
 
-`Ok` and `Err` come in two forms: type names (`type Ok<T>`, `type Err`) and pattern values (`const Ok`, `const Err`). TypeScript keeps types and values in separate namespaces, so the same name covers both contexts — exactly like Rust, where `Ok(value)` works as both an expression and a match arm.
+`massaman/match` extends ts-pattern's `P` namespace with `P.ok` and `P.err` — structural patterns that match the `Ok` and `Err` variants of `Result`. They mirror Rust's `Ok(value)` / `Err(error)` match arms.
 
-The pattern values are equivalent to the inline structural patterns:
+```typescript
+match(result)
+  .with(P.ok, ({ value }) => …)   // narrows to Ok<T>
+  .with(P.err, ({ error }) => …)  // narrows to Err
+  .exhaustive()
+```
+
+The values are equivalent to the inline structural patterns:
 
 ```typescript
 // These two are interchangeable:
 match(result)
-  .with(Ok, ({ value }) => …)
-  .with(Err, ({ error }) => …)
+  .with(P.ok, ({ value }) => …)
+  .with(P.err, ({ error }) => …)
   .exhaustive()
 
 match(result)
@@ -71,16 +78,29 @@ match(result)
   .exhaustive()
 ```
 
-Use `Ok` / `Err` when you want the Rust feel; use the inline form when you're already extending the pattern with additional fields:
+Use `P.ok` / `P.err` for readability. Use the inline form when you're already extending the pattern with additional fields:
 
 ```typescript
 // Spread the pattern to add constraints
 match(result)
-  .with({ ...Ok, value: { name: 'jane' } }, () => 'jane!')
-  .with(Ok, ({ value }) => `got ${value.name}`)
-  .with(Err, ({ error }) => `err: ${error.message}`)
+  .with({ ...P.ok, value: { name: 'jane' } }, () => 'jane!')
+  .with(P.ok, ({ value }) => `got ${value.name}`)
+  .with(P.err, ({ error }) => `err: ${error.message}`)
   .exhaustive()
 ```
+
+## Names and namespaces
+
+The same word appears in multiple places — here's the map:
+
+| Form | Namespace | What it is |
+|---|---|---|
+| `type Ok<T>`, `type Err` | type | shape of a `Result` variant |
+| `ok()`, `err()` | value (function) | constructors — make a `Result` |
+| `P.ok`, `P.err` | value (property of `P`) | patterns — match a `Result` in `match()` |
+| `isOk()`, `isErr()` | value (function) | type guards — narrow a `Result` in `if` |
+
+The forms don't collide because they live in different syntactic contexts: a type annotation, a function call, a namespace property access, or an `if` guard. Pick whichever the situation needs.
 
 ## Error normalization
 
@@ -92,7 +112,7 @@ attempt(() => { throw new Error('x') })  // err.error = Error('x')
 attempt(() => { throw { code: 42 } })    // err.error = Error('{"code":42}', { cause: { code: 42 } })
 ```
 
-This means `result.error` is always an `Error` you can `.message` and inspect uniformly. The original thrown value is preserved on `error.cause` when it wasn't already an `Error`.
+`result.error` is always an `Error` you can `.message` and inspect uniformly. The original thrown value is preserved on `error.cause` when it wasn't already an `Error`.
 
 ## When NOT to use Result
 
@@ -130,5 +150,5 @@ The Result version pushes failure into the type signature — impossible to forg
 - [`attempt`](../reference/control/attempt.md), [`attemptAsync`](../reference/control/attemptAsync.md)
 - [`ok`](../reference/control/ok.md), [`err`](../reference/control/err.md)
 - [`isOk`](../reference/control/isOk.md), [`isErr`](../reference/control/isErr.md), [`unwrap`](../reference/control/unwrap.md)
-- [`Ok`](../reference/match/Ok.md), [`Err`](../reference/match/Err.md) — pattern values for `match`
+- [`P`](../reference/match/P.md) — pattern primitives including `P.ok` / `P.err`
 - [Pattern matching concept guide](./match.md)

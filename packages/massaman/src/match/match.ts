@@ -1,49 +1,57 @@
 /**
- * Structural patterns for matching `Result` values with `match()`.
+ * Extends ts-pattern's `P` namespace with `P.ok` and `P.err` — structural
+ * patterns for matching a `Result` inside `match()`.
  *
- * `Ok` and `Err` are the patterns; `ok()` and `err()` (from
- * `massaman/control`) are the constructors. This mirrors Rust, where `Ok(v)`
- * and `Err(e)` work in both expression and match-arm positions.
- *
- * Types and pattern values share the same names — TypeScript keeps types
- * and values in separate namespaces, so `type Ok<T>` and `const Ok` coexist
- * without ambiguity. Pick whichever form reads better in context.
+ * Mirrors Rust's `Ok(value)` / `Err(error)` match arms, but uses the
+ * namespace-property form (`P.ok` / `P.err`) so it doesn't collide with
+ * the lowercase `ok()` / `err()` constructors from `massaman/control`.
  *
  * @example
  * ```ts
- * import { match, Ok, Err, attempt } from 'massaman'
+ * import { match, P, attempt } from 'massaman'
  *
- * const parsed = attempt(() => JSON.parse(raw))
- *
- * match(parsed)
- *   .with(Ok, ({ value }) => use(value))
- *   .with(Err, ({ error }) => log(error))
+ * match(attempt(() => JSON.parse(raw)))
+ *   .with(P.ok, ({ value }) => use(value))
+ *   .with(P.err, ({ error }) => log(error))
  *   .exhaustive()
  * ```
  */
 
+import { P as TsP } from 'ts-pattern'
+
 import type { Err as ErrType, Ok as OkType } from '../control/types.js'
 
+const okPattern: { ok: true } = { ok: true }
+const errPattern: { ok: false } = { ok: false }
+
 /**
- * Pattern that matches an `Ok` Result. Equivalent to the inline pattern
- * `{ ok: true }`, but reads more like Rust's `Ok(value)` match arm.
+ * Extended ts-pattern `P` namespace. Carries everything ts-pattern exports
+ * (`P.string`, `P.number`, `P.array`, `P.when`, …) plus `P.ok` / `P.err`
+ * for matching `Result` values.
  *
- * The explicit `{ ok: true }` type annotation (rather than `as const`) keeps
- * the value non-`readonly`, which is required for ts-pattern's input
- * narrowing to leave the `Err` case behind for the next arm.
+ * Explicit literal-type annotations on the additions (rather than `as const`)
+ * keep the values non-`readonly`, which ts-pattern's narrowing requires —
+ * a `readonly` pattern collapses the remaining input to `never` after the
+ * first arm, breaking exhaustiveness.
+ *
+ * For the `P.Pattern<T>` type shorthand, import `Pattern` standalone from
+ * `massaman/match` — it's the form ts-pattern's own docs recommend.
  */
-export const Ok: { ok: true } = { ok: true }
+export const P: typeof TsP & { ok: { ok: true }; err: { ok: false } } = {
+  ...TsP,
+  ok: okPattern,
+  err: errPattern,
+}
 
 /**
- * Pattern that matches an `Err` Result. Equivalent to the inline pattern
- * `{ ok: false }`, but reads more like Rust's `Err(error)` match arm.
+ * The `Ok` variant of a `Result<T>`. Re-exported here so the value-side
+ * patterns and the type-side `Ok<T>` live in one module — any consumer
+ * import gets both type and value namespaces without cross-module merge
+ * issues (TS2300).
  */
-export const Err: { ok: false } = { ok: false }
-
-// Re-export the Result types here so the value `Ok`/`Err` and the type
-// `Ok<T>`/`Err` merge in this module's scope. Re-exporting them from a
-// barrel (e.g. via `export type { Ok }` and `export { Ok }` pointing at
-// different modules) does NOT merge across modules and trips TS2300.
-
 export type Ok<T> = OkType<T>
+
+/**
+ * The `Err` variant of a `Result<T>`. See {@link Ok} for the co-location note.
+ */
 export type Err = ErrType

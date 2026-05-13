@@ -1,3 +1,4 @@
-export { isMatching, match, NonExhaustiveError, P, Pattern } from 'ts-pattern'
+export { isMatching, match, NonExhaustiveError, Pattern } from 'ts-pattern'
 
-export { Err, Ok } from './match.js'
+export { P } from './match.js'
+export type { Err, Ok } from './match.js'

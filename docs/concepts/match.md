@@ -1,6 +1,6 @@
 # Pattern matching
 
-`massaman/match` is a full re-export of [`ts-pattern`](https://github.com/gvergnaud/ts-pattern), plus `Ok` and `Err` pattern values for matching `Result`. Use it instead of `switch`, instead of nested ternaries, instead of `if`/`else if` chains that discriminate on a union.
+`massaman/match` is a full re-export of [`ts-pattern`](https://github.com/gvergnaud/ts-pattern), with one extension: `P.ok` and `P.err` for matching `Result` values. Use it instead of `switch`, instead of nested ternaries, instead of `if`/`else if` chains that discriminate on a union.
 
 ```typescript
 import { match, P } from 'massaman'
@@ -38,53 +38,60 @@ Use literals to match by equality. Use [`P`](../reference/match/P.md) for everyt
 
 ```typescript
 import { match, P } from 'massaman'
+import { sum } from 'massaman/math'
 
 match(value)
   .with(0, () => 'zero')                          // literal
   .with(P.number, (n) => `number ${n}`)           // any number
   .with(P.string, (s) => `string ${s}`)           // any string
   .with({ id: P.string }, ({ id }) => `id ${id}`) // shape with a string id
-  .with(P.array(P.number), (xs) => xs.sum())      // array of numbers
+  .with(P.array(P.number), (xs) => sum(xs))       // array of numbers
   .with(P.union('a', 'b', 'c'), () => 'letter')   // any of these literals
   .otherwise(() => 'something else')
 ```
 
 ## Matching `Result`
 
-The canonical pattern in `massaman` — discriminate on the `ok` field. Two equivalent forms:
+The canonical pattern in `massaman` — discriminate on the `ok` field via `P.ok` / `P.err`:
 
 ```typescript
-import { attempt, match, Ok, Err } from 'massaman'
+import { attempt, match, P } from 'massaman'
 
 const parsed = attempt(() => JSON.parse(raw))
 
-// Rust-style with Ok / Err pattern values:
 return match(parsed)
-  .with(Ok, ({ value }) => render(value))
-  .with(Err, ({ error }) => renderError(error))
+  .with(P.ok, ({ value }) => render(value))
+  .with(P.err, ({ error }) => renderError(error))
   .exhaustive()
+```
 
-// Or inline structural:
-return match(parsed)
+`P.ok` and `P.err` are bound names for the structural patterns `{ ok: true }` / `{ ok: false }` — they exist to read like Rust's `match` arms. The inline form is equivalent if you prefer to skip the namespace property:
+
+```typescript
+match(parsed)
   .with({ ok: true }, ({ value }) => render(value))
   .with({ ok: false }, ({ error }) => renderError(error))
   .exhaustive()
 ```
 
-`Ok` and `Err` are just bound names for `{ ok: true }` / `{ ok: false }` — they exist for readability and to mirror Rust's `match` arms. Pick whichever reads better in context. See the [Result concept guide](./result.md) for the full story.
+See the [Result concept guide](./result.md) for the full story on `Result`, including how `P.ok`/`P.err` (patterns), `ok`/`err` (constructors), `isOk`/`isErr` (guards), and `Ok<T>`/`Err` (types) all relate.
 
 ## `match` vs `if`/`when`/`ifElse`
 
-- **One-armed branching** (do X if condition, otherwise nothing or a default value) → use [`when`](../reference/function/when.md), [`unless`](../reference/function/unless.md), or [`ifElse`](../reference/function/ifElse.md). They compose with `pipe`/`flow`.
+- **One-armed branching** (do X if condition, otherwise nothing or a default value) → use [`when`](../reference/function/when.md), [`unless`](../reference/function/unless.md), or [`ifElse`](../reference/function/ifElse.md). They compose with `flow`.
 - **Multi-armed dispatch on a union** → use `match`. Don't reach for `match` for a single `if`.
 
 ```typescript
+import { flow, when } from 'massaman'
+import { isEmpty } from 'massaman/predicate'
+import { trim } from 'massaman/string'
+
 // Good — when() for single-condition branching
-const result = pipe(
-  input,
+const sanitize = flow(
   when(isEmpty, () => 'default'),
   trim,
 )
+sanitize(input)
 
 // Good — match() for multi-arm dispatch
 match(action)
@@ -103,6 +110,5 @@ You can't use both on the same chain — pick one.
 ## Related
 
 - [`match`](../reference/match/match.md), [`isMatching`](../reference/match/isMatching.md), [`P`](../reference/match/P.md), [`Pattern`](../reference/match/Pattern.md)
-- [`Ok`](../reference/match/Ok.md), [`Err`](../reference/match/Err.md) — Result patterns
-- [ts-pattern README](https://github.com/gvergnaud/ts-pattern#readme) — the full reference
+- [ts-pattern README](https://github.com/gvergnaud/ts-pattern#readme) — the full reference for `P` primitives
 - [Result type concept guide](./result.md)
