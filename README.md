@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/zrosenbauer/massaman/main/.github/assets/banner.png" alt="massaman" width="90%" />
+  <img src="https://raw.githubusercontent.com/zrosenbauer/massaman/main/.github/assets/banner.png" alt="massaman" width="100%" />
   <p><strong>Functional programming utilities for TypeScript. Result types, pattern matching, async pipelines. Fully typed.</strong></p>
 
 <a href="https://github.com/zrosenbauer/massaman/actions/workflows/ci.yml"><img src="https://github.com/zrosenbauer/massaman/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI" /></a>
@@ -10,10 +10,10 @@
 
 ## Features
 
-- Functional-esque toolkit for writing close to pure FP in TypeScript.
-- Built on two great libraries: [es-toolkit](https://es-toolkit.slash.page) and [ts-pattern](https://github.com/gvergnaud/ts-pattern).
-- Result-style errors with `attempt`/`ok`/`err`. Never throw across a boundary.
-- Variadic-narrowing predicates: `allPass([isString, isNotEmpty])` narrows to `string`.
+- Rust's `match` in TypeScript: exhaustive pattern matching via re-exported [ts-pattern](https://github.com/gvergnaud/ts-pattern).
+- Rust's `Result` in TypeScript: compose fallible operations without throws (`attempt`, `attemptAsync`, `ok`, `err`, `isOk`, `unwrap`).
+- Functional programming, fully typed: `flow`, `flowAsync`, `tap`, `when`, `ifElse`, and point-free combinators with end-to-end inference.
+- The missing pieces around [es-toolkit](https://es-toolkit.slash.page): variadic-narrowing predicates, async composition, and consistent error normalization on top of the array/object/string/math utilities you already love.
 - 100% test coverage, enforced by CI on every commit.
 
 ## Install
