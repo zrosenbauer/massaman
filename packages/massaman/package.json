@@ -1,0 +1,108 @@
+{
+  "name": "massaman",
+  "version": "0.0.1-rc.2",
+  "description": "A comprehensive functional programming library and utilities for TypeScript",
+  "keywords": [
+    "es-toolkit",
+    "fp",
+    "functional",
+    "monad",
+    "pattern-matching",
+    "result",
+    "ts-pattern",
+    "typescript",
+    "utilities"
+  ],
+  "homepage": "https://github.com/zrosenbauer/massaman#readme",
+  "bugs": {
+    "url": "https://github.com/zrosenbauer/massaman/issues"
+  },
+  "license": "MIT",
+  "author": "Zac Rosenbauer <me@zrosenbauer.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zrosenbauer/massaman.git"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./predicate": {
+      "types": "./dist/predicate/index.d.mts",
+      "import": "./dist/predicate/index.mjs"
+    },
+    "./array": {
+      "types": "./dist/array/index.d.mts",
+      "import": "./dist/array/index.mjs"
+    },
+    "./object": {
+      "types": "./dist/object/index.d.mts",
+      "import": "./dist/object/index.mjs"
+    },
+    "./function": {
+      "types": "./dist/function/index.d.mts",
+      "import": "./dist/function/index.mjs"
+    },
+    "./string": {
+      "types": "./dist/string/index.d.mts",
+      "import": "./dist/string/index.mjs"
+    },
+    "./control": {
+      "types": "./dist/control/index.d.mts",
+      "import": "./dist/control/index.mjs"
+    },
+    "./pattern": {
+      "types": "./dist/pattern/index.d.mts",
+      "import": "./dist/pattern/index.mjs"
+    },
+    "./math": {
+      "types": "./dist/math/index.d.mts",
+      "import": "./dist/math/index.mjs"
+    },
+    "./promise": {
+      "types": "./dist/promise/index.d.mts",
+      "import": "./dist/promise/index.mjs"
+    },
+    "./error": {
+      "types": "./dist/error/index.d.mts",
+      "import": "./dist/error/index.mjs"
+    },
+    "./conversion": {
+      "types": "./dist/conversion/index.d.mts",
+      "import": "./dist/conversion/index.mjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsgo --noEmit"
+  },
+  "dependencies": {
+    "es-toolkit": "catalog:",
+    "ts-pattern": "catalog:"
+  },
+  "devDependencies": {
+    "@massaman/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "@typescript/native-preview": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}

@@ -1,0 +1,31 @@
+glob_matcher: doublestar
+
+commit-msg:
+  jobs:
+    - name: commitlint
+      run: pnpm commitlint --edit {1}
+
+pre-commit:
+  parallel: true
+  jobs:
+    - name: format
+      glob: 'packages/**/*.{js,ts,jsx,tsx,yaml,yml,json}'
+      exclude: '{**/*.gen.ts,**/*.d.ts}'
+      stage_fixed: true
+      run: pnpm oxfmt {staged_files}
+
+    - name: lint
+      glob: 'packages/**/*.{js,ts,jsx,tsx}'
+      exclude: '{**/*.gen.ts,**/*.d.ts}'
+      stage_fixed: true
+      run: pnpm oxlint --fix --quiet {staged_files}
+
+    - name: typecheck
+      glob: 'packages/**/*.{ts,tsx,js,jsx}'
+      run: pnpm typecheck
+
+pre-push:
+  jobs:
+    - name: test
+      glob: 'packages/**/*.{ts,tsx,js,jsx}'
+      run: pnpm test

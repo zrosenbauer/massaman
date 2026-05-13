@@ -1,0 +1,52 @@
+{
+  "$schema": "https://v2-9-6.turborepo.dev/schema.json",
+  "ui": "tui",
+  "remoteCache": {},
+  "globalEnv": ["NODE_ENV"],
+  "globalPassThroughEnv": ["CI", "GITHUB_ACTIONS"],
+  "concurrency": "20",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "package.json", "tsconfig.json", "tsdown.config.ts"],
+      "outputs": ["dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "**/*.ts", "tsconfig.json", "package.json"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "src/**",
+        "tests/**",
+        "**/*.test.ts",
+        "**/*.test-d.ts",
+        "vitest.config.*",
+        "package.json"
+      ]
+    },
+    "validate": {
+      "dependsOn": ["typecheck", "test"]
+    },
+    "format:fix": {
+      "cache": false
+    },
+    "lint:fix": {
+      "cache": false
+    },
+    "clean:build": {
+      "cache": false
+    },
+    "clean:turbo": {
+      "cache": false
+    },
+    "clean:npm": {
+      "cache": false
+    }
+  }
+}

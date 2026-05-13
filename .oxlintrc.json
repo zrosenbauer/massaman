@@ -1,0 +1,55 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "import", "vitest", "promise", "node", "oxc"],
+  "jsPlugins": ["eslint-plugin-security", "eslint-plugin-functional"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "pedantic": "off",
+    "perf": "warn",
+    "style": "off"
+  },
+  "rules": {
+    "typescript/no-explicit-any": "error",
+    "unicorn/prefer-node-protocol": "off",
+    "import/no-unassigned-import": "off",
+    "security/detect-child-process": "error",
+    "security/detect-eval-with-expression": "error",
+    "security/detect-non-literal-fs-filename": "warn",
+    "security/detect-non-literal-regexp": "error",
+    "security/detect-object-injection": "warn",
+    "security/detect-possible-timing-attacks": "warn",
+    "security/detect-unsafe-regex": "error",
+    "prefer-const": "error",
+    "no-nested-ternary": "error",
+    "no-unneeded-ternary": "error",
+    "no-var": "error",
+    "unicorn/no-unreadable-iife": "error",
+    "functional/no-let": "error",
+    "curly": "error",
+    "no-ternary": "error",
+    "typescript/no-non-null-assertion": "error"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.ts", "**/*.spec.ts", "**/*.test-d.ts", "tests/**/*"],
+      "rules": {
+        "functional/no-let": "off",
+        "vitest/no-conditional-expect": "off",
+        "vitest/require-mock-type-parameters": "off"
+      }
+    }
+  ],
+  "ignorePatterns": [
+    "node_modules",
+    "dist",
+    "build",
+    "out",
+    ".turbo",
+    "coverage",
+    "**/.generated/**",
+    "**/*.gen.ts",
+    "**/*.d.ts",
+    "**/bundle/**"
+  ]
+}

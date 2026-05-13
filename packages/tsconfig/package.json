@@ -1,0 +1,13 @@
+{
+  "name": "@massaman/tsconfig",
+  "version": "0.0.0",
+  "private": true,
+  "files": [
+    "base.json",
+    "node.json"
+  ],
+  "exports": {
+    "./base": "./base.json",
+    "./node": "./node.json"
+  }
+}

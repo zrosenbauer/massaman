@@ -1,0 +1,18 @@
+{
+  "types": [
+    "feat",
+    "fix",
+    "docs",
+    "refactor",
+    "test",
+    "chore",
+    "perf",
+    "style",
+    "ci",
+    "deps",
+    "revert",
+    "sec",
+    "release"
+  ],
+  "scopes": ["massaman", "tsconfig", "ci", "deps", "repo", "tooling", "docs"]
+}

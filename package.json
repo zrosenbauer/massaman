@@ -1,0 +1,50 @@
+{
+  "name": "massaman-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "massaman — a comprehensive functional programming library and utilities for TypeScript",
+  "type": "module",
+  "scripts": {
+    "prepare": "lefthook install",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "fix": "turbo run format:fix lint:fix",
+    "validate": "turbo run typecheck test && pnpm lint && pnpm format:check",
+    "clean": "turbo run clean:build clean:turbo clean:npm",
+    "clean:turbo": "pnpm dlx rimraf -g '**/.turbo'",
+    "clean:npm": "pnpm dlx rimraf -g '**/node_modules'",
+    "clean:build": "pnpm dlx rimraf -g '**/dist' '**/*.tsbuildinfo'",
+    "changeset": "changeset",
+    "changeset:status": "changeset status --since=origin/main",
+    "release": "pnpm build && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "^0.7.0",
+    "@changesets/cli": "^2.31.0",
+    "@commitlint/cli": "^21.0.1",
+    "@commitlint/config-conventional": "^21.0.1",
+    "@commitlint/types": "^21.0.1",
+    "@types/node": "catalog:",
+    "eslint-plugin-functional": "^9.0.4",
+    "eslint-plugin-security": "^4.0.0",
+    "lefthook": "^2.1.6",
+    "oxfmt": "^0.49.0",
+    "oxlint": "^1.64.0",
+    "rimraf": "^6.1.3",
+    "ts-pattern": "catalog:",
+    "tsx": "catalog:",
+    "turbo": "^2.9.12",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "packageManager": "pnpm@10.32.1"
+}

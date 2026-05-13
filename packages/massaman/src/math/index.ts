@@ -1,0 +1,15 @@
+export {
+  clamp,
+  inRange,
+  mean,
+  meanBy,
+  median,
+  medianBy,
+  random,
+  randomInt,
+  range,
+  rangeRight,
+  round,
+  sum,
+  sumBy,
+} from 'es-toolkit/math'
