@@ -13,8 +13,8 @@
 - Rust's `match` in TypeScript: exhaustive pattern matching via re-exported [ts-pattern](https://github.com/gvergnaud/ts-pattern).
 - Rust's `Result` in TypeScript: compose fallible operations without throws (`attempt`, `attemptAsync`, `ok`, `err`, `isOk`, `unwrap`).
 - Functional programming, fully typed: `flow`, `flowAsync`, `tap`, `when`, `ifElse`, and point-free combinators with end-to-end inference.
-- The missing pieces around [es-toolkit](https://es-toolkit.slash.page): variadic-narrowing predicates, async composition, and consistent error normalization on top of the array/object/string/math utilities you already love.
-- 100% test coverage, enforced by CI on every commit.
+- The missing pieces around [es-toolkit](https://es-toolkit.dev): variadic-narrowing predicates, async composition, and consistent error normalization on top of the array/object/string/math utilities you already love.
+- Tree-shakeable: 12 focused subpath exports, ESM-only, `sideEffects: false`. Import only what you use.
 
 ## Install
 
@@ -40,7 +40,7 @@ const status = match(action)
 
 ### From es-toolkit
 
-Most of the surface (`array`, `object`, `string`, `function`, `math`) is a transparent re-export of [es-toolkit](https://es-toolkit.slash.page). Same names, same behavior, same docs.
+Most of the surface (`array`, `object`, `string`, `function`, `math`) is a transparent re-export of [es-toolkit](https://es-toolkit.dev). Same names, same behavior, same docs.
 
 ```ts
 import { chunk, groupBy } from 'massaman'
@@ -108,7 +108,7 @@ if (isOk(parsed)) {
 }
 ```
 
-`massaman` brings both patterns to TypeScript, layered over [es-toolkit](https://es-toolkit.slash.page) and [ts-pattern](https://github.com/gvergnaud/ts-pattern), plus a thin set of utilities filling the gaps: async-aware composition, variadic-narrowing predicates, and consistent error normalization.
+`massaman` brings both patterns to TypeScript, layered over [es-toolkit](https://es-toolkit.dev) and [ts-pattern](https://github.com/gvergnaud/ts-pattern), plus a thin set of utilities filling the gaps: async-aware composition, variadic-narrowing predicates, and consistent error normalization.
 
 More on the philosophy at [zrosenbauer.com/blog](https://zrosenbauer.com/blog).
 

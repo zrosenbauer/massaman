@@ -4,7 +4,7 @@
 
 Initial public release.
 
-`massaman` is a curated functional programming toolkit for TypeScript. It re-exports [es-toolkit](https://es-toolkit.slash.page) (array/object/string/function/math utilities) and [ts-pattern](https://github.com/gvergnaud/ts-pattern) (exhaustive pattern matching) under one namespace, then layers on a thin set of utilities that fill the gaps: Result-style error handling, async-aware composition, and variadic-narrowing predicates.
+`massaman` is a curated functional programming toolkit for TypeScript. It re-exports [es-toolkit](https://es-toolkit.dev) (array/object/string/function/math utilities) and [ts-pattern](https://github.com/gvergnaud/ts-pattern) (exhaustive pattern matching) under one namespace, then layers on a thin set of utilities that fill the gaps: Result-style error handling, async-aware composition, and variadic-narrowing predicates.
 
 ### Highlights
 
