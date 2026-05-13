@@ -1,9 +1,0 @@
-{
-  "mode": "pre",
-  "tag": "rc",
-  "initialVersions": {
-    "massaman": "0.0.0",
-    "@massaman/tsconfig": "0.0.0"
-  },
-  "changesets": ["initial-rc", "polish-readme-rc", "standard-readme", "sync-repo-urls"]
-}

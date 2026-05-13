@@ -1,29 +1,37 @@
 # massaman
 
-## 0.0.1-rc.3
+## 0.1.0
 
-### Patch Changes
+Initial public release.
 
-- - Rewrite README to follow the [standard-readme](https://github.com/RichardLitt/standard-readme) spec with a Features section mirrored from `joggrdocs/{kidd,zpress}`.
-  - Scope every file-level `oxlint-disable` directive down to per-line `oxlint-disable-next-line` so future additions require their own justification (`types/internal.ts`, `array/unfold.ts`, `array/reduceWhile.ts`, `object/evolve.ts`).
-  - Wrap const-aliased built-in predicates (`isArray`, `isFiniteNumber`, `isInteger`, `isNaN`) as real functions so they don't lose binding when passed around as callbacks.
-  - Move `combinators.ts` internal helper types (`Guarded`, `InferInput`, `UnionToIntersection`) to the bottom of the file — they're not used elsewhere.
-  - Strip label/divider comments from `src/index.ts`, `src/conversion/convert.ts`, and `src/control/result.test.ts`.
+`massaman` is a curated functional programming toolkit for TypeScript. It re-exports [es-toolkit](https://es-toolkit.slash.page) (array/object/string/function/math utilities) and [ts-pattern](https://github.com/gvergnaud/ts-pattern) (exhaustive pattern matching) under one namespace, then layers on a thin set of utilities that fill the gaps: Result-style error handling, async-aware composition, and variadic-narrowing predicates.
 
-## 0.0.1-rc.2
+### Highlights
 
-### Patch Changes
+- 12 subpath exports: `array`, `object`, `string`, `function`, `math`, `predicate`, `promise`, `pattern`, `control`, `conversion`, `error`, plus a root barrel.
+- Result-style error handling via `attempt`, `attemptAsync`, `ok`, `err`, `isOk`, `isErr`, `unwrap`.
+- Pattern matching via re-exported `match` and `P` combinators.
+- Variadic-narrowing predicate combinators (`allPass`, `anyPass`, `both`, `either`).
+- Async composition (`flowAsync`) with end-to-end type inference up to 7 steps.
+- 100% test coverage enforced by CI.
+- ESM-only, fully typed, tree-shakeable. Requires Node.js >= 24.0.0.
 
-- Polish README for release candidate: badges, status section, `@rc` install commands, and dropped the unimplemented banner block.
+### Example
 
-## 0.0.1-rc.1
+```ts
+import { match, P } from 'massaman/pattern'
+import { attempt, isOk } from 'massaman/control'
 
-### Patch Changes
+match(action)
+  .with({ type: 'load' }, () => 'loading')
+  .with({ type: 'success' }, () => 'done')
+  .with({ type: 'error', msg: P.string }, ({ msg }) => `failed: ${msg}`)
+  .exhaustive()
 
-- Sync `homepage`, `bugs`, and `repository` URLs to the new package identity.
-
-## 0.0.1-rc.0
-
-### Patch Changes
-
-- Initial release candidate. Functional programming utilities for TypeScript — curated surface over es-toolkit and ts-pattern with Result-style error handling, async-aware composition, variadic-narrowing predicates, and pattern matching.
+const parsed = attempt(() => JSON.parse(raw) as User)
+if (isOk(parsed)) {
+  console.log(`got: ${parsed.value.name}`)
+} else {
+  console.error(`failed: ${parsed.error.message}`)
+}
+```
