@@ -110,7 +110,7 @@ if (isOk(parsed)) {
 
 `massaman` brings both patterns to TypeScript, layered over [es-toolkit](https://es-toolkit.dev) and [ts-pattern](https://github.com/gvergnaud/ts-pattern), plus a thin set of utilities filling the gaps: async-aware composition, variadic-narrowing predicates, and consistent error normalization.
 
-More on the philosophy at [zrosenbauer.com/blog](https://zrosenbauer.com/blog).
+More on the philosophy at [zrosenbauer.com/gui/blog](https://zrosenbauer.com/gui/blog).
 
 ## Contributing
 
