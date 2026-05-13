@@ -24,9 +24,23 @@ npm install massaman@rc
 
 ## Usage
 
-### Standard utilities (from es-toolkit)
+### From ts-pattern
 
-Most of the surface (`array`, `object`, `string`, `function`, `math`) is a transparent re-export of [es-toolkit](https://es-toolkit.slash.page). Same names, same behavior, same docs. Import from `massaman` to keep everything under one namespace.
+The `pattern` subpath is a transparent re-export of [ts-pattern](https://github.com/gvergnaud/ts-pattern). Exhaustive matching with full TypeScript inference.
+
+```ts
+import { match, P } from 'massaman/pattern'
+
+const status = match(action)
+  .with({ type: 'load' }, () => 'loading')
+  .with({ type: 'success' }, () => 'done')
+  .with({ type: 'error', msg: P.string }, ({ msg }) => `failed: ${msg}`)
+  .exhaustive()
+```
+
+### From es-toolkit
+
+Most of the surface (`array`, `object`, `string`, `function`, `math`) is a transparent re-export of [es-toolkit](https://es-toolkit.slash.page). Same names, same behavior, same docs.
 
 ```ts
 import { chunk, groupBy } from 'massaman'
@@ -38,23 +52,63 @@ groupBy(['apple', 'avocado', 'banana', 'blueberry'], (s) => s[0])
 // { a: ['apple', 'avocado'], b: ['banana', 'blueberry'] }
 ```
 
-### Result and pattern matching together
+### Custom: Result and async composition
+
+Built on top of those re-exports, `massaman/control` adds Result-style error handling that never throws across a boundary.
 
 ```ts
-import { attempt } from 'massaman/control'
-import { match } from 'massaman/pattern'
+import { attemptAsync, isOk } from 'massaman/control'
 
-const parsed = attempt(() => JSON.parse(rawInput))
+const result = await attemptAsync(() => fetch('/api/user').then((r) => r.json()))
 
-const message = match(parsed)
-  .with({ ok: true }, ({ value }) => `Got: ${value.name}`)
-  .with({ ok: false }, ({ error }) => `Failed: ${error.message}`)
-  .exhaustive()
+if (isOk(result)) {
+  console.log(result.value)
+} else {
+  console.error(result.error.message)
+}
 ```
 
 ## Why?
 
-Two Rust patterns I keep wanting in TypeScript: `match` for exhaustive branching, and `Result` for errors that compose without throws. `massaman` brings both, layered over the two best FP libraries in the ecosystem (`es-toolkit` and `ts-pattern`), plus a thin set of utilities filling the gaps: async-aware composition, variadic-narrowing predicates, and consistent error normalization.
+Two Rust patterns I keep wanting in TypeScript: `match` for exhaustive branching, and `Result` for errors that compose without throws.
+
+In Rust:
+
+```rust
+match action {
+    Action::Load => "loading",
+    Action::Success => "done",
+    Action::Error(msg) => &format!("failed: {}", msg),
+}
+
+let parsed: Result<User, Error> = serde_json::from_str(raw);
+match parsed {
+    Ok(user) => println!("got: {}", user.name),
+    Err(err) => eprintln!("failed: {}", err),
+}
+```
+
+The equivalent in TypeScript using `massaman`:
+
+```ts
+import { match, P } from 'massaman/pattern'
+import { attempt, isOk } from 'massaman/control'
+
+match(action)
+  .with({ type: 'load' }, () => 'loading')
+  .with({ type: 'success' }, () => 'done')
+  .with({ type: 'error', msg: P.string }, ({ msg }) => `failed: ${msg}`)
+  .exhaustive()
+
+const parsed = attempt(() => JSON.parse(raw) as User)
+if (isOk(parsed)) {
+  console.log(`got: ${parsed.value.name}`)
+} else {
+  console.error(`failed: ${parsed.error.message}`)
+}
+```
+
+`massaman` brings both patterns to TypeScript, layered over [es-toolkit](https://es-toolkit.slash.page) and [ts-pattern](https://github.com/gvergnaud/ts-pattern), plus a thin set of utilities filling the gaps: async-aware composition, variadic-narrowing predicates, and consistent error normalization.
 
 More on the philosophy at [zrosenbauer.com/blog](https://zrosenbauer.com/blog).
 
