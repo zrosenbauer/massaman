@@ -64,7 +64,7 @@ reviews:
     - path: '**'
       instructions: |
         ## Review Standards
-        Search AGENTS.md and packages/massaman/CLAUDE.md for repo conventions before reviewing.
+        Search AGENTS.md for repo conventions before reviewing (CLAUDE.md is a symlink to it).
         Key sources of truth:
         - AGENTS.md — full FP persona, boundaries (Always / Never / Ask First), commit conventions, hooks
         - .oxlintrc.json — lint rules (functional/no-let, no-ternary, no-explicit-any, etc.)
@@ -213,7 +213,7 @@ reviews:
     github-checks:
       enabled: true
       timeout_ms: 90000
-    oxlint:
+    oxc:
       enabled: true
     gitleaks:
       enabled: true
@@ -227,6 +227,10 @@ reviews:
       enabled: true
     languagetool:
       enabled: true
+    prismaLint:
+      enabled: false
+    hadolint:
+      enabled: false
 
 chat:
   auto_reply: true
