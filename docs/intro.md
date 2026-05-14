@@ -2,7 +2,7 @@
 
 `massaman` is a functional programming library for TypeScript. It gives you:
 
-- **Pattern matching** with full TypeScript inference, via [`ts-pattern`](https://github.com/gvergnaud/ts-pattern).
+- **Pattern matching** with full TypeScript inference, via [`ts-pattern`](https://github.com/gvergnaud/ts-pattern), extended with `P.ok` / `P.err` for matching `Result`.
 - **A `Result` type** for errors that compose — `attempt`, `ok`, `err`, `isOk`, `unwrap`.
 - **Array, object, function, string, math, and predicate utilities** layered over [`es-toolkit`](https://es-toolkit.dev).
 - **Async-aware composition** — `flowAsync`, `tap`, `when`, `ifElse`, and other point-free combinators.
@@ -24,7 +24,7 @@ ESM-only. Tree-shakeable. Fully typed. No `compat` layer.
 | `massaman/promise` | async primitives: `delay`, `withTimeout`, `Semaphore`, … |
 | `massaman/error` | error classes: `AbortError`, `TimeoutError` |
 | `massaman/predicate` | type guards + combinators: `isString`, `isEmpty`, `isObject`, `both`, `either`, … |
-| `massaman/pattern` | pattern matching: `match`, `isMatching`, `P`, `Pattern` |
+| `massaman/match` | pattern matching: `match`, `isMatching`, `P` (extended with `P.ok` / `P.err`), `Pattern` |
 | `massaman/control` | Result + control flow: `attempt`, `ok`, `err`, `isOk`, `unwrap`, `assert`, `invariant` |
 | `massaman/conversion` | safe coercion: `toNumber`, `toInteger`, `toError`, `stringify`, … |
 
@@ -42,7 +42,7 @@ Subpath (matches the conceptual area, helps with code navigation):
 
 ```typescript
 import { chunk } from 'massaman/array'
-import { match, P } from 'massaman/pattern'
+import { match, P } from 'massaman/match'
 import { attempt } from 'massaman/control'
 ```
 
@@ -50,11 +50,11 @@ Both are tree-shakeable. Pick whichever reads better in your codebase.
 
 ## Why not just use es-toolkit + ts-pattern directly?
 
-You can. If you don't need the `Result` type, async composition, or the variadic-narrowing predicates, use the originals directly. `massaman` is what you'd build on top anyway — a single import surface plus the connective tissue.
+You can. If you don't need the `Result` type, async composition, or `P.ok` / `P.err` Result patterns, use the originals directly. `massaman` is what you'd build on top anyway — a single import surface plus the connective tissue.
 
 ## Where to go next
 
 - **[Installation](./installation.md)** — install, requirements, TypeScript config.
 - **[Philosophy](./philosophy.md)** — the FP stance the library encourages.
-- **Concepts** — [Result type](./concepts/result.md), [Pattern matching](./concepts/pattern-matching.md), [Composition](./concepts/composition.md), [Predicates](./concepts/predicates.md), [Coercion](./concepts/coercion.md).
+- **Concepts** — [Result type](./concepts/result.md), [Pattern matching](./concepts/match.md), [Composition](./concepts/composition.md), [Predicates](./concepts/predicates.md), [Coercion](./concepts/coercion.md).
 - **[Reference](./reference/)** — every export, by area.

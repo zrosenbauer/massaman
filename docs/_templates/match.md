@@ -5,7 +5,7 @@
 One-sentence description.
 
 ```typescript
-import { {{NAME}} } from 'massaman/pattern'
+import { {{NAME}} } from 'massaman/match'
 ```
 
 ## Usage
@@ -19,4 +19,4 @@ Worked example.
 ## See also
 
 - [ts-pattern README](https://github.com/gvergnaud/ts-pattern#readme) — canonical reference
-- [Pattern matching concept guide](../../concepts/pattern-matching.md)
+- [Pattern matching concept guide](../../concepts/match.md)

@@ -59,9 +59,9 @@
       "types": "./dist/control/index.d.mts",
       "import": "./dist/control/index.mjs"
     },
-    "./pattern": {
-      "types": "./dist/pattern/index.d.mts",
-      "import": "./dist/pattern/index.mjs"
+    "./match": {
+      "types": "./dist/match/index.d.mts",
+      "import": "./dist/match/index.mjs"
     },
     "./math": {
       "types": "./dist/math/index.d.mts",

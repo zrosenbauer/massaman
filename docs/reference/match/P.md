@@ -1,15 +1,16 @@
 # P
 
-> **Re-exported from [`ts-pattern`](https://github.com/gvergnaud/ts-pattern).** Massaman re-exports the public API unchanged at the [pinned version](../../_meta/upstream-versions.json).
-
 The pattern primitives namespace. Builds patterns that match by type, structure, or predicate.
 
+> [!NOTE]
+> Most of `P` is re-exported from [`ts-pattern`](https://github.com/gvergnaud/ts-pattern). Massaman extends it with `P.ok` and `P.err` for matching `Result` values — see [P.ok](#pok) and [P.err](#perr) below.
+
 ```typescript
-import { P } from 'massaman/pattern'
+import { P } from 'massaman/match'
 // or:  import { P } from 'massaman'
 ```
 
-## Common primitives
+## Primitives
 
 | Pattern | Matches |
 |---|---|
@@ -28,6 +29,39 @@ import { P } from 'massaman/pattern'
 | `P.when(predicate)` | matches when `predicate(value)` is truthy — bridge to massaman predicates |
 | `P.select()` | captures the matched value for the handler |
 | `P.select('name', pattern)` | captures a sub-value by name |
+| `P.ok` | matches an `Ok` [`Result`](../../concepts/result.md) — massaman extension |
+| `P.err` | matches an `Err` [`Result`](../../concepts/result.md) — massaman extension |
+
+## P.ok
+
+Matches the `Ok` variant of a `Result<T>`. Equivalent to the inline structural pattern `{ ok: true }`, but reads more like Rust's `Ok(value)` match arm.
+
+```typescript
+import { match, P, attempt } from 'massaman'
+
+match(attempt(() => JSON.parse(raw)))
+  .with(P.ok, ({ value }) => render(value))
+  .with(P.err, ({ error }) => log(error))
+  .exhaustive()
+```
+
+Inside the `P.ok` arm, the matched value is narrowed to `Ok<T>` — `value` is typed as `T`, `error` is `null`.
+
+Spread it to add field constraints:
+
+```typescript
+match(result)
+  .with({ ...P.ok, value: { name: 'jane' } }, () => 'jane!')
+  .with(P.ok, ({ value }) => `got ${value.name}`)
+  .with(P.err, ({ error }) => `err: ${error.message}`)
+  .exhaustive()
+```
+
+## P.err
+
+Matches the `Err` variant of a `Result<T>`. Equivalent to `{ ok: false }`. Pairs with `P.ok` to exhaustively cover any `Result`.
+
+Inside the `P.err` arm, the matched value is narrowed to `Err` — `error` is `Error`, `value` is `null`.
 
 ## Examples
 
@@ -52,23 +86,10 @@ match(arr)
   .otherwise(() => 'something else')
 ```
 
-## Matching `Result`
-
-To discriminate a `Result<T>`, match on the `ok` field directly:
-
-```typescript
-import { match, attempt } from 'massaman'
-
-match(attempt(() => JSON.parse(raw)))
-  .with({ ok: true }, ({ value }) => render(value))
-  .with({ ok: false }, ({ error }) => log(error))
-  .exhaustive()
-```
-
 ## See also
 
 - [`match`](./match.md) — multi-arm dispatch
 - [`isMatching`](./isMatching.md) — predicate form
-- [ts-pattern README — Patterns](https://github.com/gvergnaud/ts-pattern#patterns) — full reference
-- [Pattern matching concept guide](../../concepts/pattern-matching.md)
+- [ts-pattern README — Patterns](https://github.com/gvergnaud/ts-pattern#patterns) — full reference for the primitives we re-export
+- [Pattern matching concept guide](../../concepts/match.md)
 - [Result type concept guide](../../concepts/result.md)

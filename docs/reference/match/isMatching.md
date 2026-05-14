@@ -15,7 +15,7 @@ if (isMatching(pattern, value)) { /* value is narrowed */ }
 Use when you want pattern-based narrowing in an `if` or guard, not a multi-arm dispatch.
 
 ```typescript
-import { isMatching, P } from 'massaman/pattern'
+import { isMatching, P } from 'massaman/match'
 
 const isClickAt = isMatching({ kind: 'click', x: P.number, y: P.number })
 

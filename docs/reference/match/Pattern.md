@@ -5,7 +5,7 @@
 The type-level representation of a pattern. Used when you need to type a pattern variable or write a helper that accepts patterns.
 
 ```typescript
-import { type Pattern, match, P } from 'massaman/pattern'
+import { type Pattern, match, P } from 'massaman/match'
 ```
 
 ## Usage

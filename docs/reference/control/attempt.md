@@ -37,13 +37,13 @@ if (isOk(parsed)) {
 Replace `try`/`catch` at the boundary of an unsafe API:
 
 ```typescript
-import { attempt, match } from 'massaman'
+import { attempt, match, P } from 'massaman'
 
 const result = attempt(() => JSON.parse(req.body))
 
 return match(result)
-  .with({ ok: true }, ({ value }) => respond.ok(value))
-  .with({ ok: false }, ({ error }) => respond.badRequest(error.message))
+  .with(P.ok, ({ value }) => respond.ok(value))
+  .with(P.err, ({ error }) => respond.badRequest(error.message))
   .exhaustive()
 ```
 
@@ -52,4 +52,5 @@ return match(result)
 - [`attemptAsync`](./attemptAsync.md) — async variant
 - [`ok`](./ok.md) / [`err`](./err.md) — construct results manually
 - [`unwrap`](./unwrap.md) — extract or throw
+- [`P.ok`](../match/P.md#pok) / [`P.err`](../match/P.md#perr) — patterns for `match`
 - [Result type concept guide](../../concepts/result.md)

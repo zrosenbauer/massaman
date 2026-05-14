@@ -10,7 +10,7 @@
   "ts-pattern": {
     "version": "5.9.0",
     "repo": "gvergnaud/ts-pattern",
-    "$comment": "ts-pattern has no per-symbol .md upstream — pages under docs/reference/pattern/ are hand-written.",
+    "$comment": "ts-pattern has no per-symbol .md upstream — pages under docs/reference/match/ are hand-written.",
     "siteUrl": "https://github.com/gvergnaud/ts-pattern#readme"
   }
 }

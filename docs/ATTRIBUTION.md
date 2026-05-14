@@ -16,7 +16,7 @@
 - **Author** — Gabriel Vergnaud
 - **License** — MIT
 
-`massaman/pattern` re-exports `ts-pattern`'s public API.
+`massaman/match` re-exports `ts-pattern`'s public API and extends `P` with `P.ok` / `P.err` for matching `Result` values.
 
 ## License
 
