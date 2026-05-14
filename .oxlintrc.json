@@ -38,6 +38,17 @@
         "vitest/no-conditional-expect": "off",
         "vitest/require-mock-type-parameters": "off"
       }
+    },
+    {
+      "files": ["scripts/**/*.{js,mjs,ts}"],
+      "rules": {
+        "functional/no-let": "off",
+        "no-ternary": "off",
+        "curly": "off",
+        "security/detect-non-literal-fs-filename": "off",
+        "security/detect-object-injection": "off",
+        "security/detect-unsafe-regex": "off"
+      }
     }
   ],
   "ignorePatterns": [
