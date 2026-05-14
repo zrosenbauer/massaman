@@ -15,11 +15,15 @@
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "fix": "turbo run format:fix lint:fix",
-    "validate": "turbo run typecheck test && pnpm lint && pnpm format:check",
-    "clean": "turbo run clean:build clean:turbo clean:npm",
+    "docs:sync": "zx scripts/docs-sync.mjs",
+    "docs:sync:check": "zx scripts/docs-sync.mjs --check",
+    "docs:stub-originals": "zx scripts/docs-stub-originals.mjs",
+    "validate": "turbo run typecheck test && pnpm lint && pnpm format:check && pnpm docs:sync:check",
+    "clean": "turbo run clean:build clean:turbo clean:npm && pnpm clean:docs-cache",
     "clean:turbo": "pnpm dlx rimraf -g '**/.turbo'",
     "clean:npm": "pnpm dlx rimraf -g '**/node_modules'",
     "clean:build": "pnpm dlx rimraf -g '**/dist' '**/*.tsbuildinfo'",
+    "clean:docs-cache": "pnpm dlx rimraf '.cache' 'node_modules/.cache/docs-sync'",
     "changeset": "changeset",
     "changeset:status": "changeset status --since=origin/main",
     "release": "pnpm build && changeset publish"
@@ -41,7 +45,8 @@
     "tsx": "catalog:",
     "turbo": "^2.9.12",
     "typescript": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "zx": "^8.8.5"
   },
   "engines": {
     "node": ">=24.0.0"
