@@ -4,7 +4,7 @@ Guidance for AI coding agents (Claude Code, Codex, Cursor, opencode, etc.) worki
 
 ## What this repo is
 
-`fpkit` is the monorepo home for [`massaman`](https://www.npmjs.com/package/massaman), a functional programming library for TypeScript built on top of [`es-toolkit`](https://es-toolkit.slash.page) and [`ts-pattern`](https://github.com/gvergnaud/ts-pattern). The published surface is `massaman` plus subpath exports (`massaman/control`, `massaman/pattern`, etc.). Repo name is `fpkit` because more packages may follow; `massaman` is the first.
+This is [`zrosenbauer/massaman`](https://github.com/zrosenbauer/massaman) — the monorepo home for [`massaman`](https://www.npmjs.com/package/massaman), a functional programming library for TypeScript built on top of [`es-toolkit`](https://es-toolkit.dev) and [`ts-pattern`](https://github.com/gvergnaud/ts-pattern). The published surface is `massaman` plus subpath exports (`massaman/control`, `massaman/pattern`, etc.). More packages may follow; `massaman` is the first.
 
 ## Persona
 
@@ -60,7 +60,7 @@ This persona is enforced by `oxlint` config (`functional/no-let`, `no-ternary`, 
 ## Structure
 
 ```
-fpkit/
+massaman/
 ├── packages/
 │   ├── massaman/                        # The published library
 │   │   ├── src/
