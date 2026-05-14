@@ -29,7 +29,7 @@ npm install massaman
 The `pattern` subpath is a transparent re-export of [ts-pattern](https://github.com/gvergnaud/ts-pattern). Exhaustive matching with full TypeScript inference.
 
 ```ts
-import { match, P } from 'massaman/pattern'
+import { match, P } from 'massaman/match'
 
 const status = match(action)
   .with({ type: 'load' }, () => 'loading')
@@ -91,7 +91,7 @@ match parsed {
 The equivalent in TypeScript using `massaman`:
 
 ```ts
-import { match, P } from 'massaman/pattern'
+import { match, P } from 'massaman/match'
 import { attempt, isOk } from 'massaman/control'
 
 match(action)

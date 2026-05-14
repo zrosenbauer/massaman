@@ -36,18 +36,19 @@ return respond.ok(user.value)
 Compose with `match` at a route boundary:
 
 ```typescript
-import { attemptAsync, match } from 'massaman'
+import { attemptAsync, match, P } from 'massaman'
 
 const result = await attemptAsync(() => db.users.findById(id))
 
 return match(result)
-  .with({ ok: true, value: null }, () => respond.notFound())
-  .with({ ok: true }, ({ value }) => respond.ok(value))
-  .with({ ok: false }, ({ error }) => respond.serverError(error))
+  .with({ ...P.ok, value: null }, () => respond.notFound())
+  .with(P.ok, ({ value }) => respond.ok(value))
+  .with(P.err, ({ error }) => respond.serverError(error))
   .exhaustive()
 ```
 
 ## See also
 
 - [`attempt`](./attempt.md) — synchronous variant
+- [`P.ok`](../match/P.md#pok) / [`P.err`](../match/P.md#perr) — patterns for `match`
 - [Result type concept guide](../../concepts/result.md)

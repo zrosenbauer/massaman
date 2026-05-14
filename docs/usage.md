@@ -10,7 +10,7 @@ import { chunk, match, P, attempt, isEmpty } from 'massaman'
 
 // subpath — same exports, narrower import surface
 import { chunk } from 'massaman/array'
-import { match, P } from 'massaman/pattern'
+import { match, P } from 'massaman/match'
 import { attempt, isOk } from 'massaman/control'
 import { isEmpty } from 'massaman/predicate'
 ```
@@ -29,7 +29,7 @@ Both forms are equivalent at runtime and tree-shakeable. Pick what reads better 
 | `massaman/promise` | promise utilities (delay, withTimeout, Semaphore, …) |
 | `massaman/error` | error classes (AbortError, TimeoutError) |
 | `massaman/predicate` | type guards (isString, isEmpty, isObject, both, either, …) |
-| `massaman/pattern` | pattern matching (`match`, `isMatching`, `P`, `Pattern`) |
+| `massaman/match` | pattern matching (`match`, `isMatching`, `P` with `P.ok` / `P.err`, `Pattern`) |
 | `massaman/control` | Result type + control flow (attempt, ok, err, isOk, …) |
 | `massaman/conversion` | safe coercion (toNumber, toInteger, toError, …) |
 
@@ -52,7 +52,7 @@ Type-only imports work as expected:
 
 ```typescript
 import { type Result, type Ok, type Err } from 'massaman'
-import { type Pattern } from 'massaman/pattern'
+import { type Pattern } from 'massaman/match'
 ```
 
 ## CDN / no-build

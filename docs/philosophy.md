@@ -8,7 +8,7 @@ If you're coming from Rust, this will feel familiar — same patterns, weaker co
 
 ### Expressions, not statements
 
-Every operation produces a value. `if`/`else` becomes [`when`](./reference/function/when.md) / [`unless`](./reference/function/unless.md) / [`ifElse`](./reference/function/ifElse.md) or [`match`](./reference/pattern/match.md). `switch` becomes `match`. Mutating loops become `map`/`filter`/`reduce`. The result is code that flows top-to-bottom without intermediate state, and that's much easier to reason about — and to type.
+Every operation produces a value. `if`/`else` becomes [`when`](./reference/function/when.md) / [`unless`](./reference/function/unless.md) / [`ifElse`](./reference/function/ifElse.md) or [`match`](./reference/match/match.md). `switch` becomes `match`. Mutating loops become `map`/`filter`/`reduce`. The result is code that flows top-to-bottom without intermediate state, and that's much easier to reason about — and to type.
 
 ### Errors as values
 
@@ -27,7 +27,7 @@ A factory function plus a closure does everything a class does, without `this`, 
 A typical massaman module:
 
 ```typescript
-import { match, P } from 'massaman/pattern'
+import { match, P } from 'massaman/match'
 import { attemptAsync, err, type Result } from 'massaman/control'
 import { isEmpty } from 'massaman/predicate'
 
@@ -41,9 +41,9 @@ export async function fetchUser(id: string): Promise<FetchUserResult> {
 
 export function describe(result: FetchUserResult): string {
   return match(result)
-    .with({ ok: true, value: { name: P.string } }, ({ value }) => `hi ${value.name}`)
-    .with({ ok: true }, () => 'no name')
-    .with({ ok: false }, ({ error }) => `failed: ${error.message}`)
+    .with({ ...P.ok, value: { name: P.string } }, ({ value }) => `hi ${value.name}`)
+    .with(P.ok, () => 'no name')
+    .with(P.err, ({ error }) => `failed: ${error.message}`)
     .exhaustive()
 }
 ```

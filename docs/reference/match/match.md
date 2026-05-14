@@ -5,7 +5,7 @@
 Exhaustive, type-safe pattern matching for TypeScript.
 
 ```typescript
-import { match, P } from 'massaman/pattern'
+import { match, P } from 'massaman/match'
 // or:  import { match, P } from 'massaman'
 
 match(value)
@@ -59,4 +59,4 @@ const message = match(result)
 - [`isMatching`](./isMatching.md) — predicate form
 - [`P`](./P.md) — the pattern primitives
 - [ts-pattern README](https://github.com/gvergnaud/ts-pattern#readme) — canonical reference
-- [Pattern matching concept guide](../../concepts/pattern-matching.md)
+- [Pattern matching concept guide](../../concepts/match.md)

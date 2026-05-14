@@ -24,10 +24,10 @@ const message = match(result)
 - **[Philosophy](./philosophy.md)** — the FP stance, why no classes / no throws / no switch
 - **Concepts** — short guides on the core ideas:
   - [Result type](./concepts/result.md)
-  - [Pattern matching](./concepts/pattern-matching.md)
+  - [Pattern matching](./concepts/match.md)
   - [Composition](./concepts/composition.md)
   - [Predicates](./concepts/predicates.md)
   - [Coercion](./concepts/coercion.md)
 - **Reference** — every export, by area:
   - [array](./reference/array/) · [object](./reference/object/) · [function](./reference/function/) · [math](./reference/math/) · [string](./reference/string/) · [promise](./reference/promise/) · [error](./reference/error/)
-  - [predicate](./reference/predicate/) · [control](./reference/control/) · [conversion](./reference/conversion/) · [match](./reference/pattern/)
+  - [predicate](./reference/predicate/) · [control](./reference/control/) · [conversion](./reference/conversion/) · [match](./reference/match/)
