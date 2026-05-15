@@ -21,6 +21,8 @@
     "**/.generated/**",
     "**/*.gen.ts",
     "**/*.d.ts",
-    "**/bundle/**"
+    "**/bundle/**",
+    "**/CHANGELOG.md",
+    ".changeset/*.md"
   ]
 }
