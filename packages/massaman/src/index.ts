@@ -246,6 +246,9 @@ export {
   isErr,
   isOk,
   ok,
+  todo,
+  unimplemented,
+  unreachable,
   unwrap,
 } from './control/index.js'
 export type { Result } from './control/index.js'
