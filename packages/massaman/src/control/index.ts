@@ -1,4 +1,7 @@
 export { assert, invariant } from 'es-toolkit/util'
 export { attempt, attemptAsync } from './attempt.js'
 export { err, isErr, isOk, ok, unwrap } from './result.js'
+export { todo } from './todo.js'
+export { unimplemented } from './unimplemented.js'
+export { unreachable } from './unreachable.js'
 export type { Err, Ok, Result } from './types.js'
