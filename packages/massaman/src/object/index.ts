@@ -13,6 +13,7 @@ export {
   omitBy,
   pick,
   pickBy,
+  sortKeys,
   toCamelCaseKeys,
   toMerged,
   toSnakeCaseKeys,

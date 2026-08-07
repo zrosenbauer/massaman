@@ -73,14 +73,38 @@ async function main() {
     }
 
     // proxy:es-toolkit
-    const upstreamMd = path.join(upstreamDir, 'docs', 'reference', c.upstreamArea, `${c.name}.md`)
+    const upstreamMd = path.join(
+      upstreamDir,
+      'docs',
+      ...upstreamDocSegments(c.upstreamArea, c.name)
+    )
     if (!(await fs.pathExists(upstreamMd))) {
-      errors.push(
-        `missing upstream doc: es-toolkit/${c.upstreamArea}/${c.name}.md (re-exported as massaman/${c.massamanArea})`
-      )
+      const undocumentedReason = (es.undocumentedUpstream ?? {})[`${c.upstreamArea}/${c.name}`]
+      if (!undocumentedReason) {
+        errors.push(
+          `missing upstream doc: es-toolkit/${c.upstreamArea}/${c.name}.md (re-exported as massaman/${c.massamanArea})`
+        )
+        continue
+      }
+      // Allowlisted: upstream ships the symbol but has no reference page for it,
+      // so we own the page by hand. Never generated, never overwritten — but it
+      // still has to exist, or the export ships undocumented.
+      const handWrittenPath = path.join(DOCS_REF, c.massamanArea, `${c.name}.md`)
+      if (!(await fs.pathExists(handWrittenPath))) {
+        errors.push(`allowlisted as undocumented upstream but no hand-written page: ${relRef(c)}`)
+        continue
+      }
+      proxyHandWritten++
+      manifest.push({
+        ...c,
+        status: 'hand-written',
+        source: 'es-toolkit',
+        undocumentedUpstream: undocumentedReason,
+        expectedFile: relRef(c),
+      })
       continue
     }
-    const upstreamUrl = `${es.siteUrl}/${c.upstreamArea}/${c.name}.html`
+    const upstreamUrl = upstreamDocUrl(es, c.upstreamArea, c.name)
     const original = await fs.readFile(upstreamMd, 'utf8')
     const mutated = injectProxyCallout(original, upstreamUrl)
     const outPath = path.join(DOCS_REF, c.massamanArea, `${c.name}.md`)
@@ -129,7 +153,7 @@ async function main() {
   console.log(
     chalk.green(`  ${CHECK_MODE ? 'verified' : 'wrote'} ${wrote} proxy pages from es-toolkit`)
   )
-  console.log(chalk.gray(`  ${proxyHandWritten} ts-pattern pages are hand-written (not generated)`))
+  console.log(chalk.gray(`  ${proxyHandWritten} proxy pages are hand-written (not generated)`))
   console.log(chalk.gray(`  ${locals} originals expected (hand-written, not touched)`))
 
   if (errors.length > 0) {
@@ -154,6 +178,26 @@ async function ensureUpstream(repo, version) {
   await $`git clone --depth 1 --branch v${version} --filter=blob:none --sparse https://github.com/${repo}.git ${dir}`
   await $`git -C ${dir} sparse-checkout set docs`
   return dir
+}
+
+/**
+ * Upstream keeps most reference pages under `docs/reference/<area>/`, but newer
+ * entrypoints are top-level doc sections with their own `docs/<area>/reference/`
+ * tree, and the published URL mirrors the on-disk path. `fp` is the one we
+ * currently mirror; the rest are listed so adding them later is a re-export away.
+ */
+const SECTION_AREAS = new Set(['compat', 'fp', 'server', 'types'])
+
+function upstreamDocSegments(area, name) {
+  return SECTION_AREAS.has(area)
+    ? [area, 'reference', `${name}.md`]
+    : ['reference', area, `${name}.md`]
+}
+
+function upstreamDocUrl(es, area, name) {
+  return SECTION_AREAS.has(area)
+    ? `${es.siteOrigin}/${area}/reference/${name}.html`
+    : `${es.siteUrl}/${area}/${name}.html`
 }
 
 async function classifyAllExports() {

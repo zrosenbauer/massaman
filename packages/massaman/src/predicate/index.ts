@@ -11,6 +11,7 @@ export {
   isError,
   isFile,
   isFunction,
+  isIterable,
   isJSON,
   isJSONArray,
   isJSONObject,

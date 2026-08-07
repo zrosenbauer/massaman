@@ -1,6 +1,9 @@
 export {
   at,
+  cartesianProduct,
   chunk,
+  chunkBy,
+  combinations,
   compact,
   countBy,
   difference,

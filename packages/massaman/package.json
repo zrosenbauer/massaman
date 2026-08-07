@@ -59,6 +59,10 @@
       "types": "./dist/control/index.d.mts",
       "import": "./dist/control/index.mjs"
     },
+    "./fp": {
+      "types": "./dist/fp/index.d.mts",
+      "import": "./dist/fp/index.mjs"
+    },
     "./match": {
       "types": "./dist/match/index.d.mts",
       "import": "./dist/match/index.mjs"

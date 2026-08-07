@@ -2,7 +2,10 @@ export {
   adjust,
   ascend,
   at,
+  cartesianProduct,
   chunk,
+  chunkBy,
+  combinations,
   compact,
   countBy,
   descend,
@@ -122,6 +125,7 @@ export {
   meanBy,
   median,
   medianBy,
+  percentile,
   random,
   randomInt,
   range,
@@ -147,6 +151,7 @@ export {
   omitBy,
   pick,
   pickBy,
+  sortKeys,
   toCamelCaseKeys,
   toMerged,
   toSnakeCaseKeys,
@@ -173,6 +178,7 @@ export {
   isFiniteNumber,
   isFunction,
   isInteger,
+  isIterable,
   isJSON,
   isJSONArray,
   isJSONObject,
@@ -211,7 +217,7 @@ export {
   toString,
 } from './conversion/index.js'
 
-export { delay, Mutex, Semaphore, timeout, withTimeout } from './promise/index.js'
+export { allKeyed, delay, Mutex, Semaphore, timeout, withTimeout } from './promise/index.js'
 
 export {
   camelCase,
