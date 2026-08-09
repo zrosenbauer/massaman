@@ -53,7 +53,7 @@ reverseString('a-b-c'); // 'c-b-a'
 
 (`string`): Returns a new string with the characters in reverse order.
 
-## Demo
+## Try It
 
 ::: sandpack
 

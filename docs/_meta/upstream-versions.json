@@ -2,10 +2,15 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$comment": "Pinned versions of upstream packages whose docs we mirror. Update both this file and pnpm-workspace.yaml's catalog together, then run `pnpm docs:sync`.",
   "es-toolkit": {
-    "version": "1.47.0",
+    "version": "1.50.0",
     "repo": "toss/es-toolkit",
     "docsRoot": "docs/reference",
-    "siteUrl": "https://es-toolkit.dev/reference"
+    "siteUrl": "https://es-toolkit.dev/reference",
+    "siteOrigin": "https://es-toolkit.dev",
+    "$comment2": "Symbols upstream exports but has never written a reference page for. Each gets a hand-written page under docs/reference/ that docs-sync verifies exists but never overwrites. Delete an entry once upstream backfills its page, then run `pnpm docs:sync` to replace ours with the mirrored copy.",
+    "undocumentedUpstream": {
+      "array/chunkBy": "Exported from es-toolkit/array and the root index with full JSDoc (fp/array/chunkBy is a curried wrapper that delegates to it), but has no docs/reference/array/chunkBy.md in any language and no CHANGELOG entry as of v1.50.0."
+    }
   },
   "ts-pattern": {
     "version": "5.9.0",

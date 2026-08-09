@@ -13,6 +13,10 @@ export default defineConfig({
       enabled: true,
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
+      // Barrels are pure `export ... from` re-exports with no coverable statements.
+      // Tests that import them (e.g. the export-surface tests) otherwise drag every
+      // barrel into the report as a 0% row, which reads as a regression when it isn't.
+      exclude: ['src/**/index.ts'],
       thresholds: {
         statements: 100,
         branches: 100,

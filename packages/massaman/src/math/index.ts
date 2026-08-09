@@ -5,6 +5,7 @@ export {
   meanBy,
   median,
   medianBy,
+  percentile,
   random,
   randomInt,
   range,

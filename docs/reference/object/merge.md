@@ -79,7 +79,7 @@ console.log(result);
 // Output: { a: [1, 2, 3] }
 ```
 
-## Demo
+## Try It
 
 ::: sandpack
 
@@ -93,11 +93,3 @@ console.log(result);
 ```
 
 :::
-
-## Performance Comparison
-
-|                   | [Bundle Size](https://es-toolkit.dev/bundle-size.html) | [Performance](https://es-toolkit.dev/performance.html) |
-| ----------------- | ----------------------------------- | ----------------------------------- |
-| es-toolkit        | 271 bytes (97.8% smaller)           | 1,952,436 times (3.65× faster)      |
-| es-toolkit/compat | 4,381 bytes (64.9% smaller)         | 706,558 times (1.32× faster)        |
-| lodash-es         | 12,483 bytes                        | 533,484 times                       |

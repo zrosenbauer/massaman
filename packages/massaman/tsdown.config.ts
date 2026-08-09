@@ -9,6 +9,7 @@ export default defineConfig({
     'src/function/index.ts',
     'src/string/index.ts',
     'src/control/index.ts',
+    'src/fp/index.ts',
     'src/match/index.ts',
     'src/math/index.ts',
     'src/promise/index.ts',
