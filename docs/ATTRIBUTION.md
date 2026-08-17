@@ -8,7 +8,7 @@
 - **Author** — Viva Republica, Inc.
 - **License** — MIT
 
-`massaman/array`, `massaman/object`, `massaman/function`, `massaman/math`, `massaman/string`, `massaman/promise`, `massaman/error`, `massaman/predicate`, and the `assert` / `invariant` exports of `massaman/control` re-export `es-toolkit`. Their reference documentation is mirrored from `es-toolkit`'s upstream pages.
+`massaman/array`, `massaman/bigint`, `massaman/object`, `massaman/function`, `massaman/math`, `massaman/string`, `massaman/promise`, `massaman/error`, `massaman/predicate`, `massaman/fp`, and the `assert` / `invariant` exports of `massaman/control` re-export `es-toolkit`. Their reference documentation is mirrored from `es-toolkit`'s upstream pages.
 
 ## ts-pattern
 

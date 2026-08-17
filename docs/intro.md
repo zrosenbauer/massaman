@@ -12,11 +12,12 @@ ESM-only. Tree-shakeable. Fully typed. No `compat` layer.
 
 ## Available subpaths
 
-`massaman` ships 11 subpath exports plus a flat barrel. Every export is reachable from the flat barrel; the subpaths exist for code-navigation and import-grouping:
+`massaman` ships 13 subpath exports plus a flat barrel. Every export is reachable from the flat barrel except `massaman/bigint` and `massaman/fp`, whose names would collide with their counterparts; otherwise the subpaths exist for code-navigation and import-grouping:
 
 | Subpath | What's there |
 |---|---|
 | `massaman/array` | array manipulation: `chunk`, `groupBy`, `partition`, `uniq`, … |
+| `massaman/bigint` | `bigint` counterparts of the math helpers: `sum`, `clamp`, `range`, … (subpath-only) |
 | `massaman/object` | object utilities: `pick`, `omit`, `evolve`, `merge`, … |
 | `massaman/function` | composition + control: `flow`, `flowAsync`, `tap`, `when`, `ifElse`, `debounce`, `curry`, … |
 | `massaman/math` | numeric: `sum`, `clamp`, `range`, … |
@@ -27,6 +28,7 @@ ESM-only. Tree-shakeable. Fully typed. No `compat` layer.
 | `massaman/match` | pattern matching: `match`, `isMatching`, `P` (extended with `P.ok` / `P.err`), `Pattern` |
 | `massaman/control` | Result + control flow: `attempt`, `ok`, `err`, `isOk`, `unwrap`, `assert`, `invariant` |
 | `massaman/conversion` | safe coercion: `toNumber`, `toInteger`, `toError`, `stringify`, … |
+| `massaman/fp` | data-last, curried variants for `pipe` composition (subpath-only) |
 
 The full per-symbol reference is under [Reference](./reference/) — each function has its own page.
 

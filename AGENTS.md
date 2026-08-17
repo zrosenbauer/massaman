@@ -4,7 +4,7 @@ Guidance for AI coding agents (Claude Code, Codex, Cursor, opencode, etc.) worki
 
 ## What this repo is
 
-This is [`zrosenbauer/massaman`](https://github.com/zrosenbauer/massaman) — the monorepo home for [`massaman`](https://www.npmjs.com/package/massaman), a functional programming library for TypeScript built on top of [`es-toolkit`](https://es-toolkit.dev) and [`ts-pattern`](https://github.com/gvergnaud/ts-pattern). The published surface is `massaman` plus subpath exports (`massaman/control`, `massaman/pattern`, etc.). More packages may follow; `massaman` is the first.
+This is [`zrosenbauer/massaman`](https://github.com/zrosenbauer/massaman) — the monorepo home for [`massaman`](https://www.npmjs.com/package/massaman), a functional programming library for TypeScript built on top of [`es-toolkit`](https://es-toolkit.dev) and [`ts-pattern`](https://github.com/gvergnaud/ts-pattern). The published surface is `massaman` plus subpath exports (`massaman/control`, `massaman/match`, etc.). More packages may follow; `massaman` is the first.
 
 ## Persona
 
@@ -18,7 +18,7 @@ This persona is enforced by `oxlint` config (`functional/no-let`, `no-ternary`, 
 
 - **Read files before modifying them.**
 - **Run commands from repo root** with workspace filters (e.g. `pnpm test --filter=massaman`). Do not `cd` into `packages/*`.
-- **Use the local CLIs:** `pnpm`, `oxlint`, `oxfmt`, `tsgo`, `vitest`, `tsdown`, `turbo`. Not `npx`/`bunx`.
+- **Use the local CLIs:** `pnpm`, `oxlint`, `oxfmt`, `tsc`, `vitest`, `tsdown`, `turbo`. Not `npx`/`bunx`.
 - **Use `ts-pattern`'s `match()`** for any conditional logic with 2+ branches. Repo already lints `switch` out via design discipline; nested ternaries are blocked by `no-nested-ternary`.
 - **Use Result tuples** (`attempt`, `ok`, `err` from `massaman/control`) for fallible operations. Never `throw` across an exported boundary.
 - **Use `es-toolkit`** — check if the helper already exists before writing one. `massaman` re-exports the bulk of it; reach there first.
@@ -49,7 +49,7 @@ This persona is enforced by `oxlint` config (`functional/no-let`, `no-ternary`, 
 ### Ask First
 
 - **Adding a dependency** to any `package.json` (root or package).
-- **Adding a new top-level subpath export** to `massaman` (anything beyond the existing `array`/`object`/`function`/`string`/`control`/`pattern`/`math`/`promise`/`error`/`conversion`/`predicate`).
+- **Adding a new top-level subpath export** to `massaman` (anything beyond the existing `array`/`bigint`/`object`/`function`/`string`/`control`/`pattern`/`math`/`promise`/`error`/`conversion`/`predicate`).
 - **Creating a new package** under `packages/*`.
 - **Renaming or removing** an existing exported symbol from `massaman`.
 - **Changing the public type signature** of an exported function in a non-backwards-compatible way.
@@ -65,6 +65,7 @@ massaman/
 │   ├── massaman/                        # The published library
 │   │   ├── src/
 │   │   │   ├── array/                   # Re-exports from es-toolkit
+│   │   │   ├── bigint/                  # Re-exports from es-toolkit (subpath-only)
 │   │   │   ├── object/                  # Re-exports from es-toolkit
 │   │   │   ├── function/                # Re-exports from es-toolkit
 │   │   │   ├── string/                  # Re-exports from es-toolkit
@@ -82,7 +83,9 @@ massaman/
 │   │   └── package.json                 # Subpath exports declared here
 │   └── tsconfig/                        # @massaman/tsconfig — shared tsconfig base
 ├── .changeset/                          # Pending changesets for next release
-├── .github/workflows/ci.yml             # CI: typecheck → lint → format:check → test → build
+├── .github/workflows/ci.yml             # CI: typecheck → lint → format:check → test → docs → build
+├── .github/workflows/ci-security.yml    # SAST (Semgrep), SCA (Trivy), secret scan (gitleaks)
+├── .github/workflows/ci-actions.yml     # actionlint + SHA-pin enforcement for workflows
 ├── commitlint.config.ts                 # Reads commit-conventions.json
 ├── commit-conventions.json              # Allowed types + scopes (single source of truth)
 ├── lefthook.yml                         # Pre-commit (format/lint/typecheck), pre-push (test)
@@ -97,6 +100,8 @@ massaman/
 
 **Subpath convention:** every directory under `packages/massaman/src/<area>/` becomes a public subpath export (`massaman/<area>`). The barrel (`src/index.ts`) flattens the surface so `import { chunk } from 'massaman'` works too. Both paths are public — be deliberate when adding to `index.ts`.
 
+**`bigint` is the one exception:** its symbols (`sum`, `clamp`, `range`, …) share names with the `number` implementations in `math`/`array`, so it is subpath-only and deliberately absent from the root barrel. Import it as `massaman/bigint`.
+
 **Catalog deps:** shared versions (TypeScript, vitest, tsdown, es-toolkit, ts-pattern, etc.) are pinned in `pnpm-workspace.yaml` under `catalog:`. Packages reference them as `"vitest": "catalog:"`. Bump the catalog, not individual packages.
 
 ## Tech Stack
@@ -104,7 +109,7 @@ massaman/
 | Tool                                                                                                            | Purpose                               |
 | --------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
 | [pnpm](https://pnpm.io) workspaces + [Turborepo](https://turbo.build)                                           | Monorepo and task orchestration       |
-| [TypeScript](https://www.typescriptlang.org/) via [`tsgo`](https://github.com/microsoft/typescript-go)          | Types and Go-based typechecker        |
+| [TypeScript](https://www.typescriptlang.org/) 7 (`tsc`, the native Go compiler)                                 | Types and typechecking                |
 | [tsdown](https://tsdown.dev)                                                                                    | Build (ESM + `.d.mts`, per export)    |
 | [vitest](https://vitest.dev)                                                                                    | Tests + type tests, 100% coverage     |
 | [oxlint](https://oxc.rs/docs/guide/usage/linter.html) + [oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) | Lint and format (NOT ESLint/Prettier) |
@@ -113,7 +118,7 @@ massaman/
 | [changesets](https://github.com/changesets/changesets)                                                          | Versioning and publishing             |
 | [lefthook](https://lefthook.dev) + [commitlint](https://commitlint.js.org)                                      | Git hooks and conventional commits    |
 
-Node `>= 24.0.0`, pnpm `10.32.1` (pinned via `packageManager`).
+Node `>= 26.0.0`, pnpm `10.32.1` (pinned via `packageManager`).
 
 ## Commands
 
@@ -123,7 +128,7 @@ Run from repo root unless noted. Use `--filter=<name>` to scope to a package.
 | ----------------------- | ------------------------------------------------------- |
 | `pnpm install`          | Install deps and install lefthook hooks (via `prepare`) |
 | `pnpm validate`         | typecheck + test + lint + format:check (do this first)  |
-| `pnpm typecheck`        | `tsgo --noEmit` across packages                         |
+| `pnpm typecheck`        | `tsc --noEmit` across packages                          |
 | `pnpm test`             | vitest across packages (enforces 100% coverage)         |
 | `pnpm lint`             | `oxlint`                                                |
 | `pnpm lint:fix`         | `oxlint --fix`                                          |
@@ -156,7 +161,12 @@ Before marking a task complete:
 6. **Commits follow Conventional Commits** with an allowed type and scope (see [Git](#git)).
 7. **Hooks pass.** Lefthook runs format/lint/typecheck pre-commit and tests pre-push. If a hook fails, fix the cause — never `--no-verify`.
 
-CI (`.github/workflows/ci.yml`) runs the same sequence on every push and PR to `main`: `typecheck → lint → format:check → test → build`.
+CI (`.github/workflows/ci.yml`) runs the same sequence on every push and PR to `main`: `typecheck → lint → format:check → test → docs:sync:check → build`.
+
+Two more workflows run alongside it:
+
+- **`ci-security.yml`** — Semgrep (SAST), Trivy (SCA), and gitleaks (secrets). On a PR the scanners run non-blocking and reviewdog annotates findings on added lines only; on a push to `main` the scanners fail the job directly. The SAST and SCA jobs are gated behind a `dorny/paths-filter` change filter, so a docs-only PR skips them (a skipped job counts as passed).
+- **`ci-actions.yml`** — actionlint plus a check that every `uses:` is pinned to a full 40-character commit SHA. A floating tag like `@v4` can be repointed at any commit by the upstream owner; the pin check is what stops that from landing.
 
 ## Git
 
@@ -209,5 +219,7 @@ git commit -m "chore(repo): tighten oxlint rules"
 - **Subpath exports must be declared in three places** to actually work: `packages/massaman/src/<area>/index.ts`, `packages/massaman/package.json#exports`, and `tsdown.config.ts`. Missing any one ships a broken release.
 - **Type-level tests are real tests.** `*.test-d.ts` files are picked up by vitest's `typecheck` config and run as part of `pnpm test`. Don't delete them when they "fail to compile" — that's the test failing.
 - **Coverage gaps usually mean unreachable branches.** If you can't cover a branch, the code is probably wrong (dead code, redundant guard, or a `match` that isn't exhaustive). Fix the design, not the threshold.
-- **`tsgo` is pre-release.** Pinned via the `@typescript/native-preview` catalog entry. Treat occasional weirdness as "check the issue tracker before refactoring."
-- **`oxfmt` is also pre-release.** Same deal — don't fight it, file an issue if behavior is wrong.
+- **TypeScript is deliberately split across two versions.** `packages/massaman` typechecks and builds on TypeScript 7 (`catalog:`), the native Go compiler. The root `devDependency` is pinned to `^6.0.3` because `eslint-plugin-functional` pulls in `@typescript-eslint`, which declares `typescript >=4.8.4 <6.1.0` and crashes on the TS 7 API. pnpm resolves peers per-importer, so each gets the right one. Collapse this back to a single `catalog:` entry once typescript-eslint ships TS 7 support.
+- **`oxfmt` is pre-release.** Don't fight it, file an issue if behavior is wrong.
+- **Actions are SHA-pinned, and CI enforces it.** When bumping a workflow action, resolve the new tag's commit SHA (`gh api repos/<owner>/<repo>/commits/<tag> --jq .sha`) and keep the `# vX.Y.Z` comment. `ci-actions.yml` fails on any floating tag.
+- **Docs proxy pages are generated.** `pnpm docs:sync` mirrors per-symbol reference docs from the es-toolkit version pinned in `docs/_meta/upstream-versions.json`. Bump that file together with the catalog, then re-run the sync — CI runs `docs:sync:check` and fails on drift, on a missing upstream page, and on orphaned pages left behind when upstream recategorizes a symbol.

@@ -32,7 +32,6 @@ export {
   isSubsetWith,
   keyBy,
   last,
-  limitAsync,
   mapAsync,
   maxBy,
   minBy,

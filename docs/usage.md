@@ -22,6 +22,7 @@ Both forms are equivalent at runtime and tree-shakeable. Pick what reads better 
 | Subpath | Contents |
 |---|---|
 | `massaman/array` | array manipulation (chunk, groupBy, partition, …) |
+| `massaman/bigint` | `bigint` math (sum, clamp, range, …) — subpath-only, not in the flat barrel |
 | `massaman/object` | object utilities (pick, omit, evolve, merge, …) |
 | `massaman/function` | function utilities (flow, flowAsync, debounce, curry, …) |
 | `massaman/math` | math utilities (sum, clamp, range, …) |
@@ -32,6 +33,7 @@ Both forms are equivalent at runtime and tree-shakeable. Pick what reads better 
 | `massaman/match` | pattern matching (`match`, `isMatching`, `P` with `P.ok` / `P.err`, `Pattern`) |
 | `massaman/control` | Result type + control flow (attempt, ok, err, isOk, …) |
 | `massaman/conversion` | safe coercion (toNumber, toInteger, toError, …) |
+| `massaman/fp` | data-last, curried variants for `pipe` — subpath-only, not in the flat barrel |
 
 ## Tree-shaking
 

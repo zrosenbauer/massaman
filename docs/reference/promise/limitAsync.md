@@ -1,7 +1,7 @@
 # limitAsync
 
 > [!NOTE]
-> **Direct proxy** — re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/reference/array/limitAsync.html).
+> **Direct proxy** — re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/reference/promise/limitAsync.html).
 > Implementation, edge cases, and performance behavior are owned upstream.
 > This page mirrors the upstream documentation at the pinned version; see the linked source for the authoritative copy.
 
@@ -18,7 +18,7 @@ const limitedFunc = limitAsync(asyncFunc, concurrency);
 Use `limitAsync` when you want to limit the number of concurrent executions of an async function that gets called multiple times. Only the specified number of executions run concurrently, and additional calls wait until running operations complete.
 
 ```typescript
-import { limitAsync } from 'es-toolkit/array';
+import { limitAsync } from 'es-toolkit/promise';
 
 // Limit to at most 3 concurrent requests.
 const limitedFetch = limitAsync(async url => {
@@ -33,7 +33,7 @@ await Promise.all(urls.map(url => limitedFetch(url)));
 It's useful for controlling load on resource-intensive operations like external API calls or database queries. It's especially effective when working with rate-limited APIs or managing server load.
 
 ```typescript
-import { limitAsync } from 'es-toolkit/array';
+import { limitAsync } from 'es-toolkit/promise';
 
 // Process heavy computations at most 2 at a time.
 const processItem = async item => {

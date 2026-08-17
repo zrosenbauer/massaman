@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- **Node** >= 24.0.0 (or any modern bundler targeting ES2022+).
+- **Node** >= 26.0.0 (or any modern bundler targeting ES2022+).
 - **TypeScript** >= 5.0 if using TS. `moduleResolution: "bundler"` (or `"node16"` / `"nodenext"`) is required to resolve subpath exports.
 
 ## Install

@@ -5,6 +5,7 @@ export default defineConfig({
     'src/index.ts',
     'src/predicate/index.ts',
     'src/array/index.ts',
+    'src/bigint/index.ts',
     'src/object/index.ts',
     'src/function/index.ts',
     'src/string/index.ts',
@@ -22,5 +23,5 @@ export default defineConfig({
   clean: true,
   unbundle: false,
   platform: 'node',
-  target: 'node22',
+  target: 'node26',
 })
