@@ -1,0 +1,244 @@
+name: 'ci: security'
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  changes:
+    name: Changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+      deps: ${{ steps.filter.outputs.deps }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Filter changed paths
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        id: filter
+        with:
+          filters: |
+            code:
+              - '**'
+              - '!**/*.md'
+              - '!**/*.mdx'
+              - '!docs/**'
+            deps:
+              - '**/package.json'
+              - 'pnpm-lock.yaml'
+              # the catalog pins resolved versions without touching a manifest
+              - 'pnpm-workspace.yaml'
+
+  sast:
+    name: SAST
+    needs: [changes]
+    # A skipped job counts as passed, so gating on it as a required check is safe.
+    if: needs.changes.outputs.code == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      # On the runner, not Semgrep's container, so reviewdog shares the job.
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+
+      - name: Install Semgrep
+        run: python -m pip install semgrep==1.173.0
+
+      - name: Run Semgrep
+        # PR: reviewdog gates, so let findings through. Push: semgrep fails directly.
+        run: semgrep ci --sarif-output=semgrep.sarif
+        continue-on-error: ${{ github.event_name == 'pull_request' }}
+        env:
+          SEMGREP_RULES: p/default
+          SEMGREP_SEND_METRICS: 'off'
+
+      # Before the gating step below, which fails the job and would skip an upload.
+      - name: Upload report
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: sast-sarif
+          path: semgrep.sarif
+          if-no-files-found: ignore
+
+      - name: Set up reviewdog
+        if: github.event_name == 'pull_request'
+        uses: reviewdog/action-setup@d8a7baabd7f3e8544ee4dbde3ee41d0011c3a93f # v1.5.0
+
+      - name: Annotate findings
+        if: github.event_name == 'pull_request'
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # SARIF carries nosemgrep'd findings and marks them `suppressions` (spec 2.1.0
+        # section 3.27.23) rather than dropping them, unlike semgrep's --json. reviewdog
+        # v0.21.0 ignores that field and fails the job on them, so drop them before it
+        # reads the file. Status defaults to `accepted` when absent (section 3.35.3), so
+        # a `rejected` or `underReview` suppression still annotates.
+        # Remove this once reviewdog/reviewdog#2586 ships in a release.
+        run: |
+          jq '(.runs[].results) |= map(select(
+                [.suppressions[]? | select((.status // "accepted") == "accepted")] | length == 0
+              ))' semgrep.sarif > semgrep.annotate.sarif
+          reviewdog -f=sarif -name=Semgrep -reporter=github-annotations -filter-mode=added -fail-level=any < semgrep.annotate.sarif
+
+  dependencies:
+    name: Dependencies
+    needs: [changes]
+    if: needs.changes.outputs.deps == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Run Trivy
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: ${{ github.event_name == 'pull_request' && '0' || '1' }}
+          format: sarif
+          output: trivy.sarif
+
+      - name: Upload report
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: sca-sarif
+          path: trivy.sarif
+          if-no-files-found: ignore
+
+      - name: Set up reviewdog
+        if: github.event_name == 'pull_request'
+        uses: reviewdog/action-setup@d8a7baabd7f3e8544ee4dbde3ee41d0011c3a93f # v1.5.0
+
+      - name: Annotate findings
+        if: github.event_name == 'pull_request'
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: reviewdog -f=sarif -name=Trivy -reporter=github-annotations -filter-mode=added -fail-level=any < trivy.sarif
+
+  secret-scan:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Install gitleaks
+        env:
+          GITLEAKS_VERSION: 8.30.1
+        run: |
+          set -euo pipefail
+          curl -sfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+            | tar -xz -C /usr/local/bin gitleaks
+          gitleaks version
+
+      - name: Scan commit range for secrets
+        # Only this event's new commits — a pre-existing leak is its own fix, not a PR blocker.
+        # PR: reviewdog gates, so let findings through. Push: gitleaks fails directly.
+        continue-on-error: ${{ github.event_name == 'pull_request' }}
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          BEFORE_SHA: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            range="${BASE_SHA}..HEAD"
+          elif [ -z "$BEFORE_SHA" ] || [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ]; then
+            range="HEAD~1..HEAD"
+          else
+            range="${BEFORE_SHA}..${HEAD_SHA}"
+          fi
+          gitleaks git --exit-code 1 --redact --report-format sarif --report-path gitleaks.sarif \
+            --log-opts="--no-merges $range"
+
+      - name: Upload report
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: secrets-sarif
+          path: gitleaks.sarif
+          if-no-files-found: ignore
+
+      - name: Set up reviewdog
+        if: github.event_name == 'pull_request'
+        uses: reviewdog/action-setup@d8a7baabd7f3e8544ee4dbde3ee41d0011c3a93f # v1.5.0
+
+      - name: Annotate findings
+        if: github.event_name == 'pull_request'
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # nofilter, not added: the log range already scopes to new commits, so don't re-filter by diff.
+        run: reviewdog -f=sarif -name=Gitleaks -reporter=github-annotations -filter-mode=nofilter -fail-level=any < gitleaks.sarif
+
+  summary:
+    name: Summary
+    needs: [sast, dependencies, secret-scan]
+    # Advisory rollup — always runs on PRs so the step summary reflects skipped jobs too.
+    if: always() && github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Download reports
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          path: reports
+          pattern: '*-sarif'
+          merge-multiple: true
+
+      - name: Build summary
+        env:
+          SAST_RESULT: ${{ needs.sast.result }}
+          SCA_RESULT: ${{ needs.dependencies.result }}
+          SECRETS_RESULT: ${{ needs.secret-scan.result }}
+        # Counts only `accepted` suppressions as suppressed, matching the annotate step.
+        run: |
+          set -euo pipefail
+          count() {
+            [ -f "$1" ] || { echo "-"; return; }
+            jq '[.runs[].results[] | select(
+                  [.suppressions[]? | select((.status // "accepted") == "accepted")] | length == 0
+                )] | length' "$1"
+          }
+          {
+            echo "### Security scan"
+            echo
+            echo "| Scanner | Job | Findings |"
+            echo "| --- | --- | --- |"
+            echo "| Semgrep (SAST) | ${SAST_RESULT} | $(count reports/semgrep.sarif) |"
+            echo "| Trivy (SCA) | ${SCA_RESULT} | $(count reports/trivy.sarif) |"
+            echo "| Gitleaks (secrets) | ${SECRETS_RESULT} | $(count reports/gitleaks.sarif) |"
+            echo
+            echo "A \`-\` means the scanner did not run for this change. Findings are annotated inline on the diff."
+          } >> "$GITHUB_STEP_SUMMARY"
