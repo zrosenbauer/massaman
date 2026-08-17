@@ -67,8 +67,6 @@ jobs:
         with:
           header: docs-preview
           message: |
-            ## Docs preview
+            ## Docs preview ready
 
-            [Open preview](${{ steps.deploy.outputs.pages-deployment-alias-url || steps.deploy.outputs.deployment-url }})
-
-            Updated for `${{ github.event.pull_request.head.sha }}`.
+            ${{ steps.deploy.outputs.pages-deployment-alias-url || steps.deploy.outputs.deployment-url }}
