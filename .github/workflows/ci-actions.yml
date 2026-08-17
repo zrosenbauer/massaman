@@ -1,0 +1,58 @@
+name: 'ci: actions'
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/**
+      - .github/actions/**
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/**
+      - .github/actions/**
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  actionlint:
+    name: Actionlint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install actionlint
+        run: |
+          set -euo pipefail
+          curl -sfL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash -o /tmp/download-actionlint.bash
+          bash /tmp/download-actionlint.bash 1.7.12
+
+      - name: Run actionlint
+        run: ./actionlint -color
+
+      - name: Check action pins
+        # actionlint has no pinning rule and Trivy's misconfig checks don't cover
+        # workflows, so a floating tag (@v4) — which an upstream owner can repoint at
+        # any commit — is caught here. Local (./) and docker:// refs have no SHA to pin.
+        run: |
+          set -euo pipefail
+          unpinned=$(
+            grep -rhoE '^[[:space:]]*(-[[:space:]]+)?uses:[[:space:]]*\S+' \
+              .github/workflows --include='*.yml' \
+              | sed -E 's/.*uses:[[:space:]]*//' \
+              | grep -vE '^(\./|docker://)' \
+              | grep -vE '@[0-9a-f]{40}$' \
+              | sort -u
+          ) || true
+          if [ -n "$unpinned" ]; then
+            echo "::error::Actions must be pinned to a full 40-character commit SHA:"
+            echo "$unpinned" | while read -r ref; do echo "::error::  $ref"; done
+            exit 1
+          fi
+          echo "All action references are pinned to a full commit SHA."

@@ -43,6 +43,10 @@
       "types": "./dist/array/index.d.mts",
       "import": "./dist/array/index.mjs"
     },
+    "./bigint": {
+      "types": "./dist/bigint/index.d.mts",
+      "import": "./dist/bigint/index.mjs"
+    },
     "./object": {
       "types": "./dist/object/index.d.mts",
       "import": "./dist/object/index.mjs"
@@ -92,7 +96,7 @@
     "build": "tsdown",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsgo --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "es-toolkit": "catalog:",
@@ -101,13 +105,12 @@
   "devDependencies": {
     "@massaman/tsconfig": "workspace:*",
     "@types/node": "catalog:",
-    "@typescript/native-preview": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
   "engines": {
-    "node": ">=24.0.0"
+    "node": ">=26.0.0"
   }
 }

@@ -3,6 +3,7 @@ export {
   capitalize,
   constantCase,
   deburr,
+  dedent,
   escape,
   escapeRegExp,
   kebabCase,

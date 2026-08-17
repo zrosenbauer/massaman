@@ -3,6 +3,7 @@
   <p><strong>Functional programming utilities for TypeScript. Result types, pattern matching, async pipelines. Fully typed.</strong></p>
 
 <a href="https://github.com/zrosenbauer/massaman/actions/workflows/ci.yml"><img src="https://github.com/zrosenbauer/massaman/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI" /></a>
+<a href="https://github.com/zrosenbauer/massaman/actions/workflows/ci-security.yml"><img src="https://github.com/zrosenbauer/massaman/actions/workflows/ci-security.yml/badge.svg?branch=main" alt="Security" /></a>
 <a href="https://www.npmjs.com/package/massaman"><img src="https://img.shields.io/npm/v/massaman" alt="npm version" /></a>
 <a href="https://github.com/zrosenbauer/massaman/blob/main/LICENSE"><img src="https://img.shields.io/github/license/zrosenbauer/massaman" alt="License" /></a>
 

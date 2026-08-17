@@ -15,7 +15,7 @@ Use [GitHub Issues](https://github.com/zrosenbauer/massaman/issues) for bug repo
 
 Requirements:
 
-- Node.js >= 24.0.0
+- Node.js >= 26.0.0
 - pnpm >= 10.32.1
 
 Clone, install, validate:
@@ -33,7 +33,7 @@ pnpm validate    # typecheck + test + lint + format:check
 | ---------------- | ------------------------------------------ |
 | `pnpm build`     | Build all packages via turborepo           |
 | `pnpm test`      | Run vitest across all packages             |
-| `pnpm typecheck` | Type-check via tsgo                        |
+| `pnpm typecheck` | Type-check via `tsc`                       |
 | `pnpm lint`      | Lint with oxlint                           |
 | `pnpm format`    | Format with oxfmt                          |
 | `pnpm fix`       | Auto-fix lint + format issues              |
@@ -47,7 +47,7 @@ pnpm validate    # typecheck + test + lint + format:check
 | Tool                                                                                                            | Purpose                            |
 | --------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
 | [pnpm workspaces](https://pnpm.io/workspaces) + [turborepo](https://turbo.build)                                | Monorepo and task orchestration    |
-| [TypeScript](https://www.typescriptlang.org/) (via [`tsgo`](https://github.com/microsoft/typescript-go))        | Types and Go-based typechecking    |
+| [TypeScript](https://www.typescriptlang.org/) 7 — `tsc`, the native Go compiler                                 | Types and typechecking             |
 | [tsdown](https://tsdown.dev)                                                                                    | Build                              |
 | [vitest](https://vitest.dev)                                                                                    | Tests with 100% coverage threshold |
 | [oxlint](https://oxc.rs/docs/guide/usage/linter.html) + [oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) | Lint and format                    |

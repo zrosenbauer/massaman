@@ -81,7 +81,7 @@ const byLength = sortBy(
 The array of objects to sort.
 </Field>
 
-<Field name="criteria" type="Array&lt;((item: T) =&gt; unknown) | keyof T&gt;" required>
+<Field name="criteria" type="ReadonlyArray&lt;((item: T) =&gt; unknown) | keyof T&gt;" required>
 Sorting criteria. An array of object property names or transformation functions, with earlier criteria having higher priority.
 </Field>
 

@@ -36,7 +36,6 @@ export {
   isSubsetWith,
   keyBy,
   last,
-  limitAsync,
   mapAsync,
   maxBy,
   minBy,
@@ -139,12 +138,15 @@ export {
   clone,
   cloneDeep,
   cloneDeepWith,
+  deepFreeze,
   evolve,
   findKey,
   flattenObject,
   invert,
   mapKeys,
+  mapKeysAsync,
   mapValues,
+  mapValuesAsync,
   merge,
   mergeWith,
   omit,
@@ -153,8 +155,18 @@ export {
   pickBy,
   sortKeys,
   toCamelCaseKeys,
+  toConstantCaseKeys,
+  toKebabCaseKeys,
   toMerged,
+  toPascalCaseKeys,
   toSnakeCaseKeys,
+} from './object/index.js'
+export type {
+  ToCamelCaseKeys,
+  ToConstantCaseKeys,
+  ToKebabCaseKeys,
+  ToPascalCaseKeys,
+  ToSnakeCaseKeys,
 } from './object/index.js'
 
 export {
@@ -217,13 +229,22 @@ export {
   toString,
 } from './conversion/index.js'
 
-export { allKeyed, delay, Mutex, Semaphore, timeout, withTimeout } from './promise/index.js'
+export {
+  allKeyed,
+  delay,
+  limitAsync,
+  Mutex,
+  Semaphore,
+  timeout,
+  withTimeout,
+} from './promise/index.js'
 
 export {
   camelCase,
   capitalize,
   constantCase,
   deburr,
+  dedent,
   escape,
   escapeRegExp,
   kebabCase,

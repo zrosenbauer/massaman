@@ -67,15 +67,15 @@ orderBy(data, ['a', 'b', 'c'], ['asc', 'desc']);
 
 #### Parameters
 
-<Field name="arr" type="T[]" required>
+<Field name="arr" type="readonly T[]" required>
 The array of objects to sort.
 </Field>
 
-<Field name="criteria" type="Array&lt;((item: T) =&gt; unknown) | keyof T&gt;" required>
+<Field name="criteria" type="ReadonlyArray&lt;((item: T) =&gt; unknown) | keyof T&gt;" required>
 The criteria to sort by. You can use property names of objects or functions that return values.
 </Field>
 
-<Field name="orders" type="Array&lt;'asc' | 'desc'&gt;" required>
+<Field name="orders" type="ReadonlyArray&lt;'asc' | 'desc'&gt;" required>
 An array of sort directions for each criterion. `'asc'` means ascending order, `'desc'` means descending order.
 </Field>
 

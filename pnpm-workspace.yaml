@@ -2,15 +2,14 @@ packages:
   - packages/*
 
 catalog:
-  '@types/node': ^25.9.3
-  '@typescript/native-preview': 7.0.0-dev.20260611.2
-  '@vitest/coverage-v8': ^4.1.8
-  es-toolkit: 1.50.0
+  '@types/node': ^26.2.0
+  '@vitest/coverage-v8': ^4.1.10
+  es-toolkit: 1.51.0
   ts-pattern: 5.9.0
-  tsdown: 0.22.2
-  tsx: ^4.22.4
-  typescript: ^6.0.3
-  vitest: ^4.1.8
+  tsdown: 0.22.14
+  tsx: ^4.23.12
+  typescript: ^7.0.2
+  vitest: ^4.1.10
 
 onlyBuiltDependencies:
   - esbuild

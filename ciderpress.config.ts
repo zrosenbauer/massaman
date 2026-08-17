@@ -204,6 +204,7 @@ return match(result)
       landing: true,
       pages: [
         referencePage('Array', 'array', 'pixelarticons:list'),
+        referencePage('BigInt', 'bigint', 'pixelarticons:hashtag'),
         referencePage('Control', 'control', 'pixelarticons:shield'),
         referencePage('Conversion', 'conversion', 'pixelarticons:arrows-horizontal'),
         referencePage('Error', 'error', 'pixelarticons:alert'),
