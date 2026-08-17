@@ -1,0 +1,122 @@
+import { Tab, Tabs } from '@ciderpress/ui/theme'
+
+# Introduction
+
+Massaman is a Rust-inspired utility library for functional programming in JavaScript, with first-class TypeScript support. It favors pure functions, immutable data, function composition, errors returned as values, and pattern matching that handles every case.
+
+## What is Massaman?
+
+Massaman provides a broad set of utilities for transforming data, composing functions, handling failure, and branching on values. Its API is ESM-native, tree-shakeable, and available from either one flat import surface or focused subpaths.
+
+Much of the general utility surface comes from [`es-toolkit`](https://es-toolkit.dev). Exhaustive pattern matching is powered by [`ts-pattern`](https://github.com/gvergnaud/ts-pattern). Massaman connects those foundations and adds the pieces needed for a consistent functional programming model:
+
+- `Result` values and helpers for explicit failure
+- `P.ok` and `P.err` patterns for matching `Result`
+- synchronous and asynchronous function composition
+- branching and predicate combinators
+- immutable collection and object transformations
+- consistent coercion and error normalization
+
+The goal is practical functional programming that still feels like JavaScript.
+
+## Why does it exist?
+
+I built Massaman around two Rust patterns I kept wanting in TypeScript: exhaustive `match` expressions and `Result` values for expected failure. From there, the library grew into the small set of functional utilities I wanted those patterns to compose with.
+
+JavaScript supports many programming styles but provides few defaults for how an application should be structured. A codebase can easily accumulate mutable helpers, inconsistent error handling, hidden state, nested conditional logic, and slightly different versions of the same utility.
+
+Modern languages such as Rust provide stronger defaults. Massaman's maintainers prefer that more functional model:
+
+- expected failures are represented in return values
+- branching can be exhaustive
+- mutation is deliberate rather than incidental
+- small functions compose into larger operations
+- state and side effects remain explicit
+
+Massaman brings those Rust and functional programming ideas to JavaScript. Its TypeScript APIs preserve types through transformations, narrow values as they are matched, and report unhandled cases during type checking.
+
+This does not mean reimplementing good tools. `ts-pattern` provides pattern matching, and `es-toolkit` provides most of the general utilities. Massaman gives them a shared surface, adds the missing pieces, and applies one set of conventions across the API.
+
+If all you need is `es-toolkit` or `ts-pattern`, use it directly. Massaman is for codebases that want the broader utility surface and the programming model that connects it.
+
+### Similar projects
+
+- [`Effect`](https://effect.website) provides a full effect system and standard library; Massaman is smaller and uses ordinary functions and promises.
+- [`es-toolkit`](https://es-toolkit.dev) and [`ts-pattern`](https://github.com/gvergnaud/ts-pattern) provide Massaman's utility and pattern-matching foundations and can also be used directly.
+- [`Ramda`](https://ramdajs.com), [`Remeda`](https://remedajs.com), and [`Lodash/fp`](https://github.com/lodash/lodash/wiki/FP-Guide) focus on functional data utilities.
+- [`neverthrow`](https://github.com/supermacro/neverthrow), [True Myth](https://true-myth.js.org), and [`oxide.ts`](https://github.com/traverse1984/oxide.ts) provide `Result`-style APIs for typed failure.
+- [`fp-ts`](https://github.com/gcanti/fp-ts) and [Purify](https://gigobyte.github.io/purify) provide typed functional data types and abstractions.
+
+## What does the API look like?
+
+The difference is easiest to see in error handling. Assume `fetchUser()` throws a `Response` for HTTP failures. Both examples load the same user and produce the same message, but Massaman turns failure into a value while plain JavaScript handles the exception manually.
+
+<Tabs>
+<Tab label="Massaman" value="massaman">
+
+```typescript
+import { attemptAsync, match, P } from 'massaman'
+
+// Any thrown value becomes Err with a normalized Error.
+const user = await attemptAsync(() => fetchUser(userId))
+
+const message = match(user)
+  // Non-Error throws are normalized and preserved as error.cause.
+  .with(P.err({ cause: { status: 404 } }), () => 'User not found')
+  .with(P.err({ cause: { status: 403 } }), () => 'You cannot view this user')
+  .with(P.err({ cause: { status: P.number.gte(500) } }), () =>
+    'The service is unavailable',
+  )
+  // Ok contains the returned user.
+  .with(P.ok(), ({ value }) => `Welcome, ${value.name}`)
+  // Handle every remaining failure.
+  .with(P.err(), ({ error }) => `Could not load user: ${error.message}`)
+  .exhaustive()
+
+console.log(message)
+```
+
+</Tab>
+<Tab label="Plain JavaScript" value="plain-javascript">
+
+```typescript
+let message: string
+
+try {
+  const user = await fetchUser(userId)
+  message = `Welcome, ${user.name}`
+} catch (error: unknown) {
+  // Narrow the unknown value before checking HTTP status.
+  if (error instanceof Response) {
+    if (error.status === 404) {
+      message = 'User not found'
+    } else if (error.status === 403) {
+      message = 'You cannot view this user'
+    } else if (error.status >= 500) {
+      message = 'The service is unavailable'
+    } else {
+      message = `Request failed: ${error.status}`
+    }
+  } else if (error instanceof Error) {
+    message = `Could not load user: ${error.message}`
+  } else if (typeof error === 'string') {
+    message = `Could not load user: ${error}`
+  } else {
+    message = `Could not load user: ${String(error)}`
+  }
+}
+
+console.log(message)
+```
+
+</Tab>
+</Tabs>
+
+Massaman returns failure as data, so every match arm produces `message` directly. There is no exception-driven mutation to track.
+
+## What should I do next?
+
+- **[Install Massaman](./installation.mdx)** — add the package and configure JavaScript or TypeScript.
+- **[Read the philosophy](./philosophy.md)** — understand the programming model behind the API.
+- **Learn the core concepts** — start with [Result & Errors](./concepts/result.md), [Pattern Matching](./concepts/match.md), and [Composition](./concepts/composition.md).
+- **[Browse the reference](./reference/)** — find an exact function, type, or subpath.

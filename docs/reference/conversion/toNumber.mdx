@@ -1,0 +1,51 @@
+---
+description: "Converts a value to a number."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# toNumber
+
+Converts a value to a number.
+
+Thin wrapper over `Number(value)` — kept as a stable surface so callers
+don't depend directly on the global constructor's semantics (which have
+shifted in the past, e.g. `Number(BigInt)`, and may again).
+
+```typescript
+toNumber('42') // 42
+toNumber(null) // 0
+```
+
+## Usage
+
+### `toNumber(value: unknown)`
+
+Converts a value to a number.
+
+Thin wrapper over `Number(value)` — kept as a stable surface so callers
+don't depend directly on the global constructor's semantics (which have
+shifted in the past, e.g. `Number(BigInt)`, and may again).
+
+```typescript
+import { toNumber } from 'massaman'
+// or:  import { toNumber } from 'massaman/conversion'
+
+toNumber('42') // 42
+toNumber(null) // 0
+```
+
+#### Parameters
+
+<Field name="value" type="unknown" required>
+the value to convert.
+</Field>
+
+
+#### Returns
+
+the input value converted using JavaScript number coercion.
+
+```typescript
+number
+```

@@ -1,0 +1,59 @@
+---
+description: "Like reduce but returns an array of all intermediate accumulator values."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# scan
+
+Like `reduce` but returns an array of all intermediate accumulator values.
+
+The result array starts with the initial value and ends with the final
+accumulator, so its length is `array.length + 1`.
+
+```typescript
+scan([1, 2, 3, 4], (acc, n) => acc + n, 0)
+// [0, 1, 3, 6, 10]
+```
+
+## Usage
+
+### `scan<T, R>(array: readonly T[], fn: (accumulator: R, value: T, index: number) => R, initial: R)`
+
+Like `reduce` but returns an array of all intermediate accumulator values.
+
+The result array starts with the initial value and ends with the final
+accumulator, so its length is `array.length + 1`.
+
+```typescript
+import { scan } from 'massaman'
+// or:  import { scan } from 'massaman/array'
+
+scan([1, 2, 3, 4], (acc, n) => acc + n, 0)
+// [0, 1, 3, 6, 10]
+```
+
+#### Parameters
+
+<Field name="array" type="readonly T[]" required>
+the source array.
+</Field>
+
+
+<Field name="fn" type="(accumulator: R, value: T, index: number) =&gt; R" required>
+the function to apply.
+</Field>
+
+
+<Field name="initial" type="R" required>
+the initial accumulator value.
+</Field>
+
+
+#### Returns
+
+an array containing the initial value followed by every intermediate accumulator.
+
+```typescript
+R[]
+```

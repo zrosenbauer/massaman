@@ -1,0 +1,47 @@
+---
+description: "Converts a value to a finite number."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# toFinite
+
+Converts a value to a finite number.
+
+Returns `0` for non-finite results (`NaN`, `Infinity`, `-Infinity`).
+
+```typescript
+toFinite('3.14') // 3.14
+toFinite(Infinity) // 0
+```
+
+## Usage
+
+### `toFinite(value: unknown)`
+
+Converts a value to a finite number.
+
+Returns `0` for non-finite results (`NaN`, `Infinity`, `-Infinity`).
+
+```typescript
+import { toFinite } from 'massaman'
+// or:  import { toFinite } from 'massaman/conversion'
+
+toFinite('3.14') // 3.14
+toFinite(Infinity) // 0
+```
+
+#### Parameters
+
+<Field name="value" type="unknown" required>
+the value to convert.
+</Field>
+
+
+#### Returns
+
+the converted finite number, or `0` when conversion produces a non-finite value.
+
+```typescript
+number
+```

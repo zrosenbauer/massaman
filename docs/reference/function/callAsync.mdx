@@ -1,0 +1,54 @@
+---
+description: "Invokes a function returning a Promise with the provided arguments."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# callAsync
+
+Invokes a function returning a Promise with the provided arguments.
+
+Async-typed sibling of `call` — equivalent to `fn(...args)` for
+promise-returning functions, but the signature constrains the return to
+`Promise<R>` so it composes cleanly inside async pipelines.
+
+```typescript
+const user = await callAsync(fetchUser, 'user-123')
+```
+
+## Usage
+
+### `callAsync<A extends readonly unknown[], R>(fn: (...args: A) => Promise<R>, ...args: A)`
+
+Invokes a function returning a Promise with the provided arguments.
+
+Async-typed sibling of `call` — equivalent to `fn(...args)` for
+promise-returning functions, but the signature constrains the return to
+`Promise<R>` so it composes cleanly inside async pipelines.
+
+```typescript
+import { callAsync } from 'massaman'
+// or:  import { callAsync } from 'massaman/function'
+
+const user = await callAsync(fetchUser, 'user-123')
+```
+
+#### Parameters
+
+<Field name="fn" type="(...args: A) =&gt; Promise&lt;R&gt;" required>
+the async function to invoke.
+</Field>
+
+
+<Field name="args" type="A" required>
+the arguments passed to `fn`.
+</Field>
+
+
+#### Returns
+
+the promise returned by `fn`.
+
+```typescript
+Promise<R>
+```

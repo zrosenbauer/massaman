@@ -1,0 +1,58 @@
+---
+title: "xorBy"
+description: "Creates a function that returns the symmetric difference by a mapped key."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# xorBy (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that returns the symmetric difference by a mapped key. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, xorBy(secondArray, mapper));
+```
+
+::: info
+
+Prefer the original es-toolkit [`xorBy`](../../reference/array/xorBy.md) in ordinary code. Use this `fp` variant when composing transformations with [`pipe`](./pipe.md).
+
+:::
+
+## Usage
+
+`xorBy` compares the values returned by `mapper` and returns values whose mapped key appears in exactly one array.
+
+```typescript
+import { pipe, xorBy } from 'es-toolkit/fp';
+
+pipe(
+  [{ id: 1 }, { id: 2 }],
+  xorBy([{ id: 2 }, { id: 3 }], item => item.id)
+); // => [{ id: 1 }, { id: 3 }]
+```
+
+#### Parameters
+
+<Field name="secondArray" type="readonly T[]" required>
+The array to compare with the piped array.
+</Field>
+
+<Field name="mapper" type="(item: T) =&gt; U" required>
+The function that returns the comparison key.
+</Field>
+
+#### Returns
+
+A function that maps a `readonly T[]` to the symmetric difference by key.
+
+```typescript
+(array: readonly T[]) => T[]
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/xorBy.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

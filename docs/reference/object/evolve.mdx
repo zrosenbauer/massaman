@@ -1,0 +1,56 @@
+---
+description: "Applies a spec of transformation functions to matching keys of an object, returning a new object."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# evolve
+
+Applies a spec of transformation functions to matching keys of an object,
+returning a new object. Keys not in the spec are copied as-is.
+
+```typescript
+evolve({ name: '  Alice  ', age: 29, role: 'admin' }, {
+  name: (s) => s.trim(),
+  age: (n) => n + 1,
+})
+// { name: 'Alice', age: 30, role: 'admin' }
+```
+
+## Usage
+
+### `evolve<T extends Record<string, unknown>>(obj: T, spec: { [K in keyof T]?: (value: T[K]) => T[K] })`
+
+Applies a spec of transformation functions to matching keys of an object,
+returning a new object. Keys not in the spec are copied as-is.
+
+```typescript
+import { evolve } from 'massaman'
+// or:  import { evolve } from 'massaman/object'
+
+evolve({ name: '  Alice  ', age: 29, role: 'admin' }, {
+  name: (s) => s.trim(),
+  age: (n) => n + 1,
+})
+// { name: 'Alice', age: 30, role: 'admin' }
+```
+
+#### Parameters
+
+<Field name="obj" type="T" required>
+the source object.
+</Field>
+
+
+<Field name="spec" type="{ [K in keyof T]?: (value: T[K]) =&gt; T[K] }" required>
+the transformations keyed by property name.
+</Field>
+
+
+#### Returns
+
+a new object with matching transformations applied and all other properties preserved.
+
+```typescript
+T
+```

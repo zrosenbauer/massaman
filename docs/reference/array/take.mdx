@@ -1,0 +1,75 @@
+---
+title: "take"
+description: "Creates a new array by taking the specified number of elements from the beginning of the array."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# take <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a new array by taking the specified number of elements from the beginning of the array.
+
+```typescript
+const taken = take(arr, count);
+```
+
+## Usage
+
+### `take(arr, count?)`
+
+Use `take` when you only need a few elements from the front of an array. If the requested count is greater than the array length, it returns the entire array.
+
+```typescript
+import { take } from 'es-toolkit/array';
+
+// Take the first 3 elements.
+take([1, 2, 3, 4, 5], 3);
+// Returns: [1, 2, 3]
+
+// Take the first 2 elements.
+take(['a', 'b', 'c'], 2);
+// Returns: ['a', 'b']
+```
+
+If you request more elements than the array has, it returns the entire array.
+
+```typescript
+import { take } from 'es-toolkit/array';
+
+take([1, 2, 3], 5);
+// Returns: [1, 2, 3]
+```
+
+If you omit `count`, it takes only the first element.
+
+```typescript
+import { take } from 'es-toolkit/array';
+
+take([1, 2, 3]);
+// Returns: [1]
+```
+
+#### Parameters
+
+<Field name="arr" type="T[]" required>
+The array to take elements from.
+</Field>
+
+<Field name="count" type="number">
+The number of elements to take. Default is `1`.
+</Field>
+
+#### Returns
+
+Returns a new array containing the first `count` elements from the array.
+
+```typescript
+T[]
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/reference/array/take.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

@@ -1,0 +1,80 @@
+---
+title: "initial"
+description: "Returns a new array containing all elements except the last one."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# initial <Badge color="#c85a3e">es-toolkit</Badge>
+
+Returns a new array containing all elements except the last one.
+
+```typescript
+const result = initial(arr);
+```
+
+## Usage
+
+### `initial(arr)`
+
+Use `initial` when you want to get all elements except the last one from an array. If the array is empty or has only one element, it returns an empty array. This is useful when processing while excluding the end of the array.
+
+```typescript
+import { initial } from 'es-toolkit/array';
+
+// Exclude the last element from a number array
+const numbers = [1, 2, 3, 4, 5];
+initial(numbers);
+// Returns: [1, 2, 3, 4]
+
+// Exclude the last element from a string array
+const strings = ['a', 'b', 'c'];
+initial(strings);
+// Returns: ['a', 'b']
+
+// An array with only one element returns an empty array
+const single = [42];
+initial(single);
+// Returns: []
+```
+
+It safely handles empty arrays and special cases.
+
+```typescript
+import { initial } from 'es-toolkit/array';
+
+// An empty array returns an empty array
+const empty: number[] = [];
+initial(empty);
+// Returns: []
+
+// It can also handle nested arrays
+const nested = [
+  [1, 2],
+  [3, 4],
+  [5, 6],
+];
+initial(nested);
+// Returns: [[1, 2], [3, 4]]
+```
+
+#### Parameters
+
+<Field name="arr" type="readonly T[]" required>
+The array from which to exclude the last element.
+</Field>
+
+#### Returns
+
+Returns a new array excluding the last element. If the input array is empty or has only one element, it returns an empty array.
+
+```typescript
+T[]
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/reference/array/initial.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

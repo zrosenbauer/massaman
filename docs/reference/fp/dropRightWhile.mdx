@@ -1,0 +1,54 @@
+---
+title: "dropRightWhile"
+description: "Creates a function that drops trailing values while a predicate passes."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# dropRightWhile (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that drops trailing values while a predicate passes. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, dropRightWhile(predicate));
+```
+
+::: info
+
+Prefer the original es-toolkit [`dropRightWhile`](../../reference/array/dropRightWhile.md) in ordinary code. Use this `fp` variant when composing transformations with [`pipe`](./pipe.md).
+
+:::
+
+## Usage
+
+`dropRightWhile` walks the piped array from the end and removes values while `predicate` returns `true`. It stops at the first value that does not pass.
+
+```typescript
+import { dropRightWhile, pipe } from 'es-toolkit/fp';
+
+pipe(
+  [1, 2, 3, 4],
+  dropRightWhile(value => value > 2)
+); // => [1, 2]
+```
+
+#### Parameters
+
+<Field name="predicate" type="(item: T) =&gt; boolean" required>
+The function that decides whether a trailing value should be dropped.
+</Field>
+
+#### Returns
+
+A function that maps a `readonly T[]` to the values left after dropping from the end.
+
+```typescript
+(array: readonly T[]) => T[]
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/dropRightWhile.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

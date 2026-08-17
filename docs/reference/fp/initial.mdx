@@ -1,0 +1,49 @@
+---
+title: "initial"
+description: "Creates a function that returns all values except the last one."
+---
+
+import { Badge } from '@ciderpress/ui/theme'
+
+# initial (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that returns all values except the last one. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, initial());
+```
+
+::: info
+
+Prefer the original es-toolkit [`initial`](../../reference/array/initial.md) in ordinary code. Use this `fp` variant when composing transformations with [`pipe`](./pipe.md).
+
+:::
+
+## Usage
+
+`initial` returns a new array without the last value of the piped array.
+
+```typescript
+import { initial, pipe } from 'es-toolkit/fp';
+
+pipe([1, 2, 3], initial()); // => [1, 2]
+```
+
+#### Parameters
+
+This function takes no arguments; call it as `initial()`.
+
+#### Returns
+
+A function that maps a `readonly T[]` to all values except the last one.
+
+```typescript
+(array: readonly T[]) => T[]
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/initial.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

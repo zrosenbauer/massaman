@@ -7,14 +7,18 @@ import { P } from './match.js'
 
 function describeResult<T>(result: Result<T>): string {
   return match(result)
-    .with(P.ok, ({ value }) => `ok:${String(value)}`)
-    .with(P.err, ({ error }) => `err:${error.message}`)
+    .with(P.ok(), ({ value }) => `ok:${String(value)}`)
+    .with(P.err(), ({ error }) => `err:${error.message}`)
     .exhaustive()
 }
 
 describe('P.ok', () => {
-  it('is the literal shape { ok: true }', () => {
-    expect(P.ok).toEqual({ ok: true })
+  it('creates a pattern for an Ok value', () => {
+    expect(
+      match(ok(42))
+        .with(P.ok(42), () => true)
+        .otherwise(() => false)
+    ).toBe(true)
   })
 
   it('matches an Ok result via match()', () => {
@@ -27,8 +31,12 @@ describe('P.ok', () => {
 })
 
 describe('P.err', () => {
-  it('is the literal shape { ok: false }', () => {
-    expect(P.err).toEqual({ ok: false })
+  it('creates a pattern for an Err error', () => {
+    expect(
+      match(err('boom'))
+        .with(P.err({ message: 'boom' }), () => true)
+        .otherwise(() => false)
+    ).toBe(true)
   })
 
   it('matches an Err result via match() and exposes error.message', () => {
@@ -65,17 +73,28 @@ describe('P.ok and P.err together', () => {
     expect(cases.map(describeResult)).toEqual(['ok:1', 'err:a', 'ok:2', 'err:b'])
   })
 
-  it('compose with additional pattern fields by spreading P.ok', () => {
+  it('matches nested value patterns without spreading', () => {
     function nested(result: Result<{ name: string }>): string {
       return match(result)
-        .with({ ...P.ok, value: { name: 'jane' } }, () => 'jane!')
-        .with(P.ok, ({ value }) => `got ${value.name}`)
-        .with(P.err, ({ error }) => `err:${error.message}`)
+        .with(P.ok({ name: 'jane' }), () => 'jane!')
+        .with(P.ok(), ({ value }) => `got ${value.name}`)
+        .with(P.err(), ({ error }) => `err:${error.message}`)
         .exhaustive()
     }
 
     expect(nested(ok({ name: 'jane' }))).toBe('jane!')
     expect(nested(ok({ name: 'bob' }))).toBe('got bob')
     expect(nested(err('nope'))).toBe('err:nope')
+  })
+
+  it('matches nested error patterns without spreading', () => {
+    const result: Result<never> = err(new Error('missing'))
+
+    expect(
+      match(result)
+        .with(P.err({ message: 'missing' }), () => 'not found')
+        .with(P.err(), () => 'other error')
+        .exhaustive()
+    ).toBe('not found')
   })
 })

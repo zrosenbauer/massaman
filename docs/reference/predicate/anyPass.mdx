@@ -1,0 +1,59 @@
+---
+description: "Returns a predicate that checks if a value satisfies ANY predicate."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# anyPass
+
+Returns a predicate that checks if a value satisfies ANY predicate.
+
+When every input is a type guard, the result narrows to the union of every
+guard's target type (since only one needs to match).
+
+```typescript
+const isAdminOrOwner = anyPass([isAdmin, isOwner])
+isAdminOrOwner(user)
+
+const isStringOrNumber = anyPass([isString, isNumber])
+if (isStringOrNumber(x)) {
+  // x is narrowed to string | number here
+}
+```
+
+## Usage
+
+### `anyPass(predicates: ReadonlyArray<(value: unknown) => boolean>)`
+
+Returns a predicate that checks if a value satisfies ANY predicate.
+
+When every input is a type guard, the result narrows to the union of every
+guard's target type (since only one needs to match).
+
+```typescript
+import { anyPass } from 'massaman'
+// or:  import { anyPass } from 'massaman/predicate'
+
+const isAdminOrOwner = anyPass([isAdmin, isOwner])
+isAdminOrOwner(user)
+
+const isStringOrNumber = anyPass([isString, isNumber])
+if (isStringOrNumber(x)) {
+  // x is narrowed to string | number here
+}
+```
+
+#### Parameters
+
+<Field name="predicates" type="ReadonlyArray&lt;(value: unknown) =&gt; boolean&gt;" required>
+the predicates to combine.
+</Field>
+
+
+#### Returns
+
+a predicate that returns `true` when at least one supplied predicate passes.
+
+```typescript
+(value: unknown) => boolean
+```

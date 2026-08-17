@@ -1,0 +1,54 @@
+---
+title: "findLast"
+description: "Creates a function that returns the last value that passes a test."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# findLast (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that returns the last value that passes a test. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, findLast(predicate));
+```
+
+::: info
+
+This helper is specific to `es-toolkit/fp`. Use it when you want this operation as part of a [`pipe`](./pipe.md) pipeline.
+
+:::
+
+## Usage
+
+`findLast` searches the piped array from the end and returns the first value for which `predicate` returns `true`. If no value matches, it returns `undefined`.
+
+```typescript
+import { findLast, pipe } from 'es-toolkit/fp';
+
+pipe(
+  [1, 2, 3, 4],
+  findLast(value => value % 2 === 0)
+); // => 4
+```
+
+#### Parameters
+
+<Field name="predicate" type="(value: T, index: number) =&gt; boolean" required>
+The function that tests each value.
+</Field>
+
+#### Returns
+
+A function that maps a `readonly T[]` to the last matching value, or `undefined`.
+
+```typescript
+(array: readonly T[]) => T | undefined
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/findLast.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

@@ -1,0 +1,61 @@
+name: Docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/docs.yml'
+      - '.ciderpress/**'
+      - 'ciderpress.config.ts'
+      - 'docs/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'scripts/docs-base.mjs'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/docs.yml'
+      - '.ciderpress/**'
+      - 'ciderpress.config.ts'
+      - 'docs/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'scripts/docs-base.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: write
+
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.32.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm docs:build
+        env:
+          CIDERPRESS_BASE: /
+
+      - id: deploy
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy .ciderpress/dist --project-name=massaman --branch=${{ github.head_ref || github.ref_name }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}

@@ -1,61 +1,45 @@
 # Philosophy
 
-`massaman` takes a strict functional stance — it pushes you toward one shape of code: pure, immutable, declarative, composable.
+Massaman is opinionated about how JavaScript should be written, but it does not invent a new world for your application to live in.
 
-If you're coming from Rust, this will feel familiar — same patterns, weaker compiler, more discipline required from the codebase to make up for it.
+## Take what works
 
-## The stance
+Massaman borrows useful ideas from languages, libraries, and tools. We keep the parts that make JavaScript clearer, safer, or easier to compose and leave out the ceremony that does not help.
 
-### Expressions, not statements
+## Don't rebuild what works
 
-Every operation produces a value. `if`/`else` becomes [`when`](./reference/function/when.md) / [`unless`](./reference/function/unless.md) / [`ifElse`](./reference/function/ifElse.md) or [`match`](./reference/match/match.md). `switch` becomes `match`. Mutating loops become `map`/`filter`/`reduce`. The result is code that flows top-to-bottom without intermediate state, and that's much easier to reason about — and to type.
+Massaman builds on proven tools whenever they already solve part of the problem. Today, [`es-toolkit`](https://es-toolkit.dev) provides most of the general utilities and [`ts-pattern`](https://github.com/gvergnaud/ts-pattern) provides pattern matching. We will build on other tools when they are the right foundation instead of recreating their work.
 
-### Errors as values
+## Borrow the good bits from Rust
 
-Throwing is fine inside an internal helper; throwing across a public function boundary is a smell. Use [`attempt`](./reference/control/attempt.md) / [`attemptAsync`](./reference/control/attemptAsync.md) to wrap unsafe calls and propagate a [`Result`](./concepts/result.md) instead. Failure becomes a discriminated case, not a hole in the control flow.
+Rust is the largest influence on Massaman:
 
-### Immutability by default
+- expected failures are returned as `Result` values
+- `Ok` and `Err` make success and failure separate cases
+- pattern matching can require every case to be handled
+- immutable values are the default
+- small functions build larger operations through composition
 
-Functions don't mutate their arguments. `const` everywhere. New objects/arrays instead of in-place updates. The es-toolkit helpers (`pick`, `omit`, `merge`, `evolve`) all return new values; reach for them instead of writing imperative mutation.
+JavaScript does not have Rust's ownership model or compiler guarantees. Massaman uses the parts that translate well and leaves the rest in Rust.
 
-### No classes
+## Practical functional programming
 
-A factory function plus a closure does everything a class does, without `this`, without prototype chains, without inheritance, without the `new`-vs-call ambiguity. If you find yourself wanting a class, look for a factory + closure pattern first.
+Functional programming here means ordinary code built from values and functions. It does not require category-theory vocabulary or a new runtime.
 
-## What this looks like in code
+- **Pure functions by default:** Give a function a value and get a value back.
+- **Immutable transformations:** Return new objects and arrays instead of changing the inputs.
+- **Errors as values:** Use [`attempt`](./reference/control/attempt.md) and [`attemptAsync`](./reference/control/attemptAsync.md) to turn unsafe boundaries into [`Result`](./concepts/result.md).
+- **Composition over intermediate state:** Build operations with [`pipe`](./reference/fp/pipe.md), [`flow`](./reference/function/flow.md), and other functions.
+- **Exhaustive branching when it matters:** Use [`match`](./reference/match/match.md) when the cases represent the domain. A simple `if` can stay an `if`.
+- **Functions over classes:** Massaman's own APIs favor functions and closures over inheritance and object lifecycles.
 
-A typical massaman module:
+Some utilities, such as memoization and debouncing, need internal state. That state stays inside the utility and does not mutate the values passed to it.
 
-```typescript
-import { match, P } from 'massaman/match'
-import { attemptAsync, err, type Result } from 'massaman/control'
-import { isEmpty } from 'massaman/predicate'
+## A utility library, not a framework
 
-type FetchUserResult = Result<User>
+Massaman uses ordinary functions, values, and promises. You can adopt one helper, one subpath, or the full programming model without restructuring the application around a runtime.
 
-export async function fetchUser(id: string): Promise<FetchUserResult> {
-  if (isEmpty(id)) return err('id required')
+The API works in JavaScript. TypeScript adds narrowing and exhaustiveness checks where it can.
 
-  return attemptAsync(() => fetch(`/api/users/${id}`).then((r) => r.json()))
-}
-
-export function describe(result: FetchUserResult): string {
-  return match(result)
-    .with({ ...P.ok, value: { name: P.string } }, ({ value }) => `hi ${value.name}`)
-    .with(P.ok, () => 'no name')
-    .with(P.err, ({ error }) => `failed: ${error.message}`)
-    .exhaustive()
-}
-```
-
-No `throw`. No `try`/`catch`. No `class`. No `switch`. No `let`. No nested ternaries. Just expressions, pattern matching, and `Result`.
-
-## What we don't do
-
-- **No `compat` layer.** This is not a lodash replacement. If you need lodash compatibility, use [`es-toolkit/compat`](https://es-toolkit.dev/compatibility.html).
-- **No effects system / IO monad.** Tracking effects in the type system is great in Haskell; in TypeScript it's a leaky abstraction. We push effects to the edges by convention.
-- **No do-notation, no fp-ts.** `massaman` is not [fp-ts](https://gcanti.github.io/fp-ts/). If you want category theory, use that library — they're well-designed and we've borrowed ideas.
-
-## Why this trade
-
-Working FP code in TypeScript is mostly about making the right thing easy and the wrong thing awkward. `massaman` is what you'd build if you wrote enough of it: the patterns that pay off, packaged so you don't re-implement them in every project.
+> [!TIP]
+> [Effect](https://effect.website) is excellent when a team wants effects, services, concurrency, retries, and resource management in one typed system. Massaman has a smaller job: make everyday JavaScript more functional without taking over the application.

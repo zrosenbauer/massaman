@@ -1,0 +1,58 @@
+---
+title: "unionBy"
+description: "Creates a function that combines arrays by a mapped key without duplicates."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# unionBy (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that combines arrays by a mapped key without duplicates. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, unionBy(secondArray, mapper));
+```
+
+::: info
+
+Prefer the original es-toolkit [`unionBy`](../../reference/array/unionBy.md) in ordinary code. Use this `fp` variant when composing transformations with [`pipe`](./pipe.md).
+
+:::
+
+## Usage
+
+`unionBy` compares the values returned by `mapper`. It keeps the first value for each mapped key from the piped array, then from `secondArray`.
+
+```typescript
+import { pipe, unionBy } from 'es-toolkit/fp';
+
+pipe(
+  [{ id: 1 }, { id: 2 }],
+  unionBy([{ id: 2 }, { id: 3 }], item => item.id)
+); // => [{ id: 1 }, { id: 2 }, { id: 3 }]
+```
+
+#### Parameters
+
+<Field name="secondArray" type="readonly T[]" required>
+The array to combine after the piped array.
+</Field>
+
+<Field name="mapper" type="(item: T) =&gt; U" required>
+The function that returns the key used for uniqueness.
+</Field>
+
+#### Returns
+
+A function that maps a `readonly T[]` to a union by mapped key.
+
+```typescript
+(array: readonly T[]) => T[]
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/unionBy.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

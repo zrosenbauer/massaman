@@ -1,0 +1,51 @@
+---
+title: "flatten"
+description: "Creates a function that flattens nested arrays to a given depth."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# flatten (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that flattens nested arrays to a given depth. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, flatten(depth));
+```
+
+::: info
+
+Prefer the original es-toolkit [`flatten`](../../reference/array/flatten.md) in ordinary code. Use this `fp` variant when composing transformations with [`pipe`](./pipe.md).
+
+:::
+
+## Usage
+
+`flatten` flattens the piped array up to `depth`. When `depth` is omitted, it flattens one level. It is lazy-capable for one-level flattening inside [`pipe`](./pipe.md).
+
+```typescript
+import { flatten, pipe } from 'es-toolkit/fp';
+
+pipe([[1], [2, 3], [4]], flatten()); // => [1, 2, 3, 4]
+```
+
+#### Parameters
+
+<Field name="depth" type="number, optional" required>
+The depth to flatten. Defaults to `1`.
+</Field>
+
+#### Returns
+
+A function that maps a nested array to a flattened array.
+
+```typescript
+(array: readonly T[]) => Array<FlatArray<T[], D>>
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/flatten.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

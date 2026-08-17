@@ -1,0 +1,58 @@
+---
+description: "Invokes a function with the provided arguments and returns the result."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# call
+
+Invokes a function with the provided arguments and returns the result.
+
+Equivalent to `fn(...args)` — exists as a stable, named surface for the
+"apply function to args" operation. Use inside `.map(call)` over arrays
+of thunks, or anywhere a value-position function-call is clearer than an
+inline arrow.
+
+```typescript
+call(Math.max, 1, 2, 3) // 3
+[getUser, getAccount, getPrefs].map((fn) => call(fn))
+```
+
+## Usage
+
+### `call<A extends readonly unknown[], R>(fn: (...args: A) => R, ...args: A)`
+
+Invokes a function with the provided arguments and returns the result.
+
+Equivalent to `fn(...args)` — exists as a stable, named surface for the
+"apply function to args" operation. Use inside `.map(call)` over arrays
+of thunks, or anywhere a value-position function-call is clearer than an
+inline arrow.
+
+```typescript
+import { call } from 'massaman'
+// or:  import { call } from 'massaman/function'
+
+call(Math.max, 1, 2, 3) // 3
+[getUser, getAccount, getPrefs].map((fn) => call(fn))
+```
+
+#### Parameters
+
+<Field name="fn" type="(...args: A) =&gt; R" required>
+the function to invoke.
+</Field>
+
+
+<Field name="args" type="A" required>
+the arguments passed to `fn`.
+</Field>
+
+
+#### Returns
+
+the value returned by `fn`.
+
+```typescript
+R
+```

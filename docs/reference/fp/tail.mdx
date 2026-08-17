@@ -1,0 +1,49 @@
+---
+title: "tail"
+description: "Creates a function that returns all values except the first one."
+---
+
+import { Badge } from '@ciderpress/ui/theme'
+
+# tail (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that returns all values except the first one. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, tail());
+```
+
+::: info
+
+Prefer the original es-toolkit [`tail`](../../reference/array/tail.md) in ordinary code. Use this `fp` variant when composing transformations with [`pipe`](./pipe.md).
+
+:::
+
+## Usage
+
+`tail` returns a new array without the first value of the piped array.
+
+```typescript
+import { pipe, tail } from 'es-toolkit/fp';
+
+pipe([1, 2, 3], tail()); // => [2, 3]
+```
+
+#### Parameters
+
+This function takes no arguments; call it as `tail()`.
+
+#### Returns
+
+A function that maps a `readonly T[]` to all values except the first one.
+
+```typescript
+(array: readonly T[]) => T[]
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/tail.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

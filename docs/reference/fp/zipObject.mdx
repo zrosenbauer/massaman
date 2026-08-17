@@ -1,0 +1,51 @@
+---
+title: "zipObject"
+description: "Creates a function that builds an object from keys and values."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# zipObject (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that builds an object from keys and values. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, zipObject(values));
+```
+
+::: info
+
+Prefer the original es-toolkit [`zipObject`](../../reference/array/zipObject.md) in ordinary code. Use this `fp` variant when composing transformations with [`pipe`](./pipe.md).
+
+:::
+
+## Usage
+
+`zipObject` uses the piped array as keys and pairs each key with the value at the same index in `values`.
+
+```typescript
+import { pipe, zipObject } from 'es-toolkit/fp';
+
+pipe(['a', 'b'] as const, zipObject([1, 2])); // => { a: 1, b: 2 }
+```
+
+#### Parameters
+
+<Field name="values" type="readonly V[]" required>
+The values assigned to keys from the piped array by index.
+</Field>
+
+#### Returns
+
+A function that maps keys to an object built from `values`.
+
+```typescript
+(keys: readonly P[]) => Record<P, V>
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/zipObject.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

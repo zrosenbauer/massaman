@@ -1,0 +1,65 @@
+---
+title: "windowed"
+description: "Creates a function that returns sliding windows from an array."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# windowed (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that returns sliding windows from an array. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, windowed(size, step, options));
+```
+
+::: info
+
+Prefer the original es-toolkit [`windowed`](../../reference/array/windowed.md) in ordinary code. Use this `fp` variant when composing transformations with [`pipe`](./pipe.md).
+
+:::
+
+## Usage
+
+`windowed` returns sub-arrays of length `size`, moving forward by `step` each time. Full-window mode is lazy-capable inside [`pipe`](./pipe.md).
+
+```typescript
+import { pipe, windowed } from 'es-toolkit/fp';
+
+pipe([1, 2, 3, 4], windowed(2)); // => [[1, 2], [2, 3], [3, 4]]
+
+pipe([1, 2, 3, 4], windowed(2, 2)); // => [[1, 2], [3, 4]]
+```
+
+#### Parameters
+
+<Field name="size" type="number" required>
+The length of each window.
+</Field>
+
+<Field name="step" type="number, optional" required>
+The number of positions to move between windows. Defaults to `1`.
+</Field>
+
+<Field name="options" type="WindowedOptions, optional" required>
+Options such as whether to include partial trailing windows.
+</Field>
+
+#### Returns
+
+A function that maps a `readonly T[]` to sliding windows.
+
+```typescript
+(array: readonly T[]) => T[][]
+```
+
+#### Throws
+
+Throws an error if `size` or `step` is not a positive integer.
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/windowed.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

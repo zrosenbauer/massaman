@@ -1,0 +1,51 @@
+---
+description: "Converts a value to a boolean."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# toBoolean
+
+Converts a value to a boolean.
+
+Thin wrapper over `Boolean(value)` — kept as a stable surface against
+future global-constructor changes.
+
+```typescript
+toBoolean(1) // true
+toBoolean(0) // false
+toBoolean('') // false
+```
+
+## Usage
+
+### `toBoolean(value: unknown)`
+
+Converts a value to a boolean.
+
+Thin wrapper over `Boolean(value)` — kept as a stable surface against
+future global-constructor changes.
+
+```typescript
+import { toBoolean } from 'massaman'
+// or:  import { toBoolean } from 'massaman/conversion'
+
+toBoolean(1) // true
+toBoolean(0) // false
+toBoolean('') // false
+```
+
+#### Parameters
+
+<Field name="value" type="unknown" required>
+the value to convert.
+</Field>
+
+
+#### Returns
+
+the input value converted using JavaScript boolean coercion.
+
+```typescript
+boolean
+```

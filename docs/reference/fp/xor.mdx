@@ -1,0 +1,51 @@
+---
+title: "xor"
+description: "Creates a function that returns values that appear in exactly one of two arrays."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# xor (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that returns values that appear in exactly one of two arrays. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, xor(secondArray));
+```
+
+::: info
+
+Prefer the original es-toolkit [`xor`](../../reference/array/xor.md) in ordinary code. Use this `fp` variant when composing transformations with [`pipe`](./pipe.md).
+
+:::
+
+## Usage
+
+`xor` returns the symmetric difference of the piped array and `secondArray`, without duplicate values.
+
+```typescript
+import { pipe, xor } from 'es-toolkit/fp';
+
+pipe([1, 2, 3], xor([2, 3, 4])); // => [1, 4]
+```
+
+#### Parameters
+
+<Field name="secondArray" type="readonly T[]" required>
+The array to compare with the piped array.
+</Field>
+
+#### Returns
+
+A function that maps a `readonly T[]` to the symmetric difference.
+
+```typescript
+(array: readonly T[]) => T[]
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/xor.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

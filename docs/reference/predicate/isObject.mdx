@@ -1,0 +1,49 @@
+---
+description: "Checks if a value is a non-null object."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# isObject
+
+Checks if a value is a non-null object.
+
+Returns `true` for plain objects, arrays, class instances, etc.
+Returns `false` for `null`, primitives, and functions.
+
+```typescript
+isObject({}) // true
+isObject(null) // false
+```
+
+## Usage
+
+### `isObject(value: unknown)`
+
+Checks if a value is a non-null object.
+
+Returns `true` for plain objects, arrays, class instances, etc.
+Returns `false` for `null`, primitives, and functions.
+
+```typescript
+import { isObject } from 'massaman'
+// or:  import { isObject } from 'massaman/predicate'
+
+isObject({}) // true
+isObject(null) // false
+```
+
+#### Parameters
+
+<Field name="value" type="unknown" required>
+the value to test.
+</Field>
+
+
+#### Returns
+
+whether `value` is a non-null object; a `true` result narrows it to `object`.
+
+```typescript
+value is object
+```

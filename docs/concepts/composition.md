@@ -1,32 +1,63 @@
 # Composition
 
-Composing functions — building bigger operations from smaller ones — is the central activity in functional code. `massaman` gives you the standard tools, plus a few async-aware ones that don't exist in `es-toolkit`.
+Composition builds larger operations from small functions. Each step receives the previous step's output, which keeps transformations explicit and avoids intermediate mutable state.
 
-## `flow`
+Massaman includes the standard synchronous tools from `es-toolkit` and adds async-aware and branching combinators for pipelines that need them.
 
-`flow(...fns)` builds a new function from a left-to-right composition. Call the result with a value and it threads through each step.
+## Why it matters
+
+A composed operation describes data flow from left to right. Individual steps remain easy to name, test, reuse, and replace, while side effects can stay visible at the edge or in an intentional `tap`.
+
+Composition is useful when the sequence itself is the abstraction. It should make the transformation easier to read, not hide a handful of straightforward expressions behind combinators.
+
+## Core tools
+
+| Tool | Purpose |
+|---|---|
+| `flow(...functions)` | Build a reusable synchronous function |
+| `flowAsync(...functions)` | Build a reusable function that awaits each step |
+| `pipe(value, ...functions)` | Transform one value immediately |
+| `when(predicate, fn)` | Transform a value only when a condition passes |
+| `unless(predicate, fn)` | Transform a value only when a condition does not pass |
+| `ifElse(predicate, onTrue, onFalse)` | Choose one of two transformations |
+| `tap(fn)` | Run an intentional side effect and pass the value through unchanged |
+
+Use `flow` when you want a function. Use `pipe` when you already have the value. Reach for `flowAsync` only when at least one step is asynchronous.
+
+## When to use it
+
+Use composition for:
+
+- reusable normalization or validation pipelines
+- transformations made from independently useful steps
+- async workflows where each step depends on the previous result
+- conditional transformations that should remain expressions
+
+Name substantial steps instead of building a wall of anonymous callbacks. A pipeline should expose its stages like a flight plan.
+
+## Complete example
 
 ```typescript
-import { flow } from 'massaman'
-import { trim, upperCase } from 'massaman/string'
+import { flow, tap, when } from 'massaman'
+import { isEmpty } from 'massaman/predicate'
+import { kebabCase, trim } from 'massaman/string'
 
-// Build once
-const shout = flow(trim, upperCase)
+const defaultTitle = when(isEmpty, () => 'untitled')
 
-shout('  hello  ') // 'HELLO'
+const buildSlug = flow(
+  trim,
+  defaultTitle,
+  kebabCase,
+  tap((slug) => logger.debug({ slug }, 'generated slug')),
+)
+
+buildSlug('  Hello World  ') // 'hello-world'
+buildSlug('   ') // 'untitled'
 ```
 
-For a one-off transformation (no need to name the pipeline), call the composition immediately:
+The pipeline has one input and one output. `tap` marks the only side effect without changing the value moving through it.
 
-```typescript
-flow(trim, upperCase)('  hello  ') // 'HELLO'
-```
-
-`flow` is the synchronous composition primitive. Use it when every step is sync.
-
-## `flowAsync`
-
-Original to `massaman`. Like `flow`, but each step can be `async` — the next function receives the awaited value.
+The asynchronous form follows the same model:
 
 ```typescript
 import { flowAsync } from 'massaman'
@@ -34,100 +65,17 @@ import { flowAsync } from 'massaman'
 const loadUser = flowAsync(
   (id: string) => fetch(`/api/users/${id}`),
   (response) => response.json(),
-  (user) => normalize(user),
-)
-
-const user = await loadUser('123')
-```
-
-`flow` short-circuits with synchronous calls; `flowAsync` always returns a `Promise`.
-
-## Branching combinators
-
-Original to `massaman`. Conditional logic, but as expressions you can compose.
-
-```typescript
-import { flow, when, unless, ifElse } from 'massaman'
-import { isEmpty } from 'massaman/predicate'
-import { trim } from 'massaman/string'
-
-const sanitize = flow(
-  when(isEmpty, () => 'default'), // when condition: run fn, else passthrough
-  trim,
-)
-
-const requireNonEmpty = flow(
-  unless(isEmpty, (s: string) => s),       // unless condition: passthrough, else throw
-  (s) => { throw new Error(`empty: ${s}`) },
-)
-
-const describe = ifElse(
-  isEmpty,
-  () => 'empty',
-  (s: string) => `has ${s.length} chars`,
+  (user) => normalizeUser(user),
 )
 ```
 
-- **`when(predicate, fn)`** — apply `fn` if `predicate(x)` is truthy; otherwise pass `x` through.
-- **`unless(predicate, fn)`** — the inverse.
-- **`ifElse(predicate, thenFn, elseFn)`** — branch on predicate.
+## When not to use it
 
-All three return a function — compose them into pipelines.
+Do not create a pipeline for a single ordinary call or hide unrelated side effects inside transformation steps. If several stages need the same intermediate value, a small named function may communicate the control flow better than forcing it through `flow`.
 
-## `tap`
+## Related reference
 
-Run a side effect on a value, return the value unchanged. The function for logging or telemetry in the middle of a pipeline.
-
-```typescript
-import { flow, tap } from 'massaman'
-
-const handle = flow(
-  parseConfig,
-  tap((config) => logger.debug({ config }, 'parsed')),
-  applyConfig,
-)
-```
-
-`tap`'s callback can do anything; its return value is ignored. The value flowing through is whatever the tap received.
-
-## `call` and `callAsync`
-
-Apply a function to a value — useful when you have the value first and the function second, and a full `flow` would be overkill for a single call.
-
-```typescript
-import { call } from 'massaman'
-
-// call(value, fn) === fn(value)
-const length = call('hello', (s) => s.length)
-```
-
-Most useful as a building block inside other combinators, or when constructing pipelines dynamically.
-
-## Putting it together
-
-A realistic massaman pipeline:
-
-```typescript
-import { flowAsync, tap, attempt, isOk } from 'massaman'
-import { kebabCase, trim } from 'massaman/string'
-import { isEmpty } from 'massaman/predicate'
-
-const buildSlug = flowAsync(
-  (input: string) => attempt(() => JSON.parse(input).title as string),
-  (result) => (isOk(result) ? result.value : ''),
-  trim,
-  kebabCase,
-  tap((slug) => logger.debug({ slug }, 'generated')),
-  (slug) => (isEmpty(slug) ? 'untitled' : slug),
-)
-
-const slug = await buildSlug('{"title":"  Hello World  "}') // 'hello-world'
-```
-
-Expressions all the way down. No `let`, no mutation, no `if` statements.
-
-## Related
-
-- [`flow`](../reference/function/flow.md), [`flowAsync`](../reference/function/flowAsync.md)
-- [`when`](../reference/function/when.md), [`unless`](../reference/function/unless.md), [`ifElse`](../reference/function/ifElse.md), [`tap`](../reference/function/tap.md)
-- [`call`](../reference/function/call.md), [`callAsync`](../reference/function/callAsync.md)
+- [`flow`](../reference/function/flow.md), [`flowAsync`](../reference/function/flowAsync.md), and [`pipe`](../reference/fp/pipe.md)
+- [`when`](../reference/function/when.md), [`unless`](../reference/function/unless.md), and [`ifElse`](../reference/function/ifElse.md)
+- [`tap`](../reference/function/tap.md)
+- [Pattern Matching](./match.md)

@@ -1,0 +1,64 @@
+---
+title: "mapValues"
+description: "Returns a new object with values transformed through a function."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# mapValues <Badge color="#c85a3e">es-toolkit</Badge>
+
+Returns a new object with values transformed through a function.
+
+```typescript
+const newObj = mapValues(object, getNewValue);
+```
+
+## Usage
+
+### `mapValues(object, getNewValue)`
+
+Use `mapValues` when you want to create a new object by transforming each value. Keys remain the same, and only the values are changed to the results of the `getNewValue` function.
+
+```typescript
+import { mapValues } from 'es-toolkit/object';
+
+// Double all values
+const numbers = { a: 1, b: 2, c: 3 };
+const doubled = mapValues(numbers, value => value * 2);
+// doubled becomes { a: 2, b: 4, c: 6 }
+
+// Convert string values to uppercase
+const strings = { first: 'hello', second: 'world' };
+const uppercased = mapValues(strings, value => value.toUpperCase());
+// uppercased becomes { first: 'HELLO', second: 'WORLD' }
+
+// Use both key and value
+const scores = { alice: 85, bob: 90, charlie: 95 };
+const grades = mapValues(scores, (value, key) => `${key}: ${value >= 90 ? 'A' : 'B'}`);
+// grades becomes { alice: 'alice: B', bob: 'bob: A', charlie: 'charlie: A' }
+```
+
+#### Parameters
+
+<Field name="object" type="T extends object" required>
+The object to transform values from.
+</Field>
+
+<Field name="getNewValue" type="(value: T[K], key: K, object: T) =&gt; V" required>
+A function that generates new values. Receives value, key, and the entire object as parameters.
+</Field>
+
+#### Returns
+
+Returns a new object with transformed values.
+
+```typescript
+Record<K, V>
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/reference/object/mapValues.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

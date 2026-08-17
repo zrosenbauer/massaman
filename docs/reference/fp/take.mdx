@@ -1,0 +1,57 @@
+---
+title: "take"
+description: "Creates a function that returns the first count elements of an array."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# take (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that returns the first `count` elements of an array. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, take(count));
+```
+
+::: info
+
+Prefer the original es-toolkit [`take`](../../reference/array/take.md) in ordinary code. Use this `fp` variant when composing transformations with [`pipe`](./pipe.md).
+
+:::
+
+## Usage
+
+`take` returns the first `count` elements. If `count` is greater than the array length, the whole array is returned. For a non-negative integer `count` it is **lazy-capable**: inside a [`pipe`](./pipe.md) it ends the walk as soon as `count` elements have been collected, so preceding lazy operations never process the rest of the input.
+
+```typescript
+import { map, pipe, take } from 'es-toolkit/fp';
+
+pipe([1, 2, 3, 4, 5], take(3)); // => [1, 2, 3]
+
+// `count` larger than the length returns the whole array.
+pipe([1, 2, 3], take(5)); // => [1, 2, 3]
+
+// Early termination: `map` only runs three times.
+pipe([1, 2, 3, 4, 5], map(expensiveTransform), take(3));
+```
+
+#### Parameters
+
+<Field name="count" type="number" required>
+The number of elements to take from the front of the array. A negative `count` follows `es-toolkit`'s `take` and drops from the end instead.
+</Field>
+
+#### Returns
+
+A function that maps a `readonly T[]` to a new `T[]` with at most `count` elements.
+
+```typescript
+(array: readonly T[]) => T[]
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/take.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

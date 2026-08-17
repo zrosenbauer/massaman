@@ -1,0 +1,41 @@
+---
+description: "Creates a descending comparator from an accessor function."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# descend
+
+Creates a descending comparator from an accessor function.
+
+```typescript
+users.sort(descend(u => u.age))
+```
+
+## Usage
+
+### `descend<T>(fn: (value: T) => number | string)`
+
+Creates a descending comparator from an accessor function.
+
+```typescript
+import { descend } from 'massaman'
+// or:  import { descend } from 'massaman/array'
+
+users.sort(descend(u => u.age))
+```
+
+#### Parameters
+
+<Field name="fn" type="(value: T) =&gt; number | string" required>
+the function to apply.
+</Field>
+
+
+#### Returns
+
+a descending comparator suitable for `Array.prototype.sort` or `toSorted`.
+
+```typescript
+(a: T, b: T) => number
+```

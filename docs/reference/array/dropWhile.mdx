@@ -1,0 +1,74 @@
+---
+title: "dropWhile"
+description: "Returns a new array with elements removed from the beginning while a condition is satisfied."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# dropWhile <Badge color="#c85a3e">es-toolkit</Badge>
+
+Returns a new array with elements removed from the beginning while a condition is satisfied.
+
+```typescript
+const result = dropWhile(arr, canContinueDropping);
+```
+
+## Usage
+
+### `dropWhile(arr, canContinueDropping)`
+
+Use `dropWhile` when you want to remove elements from the beginning of an array that meet a specific condition. Starting from the beginning of the array, it removes elements while the condition function returns `true`, and stops when it returns `false`.
+
+```typescript
+import { dropWhile } from 'es-toolkit/array';
+
+// Remove elements less than 3 from the beginning.
+const numbers = [1, 2, 3, 4, 2, 5];
+dropWhile(numbers, x => x < 3);
+// Returns: [3, 4, 2, 5]
+// 1 and 2 satisfy the condition and are removed, stopping at 3 where the condition becomes false.
+
+// Remove elements matching a specific condition from an object array.
+const users = [
+  { name: 'Alice', active: false },
+  { name: 'Bob', active: false },
+  { name: 'Charlie', active: true },
+  { name: 'David', active: true },
+];
+dropWhile(users, user => !user.active);
+// Returns: [{ name: 'Charlie', active: true }, { name: 'David', active: true }]
+```
+
+If the array is empty or no elements satisfy the condition, it returns a new array same as the original.
+
+```typescript
+import { dropWhile } from 'es-toolkit/array';
+
+dropWhile([1, 2, 3], x => x > 5); // [1, 2, 3]
+dropWhile([], x => true); // []
+```
+
+#### Parameters
+
+<Field name="arr" type="T[]" required>
+The array to remove elements from.
+</Field>
+
+<Field name="canContinueDropping" type="(item: T, index: number, arr: T[]) =&gt; boolean" required>
+The condition function that determines whether to continue removing elements. It receives each element, its index, and the entire array, and returns true or false.
+</Field>
+
+#### Returns
+
+A new array containing elements from the first element that doesn't satisfy the condition to the end of the array.
+
+```typescript
+T[]
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/reference/array/dropWhile.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

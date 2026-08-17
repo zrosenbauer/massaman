@@ -1,0 +1,57 @@
+---
+title: "keyBy"
+description: "Creates a function that builds an object keyed by each value."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# keyBy (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that builds an object keyed by each value. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, keyBy(getKey));
+```
+
+::: info
+
+Prefer the original es-toolkit [`keyBy`](../../reference/array/keyBy.md) in ordinary code. Use this `fp` variant when composing transformations with [`pipe`](./pipe.md).
+
+:::
+
+## Usage
+
+`keyBy` calls `getKey` for each value in the piped array and returns an object whose keys are the returned keys and whose values are the original items. Later values overwrite earlier values with the same key.
+
+```typescript
+import { keyBy, pipe } from 'es-toolkit/fp';
+
+pipe(
+  [
+    { id: 'a', value: 1 },
+    { id: 'b', value: 2 },
+  ],
+  keyBy(item => item.id)
+); // => { a: { id: 'a', value: 1 }, b: { id: 'b', value: 2 } }
+```
+
+#### Parameters
+
+<Field name="getKey" type="(item: T) =&gt; K" required>
+The function that returns the key for each value.
+</Field>
+
+#### Returns
+
+A function that maps a `readonly T[]` to an object keyed by `getKey`.
+
+```typescript
+(array: readonly T[]) => Record<K, T>
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/keyBy.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

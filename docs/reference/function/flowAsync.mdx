@@ -1,0 +1,64 @@
+---
+description: "Creates an async pipeline that awaits each step before passing the result to the next function."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# flowAsync
+
+Creates an async pipeline that awaits each step before passing the result
+to the next function. Like `flow` from es-toolkit but async-aware.
+
+Each function can return a value or a Promise — `flowAsync` always returns
+a Promise that resolves to the final step's awaited result.
+
+```typescript
+const getUsername = flowAsync(
+  (id: string) => fetchUser(id),  // Promise<User>
+  (user) => user.name,            // string
+  (name) => name.toUpperCase(),
+)
+await getUsername('123') // 'ALICE'
+```
+
+## Usage
+
+### `flowAsync(...functions)`
+
+Creates an async pipeline that awaits each step before passing the result
+to the next function. Like `flow` from es-toolkit but async-aware.
+
+Each function can return a value or a Promise — `flowAsync` always returns
+a Promise that resolves to the final step's awaited result.
+
+```typescript
+import { flowAsync } from 'massaman'
+// or:  import { flowAsync } from 'massaman/function'
+
+const getUsername = flowAsync(
+  (id: string) => fetchUser(id),  // Promise<User>
+  (user) => user.name,            // string
+  (name) => name.toUpperCase(),
+)
+await getUsername('123') // 'ALICE'
+```
+
+#### Parameters
+
+<Field name="first" type="(...args: A) =&gt; R1 | Promise&lt;R1&gt;" required>
+the first pipeline function. It receives every argument passed to the composed function.
+</Field>
+
+
+<Field name="functions" type="Array&lt;(value) =&gt; result | Promise&lt;result&gt;&gt;" required>
+the remaining pipeline functions. Each receives the awaited result of the previous function.
+</Field>
+
+
+#### Returns
+
+a composed function that always resolves to the awaited result of the final pipeline step.
+
+```typescript
+(...args: A) => Promise<Awaited<R>>
+```
