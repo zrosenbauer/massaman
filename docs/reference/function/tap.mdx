@@ -1,0 +1,53 @@
+---
+description: "Returns a function that runs a side-effect and returns the value unchanged."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# tap
+
+Returns a function that runs a side-effect and returns the value unchanged.
+
+Useful for debugging inside `flow` pipelines without breaking the chain.
+
+```typescript
+const process = flow(
+  fetchUsers,
+  tap(users => console.log('count:', users.length)),
+  filterActive,
+)
+```
+
+## Usage
+
+### `tap<T>(fn: (value: T) => unknown)`
+
+Returns a function that runs a side-effect and returns the value unchanged.
+
+Useful for debugging inside `flow` pipelines without breaking the chain.
+
+```typescript
+import { tap } from 'massaman'
+// or:  import { tap } from 'massaman/function'
+
+const process = flow(
+  fetchUsers,
+  tap(users => console.log('count:', users.length)),
+  filterActive,
+)
+```
+
+#### Parameters
+
+<Field name="fn" type="(value: T) =&gt; unknown" required>
+the side-effecting function to run with each value.
+</Field>
+
+
+#### Returns
+
+a function that runs `fn` and returns its input unchanged.
+
+```typescript
+(value: T) => T
+```

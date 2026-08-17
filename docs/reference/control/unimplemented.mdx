@@ -1,0 +1,55 @@
+---
+description: "Marks a code path as intentionally unsupported and throws if execution reaches it."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# unimplemented
+
+Marks a code path as intentionally unsupported and throws if execution reaches it.
+
+```typescript
+return unimplemented('mysql driver is not supported')
+```
+
+## Usage
+
+### `unimplemented(message?)`
+
+Use `unimplemented` for behavior the application deliberately does not support. Its `never` return type allows it in any expression position, but it always throws at runtime. Use [`todo`](./todo.md) for unfinished work and [`unreachable`](./unreachable.md) for logically impossible paths.
+
+```typescript
+import { match, unimplemented } from 'massaman'
+
+type Driver = 'postgres' | 'sqlite' | 'mysql'
+
+const migrate = (driver: Driver): void =>
+  match(driver)
+    .with('postgres', runPostgresMigration)
+    .with('sqlite', runSqliteMigration)
+    .with('mysql', () => unimplemented('mysql driver is not supported'))
+    .exhaustive()
+```
+
+#### Parameters
+
+<Field name="message" type="string">
+optional context appended to the thrown error message.
+</Field>
+
+#### Returns
+
+never returns; the function always throws.
+
+```typescript
+never
+```
+
+#### Throws
+
+An `Error` with `not implemented`, optionally followed by `message`.
+
+## See also
+
+- [`todo`](./todo.md) — unfinished behavior
+- [`unreachable`](./unreachable.md) — logically impossible behavior

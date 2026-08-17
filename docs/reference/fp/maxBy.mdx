@@ -1,0 +1,54 @@
+---
+title: "maxBy"
+description: "Creates a function that returns the value with the largest computed score."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# maxBy (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that returns the value with the largest computed score. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, maxBy(getValue));
+```
+
+::: info
+
+Prefer the original es-toolkit [`maxBy`](../../reference/array/maxBy.md) in ordinary code. Use this `fp` variant when composing transformations with [`pipe`](./pipe.md).
+
+:::
+
+## Usage
+
+`maxBy` calls `getValue` for each value in the piped array and returns the value with the largest result. If the array is empty, it returns `undefined`.
+
+```typescript
+import { maxBy, pipe } from 'es-toolkit/fp';
+
+pipe(
+  [{ score: 10 }, { score: 30 }, { score: 20 }],
+  maxBy(item => item.score)
+); // => { score: 30 }
+```
+
+#### Parameters
+
+<Field name="getValue" type="(item: T) =&gt; number" required>
+The function that returns the value used for comparison.
+</Field>
+
+#### Returns
+
+A function that maps a `readonly T[]` to the maximum item, or `undefined`.
+
+```typescript
+(array: readonly T[]) => T | undefined
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/maxBy.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

@@ -1,6 +1,6 @@
 #!/usr/bin/env zx
 /**
- * docs-stub-originals — scaffolds a stub .md for every original (`local`)
+ * docs-stub-originals — scaffolds a reference page for every original (`local`)
  * symbol in docs/_meta/proxies.json that doesn't already have a page.
  *
  *   pnpm docs:stub-originals
@@ -15,7 +15,7 @@ $.verbose = false
 
 const ROOT = path.resolve(__dirname, '..')
 const MANIFEST_PATH = path.join(ROOT, 'docs', '_meta', 'proxies.json')
-const TEMPLATE_PATH = path.join(ROOT, 'docs', '_templates', 'original.md')
+const TEMPLATE_PATH = path.join(ROOT, 'docs', '_templates', 'original.mdx')
 
 const manifest = await fs.readJson(MANIFEST_PATH)
 const template = await fs.readFile(TEMPLATE_PATH, 'utf8')

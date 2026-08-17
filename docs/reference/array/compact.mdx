@@ -1,0 +1,63 @@
+---
+title: "compact"
+description: "Returns a new array with falsy values removed."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# compact <Badge color="#c85a3e">es-toolkit</Badge>
+
+Returns a new array with falsy values removed.
+
+```typescript
+const compacted = compact(arr);
+```
+
+## Usage
+
+### `compact(arr)`
+
+Use `compact` when you want to remove falsy values (`false`, `null`, `0`, `-0`, `0n`, `''`, `undefined`, `NaN`) from an array. A new array containing only truthy values is returned.
+
+```typescript
+import { compact } from 'es-toolkit/array';
+
+// Remove various falsy values.
+compact([0, -0, 0n, 1, false, 2, '', 3, null, undefined, 4, NaN, 5]);
+// Returns: [1, 2, 3, 4, 5]
+
+// Remove empty strings from a string array.
+compact(['hello', '', 'world', '', '!']);
+// Returns: ['hello', 'world', '!']
+```
+
+The type system automatically excludes falsy types.
+
+```typescript
+import { compact } from 'es-toolkit/array';
+
+const mixed: (string | number | false | null)[] = ['text', 0, false, null, 5];
+const result = compact(mixed);
+// result's type is (string | number)[]
+```
+
+#### Parameters
+
+<Field name="arr" type="T[]" required>
+The array to remove falsy values from.
+</Field>
+
+#### Returns
+
+A new array with falsy values removed.
+
+```typescript
+Array<Exclude<T, false | null | 0 | 0n | '' | undefined>>
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/reference/array/compact.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

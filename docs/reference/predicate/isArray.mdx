@@ -1,0 +1,43 @@
+---
+description: "Checks if a value is an array."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# isArray
+
+Checks if a value is an array.
+
+```typescript
+isArray([1, 2]) // true
+isArray('hello') // false
+```
+
+## Usage
+
+### `isArray(value: unknown)`
+
+Checks if a value is an array.
+
+```typescript
+import { isArray } from 'massaman'
+// or:  import { isArray } from 'massaman/predicate'
+
+isArray([1, 2]) // true
+isArray('hello') // false
+```
+
+#### Parameters
+
+<Field name="value" type="unknown" required>
+the value to test.
+</Field>
+
+
+#### Returns
+
+whether `value` is an array; a `true` result narrows it to `unknown[]`.
+
+```typescript
+value is unknown[]
+```

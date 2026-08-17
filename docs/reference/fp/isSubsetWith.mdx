@@ -1,0 +1,58 @@
+---
+title: "isSubsetWith"
+description: "Creates a function that checks subset membership using a custom equality function."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# isSubsetWith (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that checks subset membership using a custom equality function. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, isSubsetWith(superset, areItemsEqual));
+```
+
+::: info
+
+Prefer the original es-toolkit [`isSubsetWith`](../../reference/array/isSubsetWith.md) in ordinary code. Use this `fp` variant when composing transformations with [`pipe`](./pipe.md).
+
+:::
+
+## Usage
+
+`isSubsetWith` returns `true` when every value in the piped array matches at least one value in `superset` according to `areItemsEqual`.
+
+```typescript
+import { isSubsetWith, pipe } from 'es-toolkit/fp';
+
+pipe(
+  [{ id: 1 }],
+  isSubsetWith([{ id: 1 }, { id: 2 }], (a, b) => a.id === b.id)
+); // => true
+```
+
+#### Parameters
+
+<Field name="superset" type="readonly T[]" required>
+The array that may contain all values from the piped array.
+</Field>
+
+<Field name="areItemsEqual" type="(item: T, other: T) =&gt; boolean" required>
+The function that decides whether two values are equal.
+</Field>
+
+#### Returns
+
+A function that maps a `readonly T[]` to whether it is a subset.
+
+```typescript
+(array: readonly T[]) => boolean
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/isSubsetWith.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

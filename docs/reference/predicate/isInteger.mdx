@@ -1,0 +1,43 @@
+---
+description: "Checks if a value is an integer."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# isInteger
+
+Checks if a value is an integer.
+
+```typescript
+isInteger(42) // true
+isInteger(4.2) // false
+```
+
+## Usage
+
+### `isInteger(value: unknown)`
+
+Checks if a value is an integer.
+
+```typescript
+import { isInteger } from 'massaman'
+// or:  import { isInteger } from 'massaman/predicate'
+
+isInteger(42) // true
+isInteger(4.2) // false
+```
+
+#### Parameters
+
+<Field name="value" type="unknown" required>
+the value to test.
+</Field>
+
+
+#### Returns
+
+whether `value` is an integer; a `true` result narrows it to `number`.
+
+```typescript
+value is number
+```

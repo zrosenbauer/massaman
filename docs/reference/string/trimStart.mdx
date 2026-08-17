@@ -1,0 +1,77 @@
+---
+title: "trimStart"
+description: "Removes whitespace or specified characters from the start of a string."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# trimStart <Badge color="#c85a3e">es-toolkit</Badge>
+
+Removes whitespace or specified characters from the start of a string.
+
+```typescript
+const trimmed = trimStart(str, chars);
+```
+
+## Usage
+
+### `trimStart(str, chars?)`
+
+Use `trimStart` when you want to remove unnecessary characters from the beginning of a string. If no specific characters are specified, it removes whitespace characters.
+
+```typescript
+import { trimStart } from 'es-toolkit/string';
+
+// Remove default whitespace
+trimStart('  hello'); // 'hello'
+trimStart('\t\n  hello'); // 'hello'
+
+// Remove specific characters
+trimStart('---hello', '-'); // 'hello'
+trimStart('000123', '0'); // '123'
+trimStart('abcabcabc', 'a'); // 'bcabcabc'
+```
+
+If you specify multiple characters as an array, all characters matching any of them will be removed.
+
+```typescript
+import { trimStart } from 'es-toolkit/string';
+
+// Specify multiple characters as an array
+trimStart('!!@@hello', ['!', '@']); // 'hello'
+
+// Remove numbers and special characters
+trimStart('123abc', ['1', '2', '3']); // 'abc'
+
+// Remove characters and whitespace together
+trimStart('  __hello', ['_', ' ']); // 'hello'
+```
+
+#### Parameters
+
+<Field name="str" type="string" required>
+The string to remove characters from the start.
+</Field>
+
+<Field name="chars" type="string | string[]">
+The characters to remove. Can be a string or an array of characters. Defaults to whitespace characters.
+</Field>
+
+#### Returns
+
+Returns a new string with the specified characters removed from the start.
+
+```typescript
+string
+```
+
+#### Errors
+
+Throws an error if `chars` is a string with a length other than 1.
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/reference/string/trimStart.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

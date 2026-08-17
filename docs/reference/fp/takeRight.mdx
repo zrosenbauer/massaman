@@ -1,0 +1,51 @@
+---
+title: "takeRight"
+description: "Creates a function that returns values from the end of an array."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# takeRight (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that returns values from the end of an array. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, takeRight(count));
+```
+
+::: info
+
+Prefer the original es-toolkit [`takeRight`](../../reference/array/takeRight.md) in ordinary code. Use this `fp` variant when composing transformations with [`pipe`](./pipe.md).
+
+:::
+
+## Usage
+
+`takeRight` returns the last `count` values from the piped array.
+
+```typescript
+import { pipe, takeRight } from 'es-toolkit/fp';
+
+pipe([1, 2, 3, 4], takeRight(2)); // => [3, 4]
+```
+
+#### Parameters
+
+<Field name="count" type="number" required>
+The number of values to take from the end.
+</Field>
+
+#### Returns
+
+A function that maps a `readonly T[]` to the last `count` values.
+
+```typescript
+(array: readonly T[]) => T[]
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/takeRight.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

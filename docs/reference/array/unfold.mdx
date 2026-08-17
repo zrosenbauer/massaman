@@ -1,0 +1,68 @@
+---
+description: "Builds an array from a seed value using an iterator function."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# unfold
+
+Builds an array from a seed value using an iterator function.
+
+The iterator receives the current seed and returns either a `[value, nextSeed]`
+tuple to continue, or `false` to stop.
+
+Dual of `reduce` — reduce collapses a list into a value, unfold expands
+a value into a list.
+
+**Termination is the caller's responsibility.** If `fn` never returns
+`false`, `unfold` will run until memory is exhausted. For bounded
+generation, encode a counter or limit into the seed.
+
+```typescript
+unfold((n) => (n > 0 ? [n, n - 1] : false), 5)
+// [5, 4, 3, 2, 1]
+```
+
+## Usage
+
+### `unfold<T, R>(fn: (seed: T) => [R, T] | false, seed: T)`
+
+Builds an array from a seed value using an iterator function.
+
+The iterator receives the current seed and returns either a `[value, nextSeed]`
+tuple to continue, or `false` to stop.
+
+Dual of `reduce` — reduce collapses a list into a value, unfold expands
+a value into a list.
+
+**Termination is the caller's responsibility.** If `fn` never returns
+`false`, `unfold` will run until memory is exhausted. For bounded
+generation, encode a counter or limit into the seed.
+
+```typescript
+import { unfold } from 'massaman'
+// or:  import { unfold } from 'massaman/array'
+
+unfold((n) => (n > 0 ? [n, n - 1] : false), 5)
+// [5, 4, 3, 2, 1]
+```
+
+#### Parameters
+
+<Field name="fn" type="(seed: T) =&gt; [R, T] | false" required>
+the function to apply.
+</Field>
+
+
+<Field name="seed" type="T" required>
+the initial seed value.
+</Field>
+
+
+#### Returns
+
+the generated values, ending when `fn` returns `false`.
+
+```typescript
+R[]
+```

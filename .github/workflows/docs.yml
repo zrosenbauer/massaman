@@ -1,0 +1,76 @@
+name: Docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/docs.yml'
+      - '.ciderpress/**'
+      - 'ciderpress.config.ts'
+      - 'docs/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'scripts/docs-base.mjs'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/docs.yml'
+      - '.ciderpress/**'
+      - 'ciderpress.config.ts'
+      - 'docs/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'scripts/docs-base.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: write
+  pull-requests: write
+
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+        with:
+          version: 10.32.1
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 26
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm docs:build
+        env:
+          CIDERPRESS_BASE: /
+
+      - id: deploy
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy .ciderpress/dist --project-name=massaman --branch=${{ github.head_ref || github.ref_name }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment preview URL
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
+        with:
+          header: docs-preview
+          message: |
+            ### Docs Preview
+
+            [${{ steps.deploy.outputs.pages-deployment-alias-url || steps.deploy.outputs.deployment-url }}](${{ steps.deploy.outputs.pages-deployment-alias-url || steps.deploy.outputs.deployment-url }})
+
+            ---
+
+            Latest commit built: [${{ github.event.pull_request.head.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.event.pull_request.head.sha }})

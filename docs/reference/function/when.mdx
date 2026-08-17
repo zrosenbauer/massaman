@@ -1,0 +1,50 @@
+---
+description: "Returns a function that applies a transform only when a predicate passes, otherwise returns the value unchanged."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# when
+
+Returns a function that applies a transform only when a predicate passes,
+otherwise returns the value unchanged.
+
+```typescript
+const trimIfString = when(isString, (s: string) => s.trim())
+trimIfString('  hello  ') // 'hello'
+```
+
+## Usage
+
+### `when<T>(predicate: (value: T) => boolean, fn: (value: T) => T)`
+
+Returns a function that applies a transform only when a predicate passes,
+otherwise returns the value unchanged.
+
+```typescript
+import { when } from 'massaman'
+// or:  import { when } from 'massaman/function'
+
+const trimIfString = when(isString, (s: string) => s.trim())
+trimIfString('  hello  ') // 'hello'
+```
+
+#### Parameters
+
+<Field name="predicate" type="(value: T) =&gt; boolean" required>
+the condition used to select behavior.
+</Field>
+
+
+<Field name="fn" type="(value: T) =&gt; T" required>
+the transformation to apply when `predicate` returns `true`.
+</Field>
+
+
+#### Returns
+
+a function that transforms values only when `predicate` returns `true`.
+
+```typescript
+(value: T) => T
+```

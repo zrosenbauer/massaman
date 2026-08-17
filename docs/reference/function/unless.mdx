@@ -1,0 +1,56 @@
+---
+description: "Returns a function that applies a transform only when a predicate fails, otherwise returns the value unchanged."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# unless
+
+Returns a function that applies a transform only when a predicate fails,
+otherwise returns the value unchanged.
+
+Complement of `when`.
+
+```typescript
+const ensureArray = unless(Array.isArray, (v) => [v])
+ensureArray(42) // [42]
+ensureArray([1]) // [1]
+```
+
+## Usage
+
+### `unless<T>(predicate: (value: T) => boolean, fn: (value: T) => T)`
+
+Returns a function that applies a transform only when a predicate fails,
+otherwise returns the value unchanged.
+
+Complement of `when`.
+
+```typescript
+import { unless } from 'massaman'
+// or:  import { unless } from 'massaman/function'
+
+const ensureArray = unless(Array.isArray, (v) => [v])
+ensureArray(42) // [42]
+ensureArray([1]) // [1]
+```
+
+#### Parameters
+
+<Field name="predicate" type="(value: T) =&gt; boolean" required>
+the condition used to select behavior.
+</Field>
+
+
+<Field name="fn" type="(value: T) =&gt; T" required>
+the transformation to apply when `predicate` returns `false`.
+</Field>
+
+
+#### Returns
+
+a function that transforms values only when `predicate` returns `false`.
+
+```typescript
+(value: T) => T
+```

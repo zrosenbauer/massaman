@@ -1,0 +1,43 @@
+---
+description: "Checks if a value is NaN."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# isNaN
+
+Checks if a value is NaN.
+
+```typescript
+isNaN(NaN) // true
+isNaN(42) // false
+```
+
+## Usage
+
+### `isNaN(value: unknown)`
+
+Checks if a value is NaN.
+
+```typescript
+import { isNaN } from 'massaman'
+// or:  import { isNaN } from 'massaman/predicate'
+
+isNaN(NaN) // true
+isNaN(42) // false
+```
+
+#### Parameters
+
+<Field name="value" type="unknown" required>
+the value to test.
+</Field>
+
+
+#### Returns
+
+whether `value` is the numeric `NaN` value; a `true` result narrows it to `number`.
+
+```typescript
+value is number
+```

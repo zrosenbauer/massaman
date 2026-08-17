@@ -1,0 +1,58 @@
+---
+title: "differenceWith"
+description: "Creates a function that excludes values using a custom equality function."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# differenceWith (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that excludes values using a custom equality function. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, differenceWith(secondArray, areItemsEqual));
+```
+
+::: info
+
+Prefer the original es-toolkit [`differenceWith`](../../reference/array/differenceWith.md) in ordinary code. Use this `fp` variant when composing transformations with [`pipe`](./pipe.md).
+
+:::
+
+## Usage
+
+`differenceWith` keeps values from the piped array only when `areItemsEqual` returns `false` for every value in `secondArray`.
+
+```typescript
+import { differenceWith, pipe } from 'es-toolkit/fp';
+
+pipe(
+  [{ id: 1 }, { id: 2 }],
+  differenceWith([{ id: 2 }], (a, b) => a.id === b.id)
+); // => [{ id: 1 }]
+```
+
+#### Parameters
+
+<Field name="secondArray" type="readonly U[]" required>
+The array containing values to compare against.
+</Field>
+
+<Field name="areItemsEqual" type="(item: T, other: U) =&gt; boolean" required>
+The function that decides whether two values are equal.
+</Field>
+
+#### Returns
+
+A function that maps a `readonly T[]` to values not matched by the comparator.
+
+```typescript
+(array: readonly T[]) => T[]
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/differenceWith.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

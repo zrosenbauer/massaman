@@ -1,0 +1,79 @@
+import { PackageManagerTabs } from '@ciderpress/ui/theme'
+
+# Installation
+
+## Requirements
+
+- Massaman is ESM-only. Your runtime or bundler must support ES modules.
+- Node.js 26 or newer is required when running Massaman in Node.js.
+
+## Install
+
+<PackageManagerTabs
+  command={{
+    pnpm: 'pnpm add massaman',
+    npm: 'npm install massaman',
+    yarn: 'yarn add massaman',
+    bun: 'bun add massaman',
+  }}
+/>
+
+There are no peer dependencies. `es-toolkit` and `ts-pattern` are installed automatically.
+
+## Try it
+
+```typescript
+import { attempt, match, P } from 'massaman'
+
+const config = attempt<{ ready: boolean }>(() => JSON.parse('{"ready":true}'))
+
+const message = match(config)
+  .with(P.ok({ ready: true }), () => 'Massaman is ready')
+  .with(P.ok(), () => 'Massaman is not ready')
+  .with(P.err(), ({ error }) => `Invalid config: ${error.message}`)
+  .exhaustive()
+
+console.log(message)
+```
+
+## Troubleshooting
+
+<details>
+<summary>TypeScript cannot resolve <code>massaman</code></summary>
+
+Use a modern module resolver in `tsconfig.json`:
+
+```jsonc
+{
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+  },
+}
+```
+
+Use `"nodenext"` instead when TypeScript should follow Node.js module resolution.
+
+</details>
+
+<details>
+<summary>CommonJS cannot load <code>massaman</code></summary>
+
+Massaman does not ship a CommonJS build. Migrate the project to ESM or load Massaman with a dynamic import:
+
+```javascript
+async function main() {
+  const { attempt } = await import('massaman')
+  return attempt(() => JSON.parse('{"ready":true}'))
+}
+
+main()
+```
+
+</details>
+
+<details>
+<summary>Node.js reports an unsupported engine</summary>
+
+Upgrade to Node.js 26 or newer. That is the minimum version declared by the package.
+
+</details>

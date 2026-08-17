@@ -1,0 +1,49 @@
+---
+description: "Converts a value to a string."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# toString
+
+Converts a value to a string.
+
+Thin wrapper over `String(value)` — kept as a stable surface against
+future global-constructor changes.
+
+```typescript
+toString(42) // '42'
+toString(null) // 'null'
+```
+
+## Usage
+
+### `toString(value: unknown)`
+
+Converts a value to a string.
+
+Thin wrapper over `String(value)` — kept as a stable surface against
+future global-constructor changes.
+
+```typescript
+import { toString } from 'massaman'
+// or:  import { toString } from 'massaman/conversion'
+
+toString(42) // '42'
+toString(null) // 'null'
+```
+
+#### Parameters
+
+<Field name="value" type="unknown" required>
+the value to convert.
+</Field>
+
+
+#### Returns
+
+the input value converted using JavaScript string coercion.
+
+```typescript
+string
+```

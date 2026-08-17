@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/zrosenbauer/massaman/main/.github/assets/banner.png" alt="massaman" width="100%" />
+  <img src="https://raw.githubusercontent.com/zrosenbauer/massaman/main/.github/assets/banner.svg" alt="massaman" width="100%" />
   <p><strong>Functional programming utilities for TypeScript. Result types, pattern matching, async pipelines. Fully typed.</strong></p>
 
 <a href="https://github.com/zrosenbauer/massaman/actions/workflows/ci.yml"><img src="https://github.com/zrosenbauer/massaman/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI" /></a>
@@ -13,8 +13,8 @@
 - Rust's `match` in TypeScript: exhaustive pattern matching via re-exported [ts-pattern](https://github.com/gvergnaud/ts-pattern).
 - Rust's `Result` in TypeScript: compose fallible operations without throws (`attempt`, `attemptAsync`, `ok`, `err`, `isOk`, `unwrap`).
 - Functional programming, fully typed: `flow`, `flowAsync`, `tap`, `when`, `ifElse`, and point-free combinators with end-to-end inference.
-- The missing pieces around [es-toolkit](https://es-toolkit.dev): variadic-narrowing predicates, async composition, and consistent error normalization on top of the array/object/string/math utilities you already love.
-- Tree-shakeable: 12 focused subpath exports, ESM-only, `sideEffects: false`. Import only what you use.
+- The missing pieces around [es-toolkit](https://es-toolkit.dev): variadic-narrowing predicates, async composition, and consistent error normalization alongside its array, object, string, and math utilities.
+- Tree-shakeable: focused subpath exports, ESM-only, `sideEffects: false`. Import only what you use.
 
 ## Install
 
@@ -26,7 +26,7 @@ npm install massaman
 
 ### From ts-pattern
 
-The `pattern` subpath is a transparent re-export of [ts-pattern](https://github.com/gvergnaud/ts-pattern). Exhaustive matching with full TypeScript inference.
+The `match` subpath re-exports [ts-pattern](https://github.com/gvergnaud/ts-pattern) and adds `P.ok` and `P.err` for Massaman results.
 
 ```ts
 import { match, P } from 'massaman/match'

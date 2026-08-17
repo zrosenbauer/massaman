@@ -1,0 +1,58 @@
+---
+description: "Sorts an array using multiple comparators in priority order."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# sortWith
+
+Sorts an array using multiple comparators in priority order.
+
+The first comparator has highest priority. When it returns 0 (tie),
+the next comparator is used, and so on.
+
+```typescript
+sortWith(users, [
+  ascend(u => u.department),
+  descend(u => u.age),
+])
+```
+
+## Usage
+
+### `sortWith<T>(array: readonly T[], comparators: ReadonlyArray<(a: T, b: T) => number>)`
+
+Sorts an array using multiple comparators in priority order.
+
+The first comparator has highest priority. When it returns 0 (tie),
+the next comparator is used, and so on.
+
+```typescript
+import { sortWith } from 'massaman'
+// or:  import { sortWith } from 'massaman/array'
+
+sortWith(users, [
+  ascend(u => u.department),
+  descend(u => u.age),
+])
+```
+
+#### Parameters
+
+<Field name="array" type="readonly T[]" required>
+the source array.
+</Field>
+
+
+<Field name="comparators" type="ReadonlyArray&lt;(a: T, b: T) =&gt; number&gt;" required>
+the comparators to apply in priority order.
+</Field>
+
+
+#### Returns
+
+a new array ordered by the supplied comparators. The input array is not mutated.
+
+```typescript
+T[]
+```

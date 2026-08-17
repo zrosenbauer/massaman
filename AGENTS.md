@@ -86,6 +86,7 @@ massaman/
 ├── .github/workflows/ci.yml             # CI: typecheck → lint → format:check → test → docs → build
 ├── .github/workflows/ci-security.yml    # SAST (Semgrep), SCA (Trivy), secret scan (gitleaks)
 ├── .github/workflows/ci-actions.yml     # actionlint + SHA-pin enforcement for workflows
+├── .github/workflows/docs.yml           # Builds the docs site, deploys to Cloudflare Pages
 ├── commitlint.config.ts                 # Reads commit-conventions.json
 ├── commit-conventions.json              # Allowed types + scopes (single source of truth)
 ├── lefthook.yml                         # Pre-commit (format/lint/typecheck), pre-push (test)

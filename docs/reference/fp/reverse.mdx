@@ -1,0 +1,52 @@
+---
+title: "reverse"
+description: "Creates a function that returns a reversed copy of an array."
+---
+
+import { Badge } from '@ciderpress/ui/theme'
+
+# reverse (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that returns a reversed copy of an array. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, reverse());
+```
+
+::: info
+
+This helper is specific to `es-toolkit/fp`. Use it when you want this operation as part of a [`pipe`](./pipe.md) pipeline.
+
+:::
+
+## Usage
+
+`reverse` returns a new array with the values of the piped array in reverse order. It does not mutate the input array.
+
+```typescript
+import { pipe, reverse } from 'es-toolkit/fp';
+
+const array = [1, 2, 3];
+
+pipe(array, reverse()); // => [3, 2, 1]
+array; // => [1, 2, 3]
+```
+
+#### Parameters
+
+This function takes no arguments; call it as `reverse()`.
+
+#### Returns
+
+A function that maps a `readonly T[]` to a reversed copy.
+
+```typescript
+(array: readonly T[]) => T[]
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/reverse.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

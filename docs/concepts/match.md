@@ -1,114 +1,79 @@
-# Pattern matching
+# Pattern Matching
 
-`massaman/match` is a full re-export of [`ts-pattern`](https://github.com/gvergnaud/ts-pattern), with one extension: `P.ok` and `P.err` for matching `Result` values. Use it instead of `switch`, instead of nested ternaries, instead of `if`/`else if` chains that discriminate on a union.
+`massaman/match` re-exports [`ts-pattern`](https://github.com/gvergnaud/ts-pattern) and adds `P.ok` and `P.err` patterns for Massaman results. It turns branching into an expression and can prove that every variant of a union is handled.
+
+## Why it matters
+
+Branching on a discriminated union is domain logic. A fallback branch can silently swallow a new variant, while an exhaustive match makes that new variant a type error everywhere it must be handled.
+
+Matching also works on structure rather than only equality. A pattern can select a union variant, narrow nested fields, or apply a predicate without manually chaining checks.
+
+## Core tools
+
+| Tool | Purpose |
+|---|---|
+| `match(value)` | Start a match expression |
+| `.with(pattern, handler)` | Handle values matching a pattern |
+| `.exhaustive()` | Require every possible case to be handled |
+| `.otherwise(handler)` | Handle anything unmatched when the input is open-ended |
+| `P` | Build structural, collection, and predicate patterns |
+| `P.ok(pattern?)` / `P.err(pattern?)` | Match Massaman `Result` variants |
+| `isMatching(pattern, value)` | Test and narrow a value without building a match expression |
+
+Use `.exhaustive()` for a closed union you control. Use `.otherwise()` for open inputs such as arbitrary strings or unknown external data.
+
+## When to use it
+
+Use pattern matching when logic has multiple meaningful cases:
+
+- rendering a discriminated union
+- handling every state in a workflow
+- branching on nested object or array shapes
+- consuming `Result` values with structural error cases
+
+For one boolean condition, use an `if`, `when`, `unless`, or `ifElse`. A match should clarify a domain, not add ceremony to a yes-or-no check.
+
+## Complete example
 
 ```typescript
 import { match, P } from 'massaman'
 
-const message = match(event)
-  .with({ kind: 'click' }, ({ x, y }) => `click at ${x},${y}`)
-  .with({ kind: 'key', code: 'Enter' }, () => 'confirmed')
-  .with({ kind: 'key' }, ({ code }) => `key ${code}`)
-  .otherwise(() => 'unknown')
+type Job =
+  | { status: 'queued' }
+  | { status: 'running'; progress: number }
+  | { status: 'failed'; error: Error }
+  | { status: 'complete'; output: string }
+
+const describeJob = (job: Job): string =>
+  match(job)
+    .with({ status: 'queued' }, () => 'Waiting to start')
+    .with(
+      { status: 'running', progress: P.number },
+      ({ progress }) => `${progress}% complete`,
+    )
+    .with({ status: 'failed' }, ({ error }) => `Failed: ${error.message}`)
+    .with({ status: 'complete' }, ({ output }) => output)
+    .exhaustive()
 ```
 
-## The three things `match` gives you
+Adding another `Job` variant makes this function fail type checking until the new case is handled.
 
-1. **An expression.** `match(x).with(…).exhaustive()` returns a value — chain it, assign it, return it.
-2. **Exhaustiveness.** `.exhaustive()` is a compile error if any case is unhandled. The TypeScript compiler narrows the input against each pattern until nothing is left.
-3. **Structural patterns.** Match on shape, not just on equality. `{ kind: 'click', x: 0 }` matches any click at `x: 0`.
-
-## The exhaustiveness contract
+For a `Result`, use the same structure with `P.ok()` and `P.err()`:
 
 ```typescript
-type Event = { kind: 'click' } | { kind: 'key' } | { kind: 'scroll' }
-
-match(event)
-  .with({ kind: 'click' }, () => 'clicked')
-  .with({ kind: 'key' }, () => 'typed')
-  .exhaustive()
-//  ^^^^^^^^^^^ Error: 'scroll' case not handled
-```
-
-This is the killer feature. When you add a new variant to a union, every `match` against it becomes a compile error until you handle the new case. You will never have a stale `default:` branch silently swallowing new states.
-
-## Patterns
-
-Use literals to match by equality. Use [`P`](../reference/match/P.md) for everything else.
-
-```typescript
-import { match, P } from 'massaman'
-import { sum } from 'massaman/math'
-
-match(value)
-  .with(0, () => 'zero')                          // literal
-  .with(P.number, (n) => `number ${n}`)           // any number
-  .with(P.string, (s) => `string ${s}`)           // any string
-  .with({ id: P.string }, ({ id }) => `id ${id}`) // shape with a string id
-  .with(P.array(P.number), (xs) => sum(xs))       // array of numbers
-  .with(P.union('a', 'b', 'c'), () => 'letter')   // any of these literals
-  .otherwise(() => 'something else')
-```
-
-## Matching `Result`
-
-The canonical pattern in `massaman` — discriminate on the `ok` field via `P.ok` / `P.err`:
-
-```typescript
-import { attempt, match, P } from 'massaman'
-
-const parsed = attempt(() => JSON.parse(raw))
-
-return match(parsed)
-  .with(P.ok, ({ value }) => render(value))
-  .with(P.err, ({ error }) => renderError(error))
+match(result)
+  .with(P.ok(), ({ value }) => render(value))
+  .with(P.err(), ({ error }) => renderError(error))
   .exhaustive()
 ```
 
-`P.ok` and `P.err` are bound names for the structural patterns `{ ok: true }` / `{ ok: false }` — they exist to read like Rust's `match` arms. The inline form is equivalent if you prefer to skip the namespace property:
+## When not to use it
 
-```typescript
-match(parsed)
-  .with({ ok: true }, ({ value }) => render(value))
-  .with({ ok: false }, ({ error }) => renderError(error))
-  .exhaustive()
-```
+Do not use `match` merely to avoid every `if`. A guard clause or a branching combinator is clearer for a single condition. Do not use `.otherwise()` on a closed domain just to silence exhaustiveness; handling each variant is the point.
 
-See the [Result concept guide](./result.md) for the full story on `Result`, including how `P.ok`/`P.err` (patterns), `ok`/`err` (constructors), `isOk`/`isErr` (guards), and `Ok<T>`/`Err` (types) all relate.
+## Related reference
 
-## `match` vs `if`/`when`/`ifElse`
-
-- **One-armed branching** (do X if condition, otherwise nothing or a default value) → use [`when`](../reference/function/when.md), [`unless`](../reference/function/unless.md), or [`ifElse`](../reference/function/ifElse.md). They compose with `flow`.
-- **Multi-armed dispatch on a union** → use `match`. Don't reach for `match` for a single `if`.
-
-```typescript
-import { flow, when } from 'massaman'
-import { isEmpty } from 'massaman/predicate'
-import { trim } from 'massaman/string'
-
-// Good — when() for single-condition branching
-const sanitize = flow(
-  when(isEmpty, () => 'default'),
-  trim,
-)
-sanitize(input)
-
-// Good — match() for multi-arm dispatch
-match(action)
-  .with({ kind: 'load' }, ...)
-  .with({ kind: 'save' }, ...)
-  .exhaustive()
-```
-
-## `.exhaustive()` vs `.otherwise()`
-
-- **`.exhaustive()`** — compile error if any case is unhandled. Use when the input type is closed (a union you control).
-- **`.otherwise(handler)`** — fallback for unmatched cases. Use when the input is open (a `string`, a `number`, anything you don't fully enumerate).
-
-You can't use both on the same chain — pick one.
-
-## Related
-
-- [`match`](../reference/match/match.md), [`isMatching`](../reference/match/isMatching.md), [`P`](../reference/match/P.md), [`Pattern`](../reference/match/Pattern.md)
-- [ts-pattern README](https://github.com/gvergnaud/ts-pattern#readme) — the full reference for `P` primitives
-- [Result type concept guide](./result.md)
+- [`match`](../reference/match/match.md) and [`isMatching`](../reference/match/isMatching.md)
+- [`P`](../reference/match/P.md) and [`Pattern`](../reference/match/Pattern.md)
+- [`when`](../reference/function/when.md), [`unless`](../reference/function/unless.md), and [`ifElse`](../reference/function/ifElse.md)
+- [Result & Errors](./result.md)

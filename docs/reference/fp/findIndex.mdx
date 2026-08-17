@@ -1,0 +1,54 @@
+---
+title: "findIndex"
+description: "Creates a function that returns the index of the first value that passes a test."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# findIndex (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that returns the index of the first value that passes a test. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, findIndex(predicate));
+```
+
+::: info
+
+This helper is specific to `es-toolkit/fp`. Use it when you want this operation as part of a [`pipe`](./pipe.md) pipeline.
+
+:::
+
+## Usage
+
+`findIndex` returns the index of the first value in the piped array for which `predicate` returns `true`. If no value matches, it returns `-1`.
+
+```typescript
+import { findIndex, pipe } from 'es-toolkit/fp';
+
+pipe(
+  [1, 2, 3, 4],
+  findIndex(value => value > 2)
+); // => 2
+```
+
+#### Parameters
+
+<Field name="predicate" type="(value: T, index: number) =&gt; boolean" required>
+The function that tests each value.
+</Field>
+
+#### Returns
+
+A function that maps a `readonly T[]` to the first matching index, or `-1`.
+
+```typescript
+(array: readonly T[]) => number
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/findIndex.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

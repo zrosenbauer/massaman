@@ -1,0 +1,75 @@
+---
+title: "takeRight"
+description: "Creates a new array by taking the specified number of elements from the end of the array."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# takeRight <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a new array by taking the specified number of elements from the end of the array.
+
+```typescript
+const taken = takeRight(arr, count);
+```
+
+## Usage
+
+### `takeRight(arr, count?)`
+
+Use `takeRight` when you only need a few elements from the end of an array. If the requested count is greater than the array length, it returns the entire array.
+
+```typescript
+import { takeRight } from 'es-toolkit/array';
+
+// Take the last 2 elements.
+takeRight([1, 2, 3, 4, 5], 2);
+// Returns: [4, 5]
+
+// Take the last 2 elements.
+takeRight(['a', 'b', 'c'], 2);
+// Returns: ['b', 'c']
+```
+
+If you request more elements than the array has, it returns the entire array.
+
+```typescript
+import { takeRight } from 'es-toolkit/array';
+
+takeRight([1, 2, 3], 5);
+// Returns: [1, 2, 3]
+```
+
+If you omit `count`, it takes only the last element.
+
+```typescript
+import { takeRight } from 'es-toolkit/array';
+
+takeRight([1, 2, 3]);
+// Returns: [3]
+```
+
+#### Parameters
+
+<Field name="arr" type="T[]" required>
+The array to take elements from.
+</Field>
+
+<Field name="count" type="number">
+The number of elements to take. Default is `1`.
+</Field>
+
+#### Returns
+
+Returns a new array containing the last `count` elements from the array.
+
+```typescript
+T[]
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/reference/array/takeRight.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

@@ -1,0 +1,77 @@
+---
+description: "Applies a function to the element at an index and returns a new array."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# adjust
+
+Applies a function to the element at an index and returns a new array.
+
+```typescript
+const adjusted = adjust([1, 2, 3], 1, (value) => value * 10)
+// [1, 20, 3]
+```
+
+## Usage
+
+### `adjust(array, index, fn)`
+
+Use `adjust` when one position needs to change without mutating the input array. The callback runs only when `index` is within the array bounds; an out-of-bounds index returns an unchanged copy.
+
+```typescript
+import { adjust } from 'massaman'
+// or:  import { adjust } from 'massaman/array'
+
+const original = [1, 2, 3]
+const adjusted = adjust(original, 1, (value) => value * 10)
+
+console.log(original) // [1, 2, 3]
+console.log(adjusted) // [1, 20, 3]
+```
+
+#### Parameters
+
+<Field name="array" type="readonly T[]" required>
+the source array. It is never mutated.
+</Field>
+
+<Field name="index" type="number" required>
+the zero-based index of the element to transform.
+</Field>
+
+<Field name="fn" type="(value: T) =&gt; T" required>
+the function applied to the element at `index`.
+</Field>
+
+#### Returns
+
+a new array containing the transformed element. When `index` is negative or greater than or equal to the array length, the returned copy has the same elements as `array`.
+
+```typescript
+T[]
+```
+
+## Examples
+
+```typescript
+import { adjust } from 'massaman/array'
+
+type Task = Readonly<{
+  title: string
+  completed: boolean
+}>
+
+const tasks: readonly Task[] = [
+  { title: 'Write docs', completed: false },
+  { title: 'Ship release', completed: false },
+]
+
+const completed = adjust(tasks, 0, (task) => ({
+  ...task,
+  completed: true,
+}))
+
+console.log(completed[0])
+// { title: 'Write docs', completed: true }
+```

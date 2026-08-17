@@ -1,0 +1,51 @@
+---
+description: "Type guard that narrows a Result to Err."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# isErr
+
+Type guard that narrows a [`Result`](../../concepts/result.md) to `Err`.
+
+```typescript
+if (isErr(result)) {
+  // result.error is Error
+}
+```
+
+## Usage
+
+### `isErr(result)`
+
+The inverse of [`isOk`](./isOk.md). Useful when the failure path is the early-return: check `isErr`, bail, continue with the narrowed `Ok` after.
+
+```typescript
+import { attemptAsync, isErr } from 'massaman'
+
+const user = await attemptAsync(() => db.users.findById(id))
+if (isErr(user)) {
+  return respond.serverError(user.error)
+}
+// user is Ok<User> here
+return respond.ok(user.value)
+```
+
+#### Parameters
+
+<Field name="result" type="Result&lt;T&gt;" required>
+the result to test.
+</Field>
+
+#### Returns
+
+`true` if the result is a failure.
+
+```typescript
+result is Err
+```
+
+## See also
+
+- [`isOk`](./isOk.md) — the inverse guard
+- [Result & Errors concept guide](../../concepts/result.md)
