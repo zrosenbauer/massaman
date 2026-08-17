@@ -1,5 +1,31 @@
 # massaman
 
+## 0.5.0
+
+### Minor Changes
+
+- [#14](https://github.com/zrosenbauer/massaman/pull/14) [`5f73878`](https://github.com/zrosenbauer/massaman/commit/5f7387833cf95b6c0ae3d47835f57aa4323649a5) Thanks [@zrosenbauer](https://github.com/zrosenbauer)! - Make `P.ok()` and `P.err()` callable Result pattern factories. Call them without an argument to match a variant, or pass a ts-pattern pattern to match the contained value or error.
+
+- [#16](https://github.com/zrosenbauer/massaman/pull/16) [`f896fc1`](https://github.com/zrosenbauer/massaman/commit/f896fc11f14ffaed32db26f074af3152a5606830) Thanks [@zrosenbauer](https://github.com/zrosenbauer)! - Catch up to es-toolkit 1.51.0 and raise the minimum Node version.
+  
+  **Breaking**
+  
+  - `limitAsync` moved from `massaman/array` to `massaman/promise`, following es-toolkit's recategorization. It is still reachable from the flat `massaman` barrel; only the `massaman/array` subpath import breaks.
+  - `engines.node` is now `>=26.0.0` (was `>=24.0.0`), and the build targets `node26`.
+  
+  **Added**
+  
+  - New `massaman/bigint` subpath: `sum`, `sumBy`, `max`, `min`, `maxBy`, `minBy`, `clamp`, `inRange`, `median`, `medianBy`, `percentile`, `range`, `rangeRight` for `bigint`. Subpath-only — these names collide with the `number` implementations in `massaman/math` and `massaman/array`, so they are deliberately absent from the flat barrel.
+  - `massaman/object`: `deepFreeze`, `mapKeysAsync`, `mapValuesAsync`, `toPascalCaseKeys`, `toKebabCaseKeys`, `toConstantCaseKeys`, and the `ToCamelCaseKeys` / `ToPascalCaseKeys` / `ToSnakeCaseKeys` / `ToKebabCaseKeys` / `ToConstantCaseKeys` types.
+  - `massaman/string`: `dedent`.
+  
+  **Fixed upstream** (inherited from es-toolkit 1.51.0)
+  
+  - `retry` now passes the last error to the `delay` callback and throws without a trailing delay.
+  - `pullAt` removes the correct elements for negative indices.
+  - `at`, `pullAt`, `orderBy`, and `sortBy` accept readonly arrays.
+  - `flattenObject` gained a `preserveArrays` option.
+
 ## 0.4.0
 
 ### Minor Changes
