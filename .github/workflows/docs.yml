@@ -26,6 +26,7 @@ on:
 permissions:
   contents: read
   deployments: write
+  pull-requests: write
 
 concurrency:
   group: docs-${{ github.ref }}
@@ -59,3 +60,32 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy .ciderpress/dist --project-name=massaman --branch=${{ github.head_ref || github.ref_name }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment preview URL
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v9
+        env:
+          PREVIEW_URL: ${{ steps.deploy.outputs.pages-deployment-alias-url || steps.deploy.outputs.deployment-url }}
+        with:
+          script: |
+            const marker = '<!-- massaman-docs-preview -->'
+            const body = `${marker}\n## Docs preview\n\n[Open preview](${process.env.PREVIEW_URL})\n\nUpdated for ${context.sha.slice(0, 7)}.`
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              ...context.repo,
+              issue_number: context.issue.number,
+            })
+            const comment = comments.find(({ body }) => body?.includes(marker))
+
+            if (comment) {
+              await github.rest.issues.updateComment({
+                ...context.repo,
+                comment_id: comment.id,
+                body,
+              })
+            } else {
+              await github.rest.issues.createComment({
+                ...context.repo,
+                issue_number: context.issue.number,
+                body,
+              })
+            }
