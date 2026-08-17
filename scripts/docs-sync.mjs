@@ -1,8 +1,8 @@
 #!/usr/bin/env zx
 /**
  * docs-sync — mirrors per-symbol reference docs from upstream packages into
- * docs/reference/<area>/<name>.md, injecting a "Direct proxy" callout after
- * the H1. Hand-written pages (originals, ts-pattern, prose, concepts) are
+ * docs/reference/<area>/<name>.mdx, adding an inline source badge and a proxy
+ * disclosure at the bottom. Hand-written pages (originals, ts-pattern, prose, concepts) are
  * never touched.
  *
  * Modes:
@@ -14,11 +14,13 @@
  *   packages/massaman/src/<area>/index.ts (re-export classifications)
  *
  * Outputs:
- *   docs/reference/<area>/<name>.md     (proxy pages)
+ *   docs/reference/<area>/<name>.mdx    (proxy pages)
  *   docs/_meta/proxies.json             (manifest)
  */
 
 import 'zx/globals'
+import { withReferenceDescription } from './docs-descriptions.mjs'
+import { transformReferenceFields } from './docs-fields.mjs'
 
 $.verbose = false
 
@@ -53,21 +55,31 @@ async function main() {
   let proxyHandWritten = 0
   let locals = 0
 
+  await migrateHandWrittenFields(errors)
+
   for (const c of classifications) {
     if (c.kind === 'local') {
       locals++
-      manifest.push({ ...c, status: 'original', expectedFile: relRef(c) })
+      const expectedFile = await existingRef(c)
+      if (expectedFile === null) errors.push(`missing local reference page: ${refBase(c)}`)
+      manifest.push({
+        ...c,
+        status: 'original',
+        expectedFile: expectedFile ?? `${refBase(c)}.mdx`,
+      })
       continue
     }
 
     if (c.kind === 'proxy:ts-pattern') {
+      const expectedFile = await existingRef(c)
+      if (expectedFile === null) errors.push(`missing ts-pattern reference page: ${refBase(c)}`)
       proxyHandWritten++
       manifest.push({
         ...c,
         status: 'hand-written',
         source: 'ts-pattern',
         upstreamUrl: tsp.siteUrl,
-        expectedFile: relRef(c),
+        expectedFile: expectedFile ?? `${refBase(c)}.mdx`,
       })
       continue
     }
@@ -89,9 +101,9 @@ async function main() {
       // Allowlisted: upstream ships the symbol but has no reference page for it,
       // so we own the page by hand. Never generated, never overwritten — but it
       // still has to exist, or the export ships undocumented.
-      const handWrittenPath = path.join(DOCS_REF, c.massamanArea, `${c.name}.md`)
-      if (!(await fs.pathExists(handWrittenPath))) {
-        errors.push(`allowlisted as undocumented upstream but no hand-written page: ${relRef(c)}`)
+      const handWrittenPath = await existingRef(c)
+      if (handWrittenPath === null) {
+        errors.push(`allowlisted as undocumented upstream but no hand-written page: ${refBase(c)}`)
         continue
       }
       proxyHandWritten++
@@ -100,23 +112,31 @@ async function main() {
         status: 'hand-written',
         source: 'es-toolkit',
         undocumentedUpstream: undocumentedReason,
-        expectedFile: relRef(c),
+        expectedFile: handWrittenPath,
       })
       continue
     }
     const upstreamUrl = upstreamDocUrl(es, c.upstreamArea, c.name)
     const original = await fs.readFile(upstreamMd, 'utf8')
-    const mutated = injectProxyCallout(original, upstreamUrl)
-    const outPath = path.join(DOCS_REF, c.massamanArea, `${c.name}.md`)
+    const mutated = withProxyTitle(
+      withReferenceDescription(
+        decorateProxyPage(transformReferenceFields(original).content, c.name, upstreamUrl)
+      ),
+      c.name
+    )
+    const outPath = path.join(DOCS_REF, c.massamanArea, `${c.name}.mdx`)
+    const stalePath = path.join(DOCS_REF, c.massamanArea, `${c.name}.md`)
     expectedFiles.add(outPath)
 
     if (CHECK_MODE) {
       const existing = await fs.readFile(outPath, 'utf8').catch(() => null)
       if (existing !== mutated) {
-        errors.push(`drift: docs/reference/${c.massamanArea}/${c.name}.md`)
+        errors.push(`drift: docs/reference/${c.massamanArea}/${c.name}.mdx`)
       }
+      if (await fs.pathExists(stalePath)) errors.push(`stale proxy: ${refBase(c)}.md`)
     } else {
       await fs.outputFile(outPath, mutated)
+      await fs.remove(stalePath)
     }
     wrote++
     manifest.push({
@@ -124,7 +144,7 @@ async function main() {
       status: 'proxy',
       source: 'es-toolkit',
       upstreamUrl,
-      expectedFile: relRef(c),
+      expectedFile: `${refBase(c)}.mdx`,
     })
   }
 
@@ -132,6 +152,8 @@ async function main() {
   // We can't blanket-flag all .md (originals are hand-written), so we scope to
   // "looks like a proxy" — has the canonical callout marker on line 3.
   await detectOrphans(manifest, errors)
+  await detectPlaceholderPages(errors)
+  await normalizeReferenceDescriptions(errors)
 
   if (!CHECK_MODE) {
     await fs.outputJson(
@@ -256,19 +278,38 @@ function parseExports(content) {
 }
 
 // Sentinel substring used by orphan detection. Must be unique to generated
-// proxy pages and remain on the second line of the GFM alert below.
-const CALLOUT_MARKER = '> **Direct proxy**'
+// proxy pages and remain in the disclosure below.
+const CALLOUT_MARKER = '<summary>Source: es-toolkit</summary>'
 
 function injectProxyCallout(content, upstreamUrl) {
-  const callout =
-    `> [!NOTE]\n` +
-    `${CALLOUT_MARKER} — re-exported verbatim from [\`es-toolkit\`](${upstreamUrl}).\n` +
-    `> Implementation, edge cases, and performance behavior are owned upstream.\n` +
-    `> This page mirrors the upstream documentation at the pinned version; see the linked source for the authoritative copy.\n\n`
-  const withCallout = content.replace(/^(#\s+\S[^\n]*\n)(\s*\n)?/m, (_match, h1, blank) => {
-    return `${h1}${blank || '\n'}${callout}`
-  })
-  return rewriteUpstreamCrossRefs(withCallout)
+  const disclosure =
+    `<details>\n` +
+    `${CALLOUT_MARKER}\n\n` +
+    `Re-exported verbatim from [\`es-toolkit\`](${upstreamUrl}). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.\n\n` +
+    `</details>\n`
+  return `${content.trimEnd()}\n\n${disclosure}`
+}
+
+function decorateProxyPage(content, name, upstreamUrl) {
+  const withImport = content.includes("from '@ciderpress/ui/theme'")
+    ? content.replace(
+        /import \{ ([^}]+) \} from '@ciderpress\/ui\/theme'/u,
+        (_match, imports) =>
+          `import { ${['Badge', ...imports.split(',').map((item) => item.trim())]
+            .filter((item, index, values) => values.indexOf(item) === index)
+            .sort()
+            .join(', ')} } from '@ciderpress/ui/theme'`
+      )
+    : content.replace(/^(#\s+\S[^\n]*\n)/mu, `import { Badge } from '@ciderpress/ui/theme'\n\n$1`)
+  const withBadge = withImport.replace(
+    /^(#\s+\S[^\n]*)$/mu,
+    `$1 <Badge color="#c85a3e">es-toolkit</Badge>`
+  )
+  return rewriteUpstreamCrossRefs(injectProxyCallout(withBadge, upstreamUrl))
+}
+
+function withProxyTitle(content, name) {
+  return content.replace(/^---\r?\n/u, `---\ntitle: ${JSON.stringify(name)}\n`)
 }
 
 // Upstream pages reference site-level docs (bundle-size, performance) via
@@ -281,12 +322,23 @@ function rewriteUpstreamCrossRefs(content) {
   )
 }
 
-function relRef(c) {
-  return `docs/reference/${c.massamanArea}/${c.name}.md`
+function refBase(c) {
+  return `docs/reference/${c.massamanArea}/${c.name}`
+}
+
+async function existingRef(c, fallback = false) {
+  const candidates = [`${refBase(c)}.mdx`, `${refBase(c)}.md`]
+  const existing = await Promise.all(
+    candidates.map(async (candidate) => [candidate, await fs.pathExists(candidate)])
+  )
+  const match = existing.find(([, exists]) => exists)?.[0]
+  if (match !== undefined) return match
+  if (fallback) return `${refBase(c)}.mdx`
+  return null
 }
 
 async function detectOrphans(manifest, errors) {
-  const expected = new Set(manifest.map((c) => relRef(c)))
+  const expected = new Set(manifest.map((c) => c.expectedFile).filter(Boolean))
   const areas = await fs.readdir(DOCS_REF).catch(() => [])
   for (const area of areas) {
     const areaPath = path.join(DOCS_REF, area)
@@ -294,7 +346,7 @@ async function detectOrphans(manifest, errors) {
     if (!stat?.isDirectory()) continue
     const files = await fs.readdir(areaPath)
     for (const f of files) {
-      if (!f.endsWith('.md') || f.startsWith('_')) continue
+      if ((!f.endsWith('.md') && !f.endsWith('.mdx')) || f.startsWith('_')) continue
       const rel = `docs/reference/${area}/${f}`
       if (expected.has(rel)) continue
       // Only flag as orphan if it looks like a proxy page we generated previously.
@@ -304,6 +356,103 @@ async function detectOrphans(manifest, errors) {
       }
     }
   }
+}
+
+const PLACEHOLDER_MARKERS = [
+  'One-sentence description',
+  'Worked-example paragraph',
+  'type="Type"',
+  'realistic, end-to-end example',
+]
+
+async function detectPlaceholderPages(errors) {
+  const areas = await fs.readdir(DOCS_REF).catch(() => [])
+  const pages = (
+    await Promise.all(
+      areas.map(async (area) => {
+        const areaPath = path.join(DOCS_REF, area)
+        const stat = await fs.stat(areaPath).catch(() => null)
+        if (!stat?.isDirectory()) return []
+        return (await fs.readdir(areaPath))
+          .filter((file) => file.endsWith('.md') || file.endsWith('.mdx'))
+          .map((file) => path.join(areaPath, file))
+      })
+    )
+  ).flat()
+
+  await Promise.all(
+    pages.map(async (page) => {
+      const content = await fs.readFile(page, 'utf8')
+      const marker = PLACEHOLDER_MARKERS.find((candidate) => content.includes(candidate))
+      if (marker === undefined) return
+      errors.push(`placeholder content (${marker}): ${path.relative(ROOT, page)}`)
+    })
+  )
+}
+
+async function normalizeReferenceDescriptions(errors) {
+  const areas = await fs.readdir(DOCS_REF).catch(() => [])
+  const pages = (
+    await Promise.all(
+      areas.map(async (area) => {
+        const areaPath = path.join(DOCS_REF, area)
+        const stat = await fs.stat(areaPath).catch(() => null)
+        if (!stat?.isDirectory()) return []
+        return (await fs.readdir(areaPath))
+          .filter((file) => file.endsWith('.md') || file.endsWith('.mdx'))
+          .map((file) => path.join(areaPath, file))
+      })
+    )
+  ).flat()
+
+  await Promise.all(
+    pages.map(async (page) => {
+      const content = await fs.readFile(page, 'utf8')
+      const normalized = withReferenceDescription(content)
+      if (content === normalized) return
+
+      if (CHECK_MODE) {
+        errors.push(`reference description drift: ${path.relative(ROOT, page)}`)
+        return
+      }
+      await fs.writeFile(page, normalized)
+    })
+  )
+}
+
+async function migrateHandWrittenFields(errors) {
+  const areas = await fs.readdir(DOCS_REF).catch(() => [])
+  const referencePaths = (
+    await Promise.all(
+      areas.map(async (area) => {
+        const areaPath = path.join(DOCS_REF, area)
+        const stat = await fs.stat(areaPath).catch(() => null)
+        if (!stat?.isDirectory()) return []
+        const files = await fs.readdir(areaPath)
+        return files
+          .filter((file) => file.endsWith('.md') || file.endsWith('.mdx'))
+          .map((file) => path.join(areaPath, file))
+      })
+    )
+  ).flat()
+
+  await Promise.all(
+    referencePaths.map(async (referencePath) => {
+      const original = await fs.readFile(referencePath, 'utf8')
+      const transformed = transformReferenceFields(original)
+      if (!transformed.changed) return
+      const mdxPath = referencePath.replace(/\.md$/u, '.mdx')
+      const relative = path.relative(ROOT, referencePath)
+
+      if (CHECK_MODE) {
+        errors.push(`reference field markup drift: ${relative}`)
+        return
+      }
+
+      await fs.outputFile(mdxPath, transformed.content)
+      if (referencePath !== mdxPath) await fs.remove(referencePath)
+    })
+  )
 }
 
 await main()

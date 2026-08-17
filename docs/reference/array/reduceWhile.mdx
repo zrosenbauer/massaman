@@ -1,0 +1,78 @@
+---
+description: "Like reduce but stops early when the predicate returns false."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# reduceWhile
+
+Like `reduce` but stops early when the predicate returns `false`.
+
+The predicate receives the current accumulator and element. When it
+returns `false`, the current accumulator is returned without processing
+the remaining elements.
+
+```typescript
+// Sum until we hit a negative number
+reduceWhile(
+  [1, 2, 3, -1, 5],
+  (acc, n) => n >= 0,
+  (acc, n) => acc + n,
+  0,
+)
+// 6
+```
+
+## Usage
+
+### `reduceWhile<T, R>(array: readonly T[], predicate: (accumulator: R, value: T) => boolean, fn: (accumulator: R, value: T, index: number) => R, initial: R)`
+
+Like `reduce` but stops early when the predicate returns `false`.
+
+The predicate receives the current accumulator and element. When it
+returns `false`, the current accumulator is returned without processing
+the remaining elements.
+
+```typescript
+import { reduceWhile } from 'massaman'
+// or:  import { reduceWhile } from 'massaman/array'
+
+// Sum until we hit a negative number
+reduceWhile(
+  [1, 2, 3, -1, 5],
+  (acc, n) => n >= 0,
+  (acc, n) => acc + n,
+  0,
+)
+// 6
+```
+
+#### Parameters
+
+<Field name="array" type="readonly T[]" required>
+the source array.
+</Field>
+
+
+<Field name="predicate" type="(accumulator: R, value: T) =&gt; boolean" required>
+the condition used to select behavior.
+</Field>
+
+
+<Field name="fn" type="(accumulator: R, value: T, index: number) =&gt; R" required>
+the function to apply.
+</Field>
+
+
+<Field name="initial" type="R" required>
+the initial accumulator value.
+</Field>
+
+
+#### Returns
+
+the accumulated value when the input ends or the predicate first returns `false`.
+
+```typescript
+R
+```

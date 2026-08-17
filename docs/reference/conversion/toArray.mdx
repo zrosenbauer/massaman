@@ -1,0 +1,57 @@
+---
+description: "Converts a value to an array."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# toArray
+
+Converts a value to an array.
+
+- Arrays are returned as-is.
+- Iterables (strings, Sets, Maps) are spread into an array.
+- `null` / `undefined` return `[]`.
+- All other values are wrapped in a single-element array.
+
+```typescript
+toArray(new Set([1, 2])) // [1, 2]
+toArray('abc') // ['a', 'b', 'c']
+toArray(null) // []
+toArray(42) // [42]
+```
+
+## Usage
+
+### `toArray<T>(value: Iterable<T> | T | null | undefined)`
+
+Converts a value to an array.
+
+- Arrays are returned as-is.
+- Iterables (strings, Sets, Maps) are spread into an array.
+- `null` / `undefined` return `[]`.
+- All other values are wrapped in a single-element array.
+
+```typescript
+import { toArray } from 'massaman'
+// or:  import { toArray } from 'massaman/conversion'
+
+toArray(new Set([1, 2])) // [1, 2]
+toArray('abc') // ['a', 'b', 'c']
+toArray(null) // []
+toArray(42) // [42]
+```
+
+#### Parameters
+
+<Field name="value" type="Iterable&lt;T&gt; | T | null | undefined" required>
+the value to convert.
+</Field>
+
+
+#### Returns
+
+an array containing the input values, or an empty array for `null` and `undefined`.
+
+```typescript
+T[]
+```

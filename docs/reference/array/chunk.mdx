@@ -1,0 +1,81 @@
+---
+title: "chunk"
+description: "Splits an array into smaller arrays of a specified size."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# chunk <Badge color="#c85a3e">es-toolkit</Badge>
+
+Splits an array into smaller arrays of a specified size.
+
+```typescript
+const chunked = chunk(arr, size);
+```
+
+## Usage
+
+### `chunk(arr, size)`
+
+Use `chunk` when you want to split a long array into multiple smaller arrays of the same size. If the array cannot be evenly divided, the last chunk will contain the remaining elements.
+
+```typescript
+import { chunk } from 'es-toolkit/array';
+
+// Split a number array into chunks of size 2.
+chunk([1, 2, 3, 4, 5], 2);
+// Returns: [[1, 2], [3, 4], [5]]
+
+// Split a string array into chunks of size 3.
+chunk(['a', 'b', 'c', 'd', 'e', 'f', 'g'], 3);
+// Returns: [['a', 'b', 'c'], ['d', 'e', 'f'], ['g']]
+```
+
+Splitting an empty array returns an empty array.
+
+```typescript
+import { chunk } from 'es-toolkit/array';
+
+chunk([], 2); // []
+```
+
+#### Parameters
+
+<Field name="arr" type="T[]" required>
+The array to split.
+</Field>
+
+<Field name="size" type="number" required>
+The size of each chunk. Must be a positive integer.
+</Field>
+
+#### Returns
+
+A 2D array split into chunks of size `size`.
+
+```typescript
+T[][]
+```
+
+#### Throws
+
+Throws an error if `size` is not a positive integer.
+
+## Try It
+
+::: sandpack
+
+```ts index.ts
+import { chunk } from 'es-toolkit/array';
+
+console.log(chunk([1, 2, 3, 4, 5], 2));
+```
+
+:::
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/reference/array/chunk.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

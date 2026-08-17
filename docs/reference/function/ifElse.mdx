@@ -1,0 +1,63 @@
+---
+description: "Returns a function that branches between two functions based on a predicate."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# ifElse
+
+Returns a function that branches between two functions based on a predicate.
+
+```typescript
+const format = ifElse(
+  (n: number) => n > 0,
+  (n) => `+${n}`,
+  (n) => `${n}`,
+)
+format(5)  // '+5'
+format(-3) // '-3'
+```
+
+## Usage
+
+### `ifElse<T, R>(predicate: (value: T) => boolean, onTrue: (value: T) => R, onFalse: (value: T) => R)`
+
+Returns a function that branches between two functions based on a predicate.
+
+```typescript
+import { ifElse } from 'massaman'
+// or:  import { ifElse } from 'massaman/function'
+
+const format = ifElse(
+  (n: number) => n > 0,
+  (n) => `+${n}`,
+  (n) => `${n}`,
+)
+format(5)  // '+5'
+format(-3) // '-3'
+```
+
+#### Parameters
+
+<Field name="predicate" type="(value: T) =&gt; boolean" required>
+the condition used to select behavior.
+</Field>
+
+
+<Field name="onTrue" type="(value: T) =&gt; R" required>
+the function called when `predicate` returns `true`.
+</Field>
+
+
+<Field name="onFalse" type="(value: T) =&gt; R" required>
+the function called when `predicate` returns `false`.
+</Field>
+
+
+#### Returns
+
+a function that dispatches each value to `onTrue` or `onFalse`.
+
+```typescript
+(value: T) => R
+```

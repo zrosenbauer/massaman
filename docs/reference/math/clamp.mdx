@@ -1,0 +1,89 @@
+---
+title: "clamp"
+description: "Clamps a number within a specified range."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# clamp <Badge color="#c85a3e">es-toolkit</Badge>
+
+Clamps a number within a specified range.
+
+```typescript
+const clamped = clamp(value, maximum);
+const clamped = clamp(value, minimum, maximum);
+```
+
+## Usage
+
+### `clamp(value, maximum)`
+
+Use `clamp` when you want to restrict a number to be at most a given maximum value. If the value exceeds the maximum, it's clamped to the maximum; otherwise, it returns the original value.
+
+```typescript
+import { clamp } from 'es-toolkit/math';
+
+// Clamp to maximum value
+const result1 = clamp(10, 5); // result1 is 5 (10 is clamped to maximum 5)
+const result2 = clamp(3, 5); // result2 is 3 (less than 5, so unchanged)
+```
+
+#### Parameters
+
+<Field name="value" type="number" required>
+The number to clamp.
+</Field>
+
+<Field name="maximum" type="number" required>
+The maximum value.
+</Field>
+
+#### Returns
+
+Returns the number clamped to be at most the maximum value.
+
+```typescript
+number
+```
+
+### `clamp(value, minimum, maximum)`
+
+Use `clamp` when you want to restrict a number within a given minimum and maximum range. If the value falls outside the range, it's clamped to the nearest boundary.
+
+```typescript
+import { clamp } from 'es-toolkit/math';
+
+// Clamp within minimum and maximum range
+const result1 = clamp(10, 5, 15); // result1 is 10 (within range 5-15)
+const result2 = clamp(2, 5, 15); // result2 is 5 (clamped to minimum 5)
+const result3 = clamp(20, 5, 15); // result3 is 15 (clamped to maximum 15)
+```
+
+#### Parameters
+
+<Field name="value" type="number" required>
+The number to clamp.
+</Field>
+
+<Field name="minimum" type="number" required>
+The minimum value.
+</Field>
+
+<Field name="maximum" type="number" required>
+The maximum value.
+</Field>
+
+#### Returns
+
+Returns the number clamped within the specified range.
+
+```typescript
+number
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/reference/math/clamp.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

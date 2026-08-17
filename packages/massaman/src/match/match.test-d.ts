@@ -5,18 +5,18 @@ import type { Result } from '../control/types.js'
 import { P } from './match.js'
 
 describe('P.ok pattern value', () => {
-  it('has literal shape { ok: true }', () => {
-    expectTypeOf(P.ok).toEqualTypeOf<{ ok: true }>()
+  it('creates a typed matcher', () => {
+    expectTypeOf(P.ok({ id: P.string })).not.toBeAny()
   })
 
   it('narrows the match arm to Ok<T> with value: T', () => {
     function check(result: Result<number>) {
       match(result)
-        .with(P.ok, (matched) => {
+        .with(P.ok(), (matched) => {
           expectTypeOf(matched.value).toEqualTypeOf<number>()
           expectTypeOf(matched.error).toEqualTypeOf<null>()
         })
-        .with(P.err, () => null)
+        .with(P.err(), () => null)
         .exhaustive()
     }
     expectTypeOf(check).parameter(0).toEqualTypeOf<Result<number>>()
@@ -25,10 +25,10 @@ describe('P.ok pattern value', () => {
   it('preserves generic inference for nested types', () => {
     function check(result: Result<{ id: string; count: number }>) {
       match(result)
-        .with(P.ok, (matched) => {
+        .with(P.ok({ id: P.string, count: P.number }), (matched) => {
           expectTypeOf(matched.value).toEqualTypeOf<{ id: string; count: number }>()
         })
-        .with(P.err, () => null)
+        .with(P.err(), () => null)
         .exhaustive()
     }
     expectTypeOf(check).parameter(0).toEqualTypeOf<Result<{ id: string; count: number }>>()
@@ -36,15 +36,15 @@ describe('P.ok pattern value', () => {
 })
 
 describe('P.err pattern value', () => {
-  it('has literal shape { ok: false }', () => {
-    expectTypeOf(P.err).toEqualTypeOf<{ ok: false }>()
+  it('creates a typed matcher', () => {
+    expectTypeOf(P.err({ message: P.string })).not.toBeAny()
   })
 
   it('narrows the match arm to Err with error: Error', () => {
     function check(result: Result<string>) {
       match(result)
-        .with(P.ok, () => null)
-        .with(P.err, (matched) => {
+        .with(P.ok(), () => null)
+        .with(P.err(), (matched) => {
           expectTypeOf(matched.error).toEqualTypeOf<Error>()
           expectTypeOf(matched.value).toEqualTypeOf<null>()
         })

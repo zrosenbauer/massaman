@@ -1,0 +1,54 @@
+---
+title: "countBy"
+description: "Creates a function that counts values by a key."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# countBy (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that counts values by a key. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, countBy(mapper));
+```
+
+::: info
+
+Prefer the original es-toolkit [`countBy`](../../reference/array/countBy.md) in ordinary code. Use this `fp` variant when composing transformations with [`pipe`](./pipe.md).
+
+:::
+
+## Usage
+
+`countBy` calls `mapper` for each value in the piped array and returns an object whose keys are mapper results and whose values are counts.
+
+```typescript
+import { countBy, pipe } from 'es-toolkit/fp';
+
+pipe(
+  ['one', 'two', 'three'],
+  countBy(word => word.length)
+); // => { 3: 2, 5: 1 }
+```
+
+#### Parameters
+
+<Field name="mapper" type="(item: T) =&gt; K" required>
+The function that returns the key used for counting.
+</Field>
+
+#### Returns
+
+A function that maps a `readonly T[]` to counts by key.
+
+```typescript
+(array: readonly T[]) => Record<K, number>
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/countBy.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

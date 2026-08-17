@@ -1,0 +1,41 @@
+---
+description: "Creates an ascending comparator from an accessor function."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# ascend
+
+Creates an ascending comparator from an accessor function.
+
+```typescript
+users.sort(ascend(u => u.name))
+```
+
+## Usage
+
+### `ascend<T>(fn: (value: T) => number | string)`
+
+Creates an ascending comparator from an accessor function.
+
+```typescript
+import { ascend } from 'massaman'
+// or:  import { ascend } from 'massaman/array'
+
+users.sort(ascend(u => u.name))
+```
+
+#### Parameters
+
+<Field name="fn" type="(value: T) =&gt; number | string" required>
+the function to apply.
+</Field>
+
+
+#### Returns
+
+an ascending comparator suitable for `Array.prototype.sort` or `toSorted`.
+
+```typescript
+(a: T, b: T) => number
+```

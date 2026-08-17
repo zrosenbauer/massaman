@@ -1,0 +1,59 @@
+---
+description: "Produces a human-readable string from any unknown value."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# stringify
+
+Produces a human-readable string from any unknown value.
+
+Uses `JSON.stringify` for structured types (plain objects, arrays)
+so the message contains actual content instead of `[object Object]`.
+Maps and Sets are converted to their array representation first.
+Falls back to `String()` for primitives or when serialization fails
+(e.g. circular references).
+
+```typescript
+stringify({ status: 400 })          // '{"status":400}'
+stringify(new Map([['k', 'v']]))    // '[["k","v"]]'
+stringify(null)                     // 'null'
+stringify(42)                       // '42'
+```
+
+## Usage
+
+### `stringify(value: unknown)`
+
+Produces a human-readable string from any unknown value.
+
+Uses `JSON.stringify` for structured types (plain objects, arrays)
+so the message contains actual content instead of `[object Object]`.
+Maps and Sets are converted to their array representation first.
+Falls back to `String()` for primitives or when serialization fails
+(e.g. circular references).
+
+```typescript
+import { stringify } from 'massaman'
+// or:  import { stringify } from 'massaman/conversion'
+
+stringify({ status: 400 })          // '{"status":400}'
+stringify(new Map([['k', 'v']]))    // '[["k","v"]]'
+stringify(null)                     // 'null'
+stringify(42)                       // '42'
+```
+
+#### Parameters
+
+<Field name="value" type="unknown" required>
+the value to convert.
+</Field>
+
+
+#### Returns
+
+A meaningful string representation.
+
+```typescript
+string
+```

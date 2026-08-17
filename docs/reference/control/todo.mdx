@@ -1,0 +1,51 @@
+---
+description: "Marks a code path you intend to implement later and throws if execution reaches it."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# todo
+
+Marks a code path you intend to implement later and throws if execution reaches it.
+
+```typescript
+return todo('waiting on schema decision')
+```
+
+## Usage
+
+### `todo(message?)`
+
+Use `todo` as an explicit, type-safe placeholder while work is incomplete. Its `never` return type allows it in any expression position, but it always throws at runtime. Use [`unimplemented`](./unimplemented.md) for intentionally unsupported behavior and [`unreachable`](./unreachable.md) for logically impossible paths.
+
+```typescript
+import { todo } from 'massaman'
+// or:  import { todo } from 'massaman/control'
+
+function parseConfig(raw: string): Config {
+  return todo('waiting on schema decision')
+}
+```
+
+#### Parameters
+
+<Field name="message" type="string">
+optional context appended to the thrown error message.
+</Field>
+
+#### Returns
+
+never returns; the function always throws.
+
+```typescript
+never
+```
+
+#### Throws
+
+An `Error` with `not yet implemented`, optionally followed by `message`.
+
+## See also
+
+- [`unimplemented`](./unimplemented.md) — intentionally unsupported behavior
+- [`unreachable`](./unreachable.md) — logically impossible behavior

@@ -1,0 +1,61 @@
+---
+description: "Returns a predicate that checks if a value satisfies ALL predicates."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# allPass
+
+Returns a predicate that checks if a value satisfies ALL predicates.
+
+When every input is a type guard, the result narrows to the intersection
+of every guard's target type. Plain `boolean` predicates contribute nothing
+to the narrowing (they fall back to no-op).
+
+```typescript
+const isPositiveEven = allPass([(n: number) => n > 0, (n: number) => n % 2 === 0])
+isPositiveEven(4) // true
+
+const isNonEmptyString = allPass([isString, isNotEmpty])
+if (isNonEmptyString(x)) {
+  // x is narrowed to string here
+}
+```
+
+## Usage
+
+### `allPass(predicates: ReadonlyArray<(value: unknown) => boolean>)`
+
+Returns a predicate that checks if a value satisfies ALL predicates.
+
+When every input is a type guard, the result narrows to the intersection
+of every guard's target type. Plain `boolean` predicates contribute nothing
+to the narrowing (they fall back to no-op).
+
+```typescript
+import { allPass } from 'massaman'
+// or:  import { allPass } from 'massaman/predicate'
+
+const isPositiveEven = allPass([(n: number) => n > 0, (n: number) => n % 2 === 0])
+isPositiveEven(4) // true
+
+const isNonEmptyString = allPass([isString, isNotEmpty])
+if (isNonEmptyString(x)) {
+  // x is narrowed to string here
+}
+```
+
+#### Parameters
+
+<Field name="predicates" type="ReadonlyArray&lt;(value: unknown) =&gt; boolean&gt;" required>
+the predicates to combine.
+</Field>
+
+
+#### Returns
+
+a predicate that returns `true` only when every supplied predicate passes.
+
+```typescript
+(value: unknown) => boolean
+```

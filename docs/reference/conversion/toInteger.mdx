@@ -1,0 +1,43 @@
+---
+description: "Converts a value to an integer by calling toNumber and truncating."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# toInteger
+
+Converts a value to an integer by calling `toNumber` and truncating.
+
+```typescript
+toInteger('4.9') // 4
+toInteger(null) // 0
+```
+
+## Usage
+
+### `toInteger(value: unknown)`
+
+Converts a value to an integer by calling `toNumber` and truncating.
+
+```typescript
+import { toInteger } from 'massaman'
+// or:  import { toInteger } from 'massaman/conversion'
+
+toInteger('4.9') // 4
+toInteger(null) // 0
+```
+
+#### Parameters
+
+<Field name="value" type="unknown" required>
+the value to convert.
+</Field>
+
+
+#### Returns
+
+the converted number truncated toward zero.
+
+```typescript
+number
+```

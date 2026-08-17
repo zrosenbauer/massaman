@@ -1,154 +1,86 @@
-# Result type
+# Result & Errors
 
-A `Result<T>` is the value returned by a function that might fail. Instead of throwing, the function returns either an `Ok<T>` (success, with a value) or an `Err` (failure, with an `Error`). Callers discriminate on the `ok` field and read either `value` or `error`.
-
-This is Rust's `Result<T, E>` in TypeScript — with one simplification: errors are always `Error`. The normalization is done for you by `attempt`, `attemptAsync`, and `err`.
-
-## The shape
+Massaman treats expected failure as data. A fallible operation returns a `Result<T>` so its caller can see and handle both outcomes without relying on an exception path.
 
 ```typescript
-type Ok<T>  = { ok: true;  value: T;    error: null }
-type Err    = { ok: false; value: null; error: Error }
+type Ok<T> = { ok: true; value: T; error: null }
+type Err = { ok: false; value: null; error: Error }
 type Result<T> = Ok<T> | Err
 ```
 
-`ok` is the discriminant. TypeScript narrows on it.
+Thrown and rejected values still exist at unsafe boundaries. `attempt`, `attemptAsync`, and `err` normalize those values into an `Error` before returning an `Err`.
 
-## Three ways to make one
+## Why it matters
 
-```typescript
-import { attempt, attemptAsync, ok, err } from 'massaman'
+Exceptions hide failure outside a function's return type. A `Result` makes failure visible, keeps it local to the data flow, and gives TypeScript a discriminated union to narrow.
 
-// 1. Wrap an unsafe call
-const parsed = attempt(() => JSON.parse(input))
+This creates a clear boundary:
 
-// 2. Wrap an async unsafe call
-const user = await attemptAsync(() => fetch('/api/me').then((r) => r.json()))
+- unsafe code may throw or reject
+- `attempt` or `attemptAsync` catches that outcome once
+- application code handles `Ok` and `Err` as ordinary values
 
-// 3. Construct directly (in your own functions)
-function divide(a: number, b: number): Result<number> {
-  return b === 0 ? err('division by zero') : ok(a / b)
-}
-```
+## Core tools
 
-## Three ways to consume one
+| Tool | Purpose |
+|---|---|
+| `attempt(fn)` | Run synchronous unsafe work and return a `Result` |
+| `attemptAsync(fn)` | Run asynchronous unsafe work and return a promised `Result` |
+| `ok(value)` | Construct a successful result |
+| `err(error)` | Construct a failed result and normalize its error |
+| `isOk(result)` / `isErr(result)` | Narrow a result with a type guard |
+| `P.ok(pattern?)` / `P.err(pattern?)` | Match a result structurally |
+| `unwrap(result, message?)` | Extract an `Ok` value or throw; use only at a deliberate crash boundary |
+| `toError(value)` | Normalize an unknown value when no `Result` is needed |
 
-```typescript
-import { isOk, isErr, unwrap, match, P } from 'massaman'
+`AbortError` and `TimeoutError` provide recognizable error types for cancellation and time limits. They can be carried by an `Err` like any other `Error`.
 
-// 1. Type guards (good for early-return)
-if (isErr(result)) {
-  return handleError(result.error)
-}
-useValue(result.value) // narrowed to T
+## When to use it
 
-// 2. Pattern matching (good for multi-arm logic)
-return match(result)
-  .with(P.ok, ({ value }) => render(value))
-  .with(P.err, ({ error }) => renderError(error))
-  .exhaustive()
+Use `Result` when failure is expected and the caller can respond:
 
-// 3. Unwrap (escape hatch — throws on Err)
-const value = unwrap(result, 'value required')
-```
+- parsing untrusted input
+- reading files or configuration
+- calling a network or storage boundary
+- enforcing a domain rule that can reject a value
 
-## `P.ok` and `P.err` for matching
+Construct `ok` and `err` in functions that model fallibility directly. Use `attempt` and `attemptAsync` around APIs that communicate failure by throwing or rejecting.
 
-`massaman/match` extends ts-pattern's `P` namespace with `P.ok` and `P.err` — structural patterns that match the `Ok` and `Err` variants of `Result`. They mirror Rust's `Ok(value)` / `Err(error)` match arms.
+## Complete example
 
 ```typescript
-match(result)
-  .with(P.ok, ({ value }) => …)   // narrows to Ok<T>
-  .with(P.err, ({ error }) => …)  // narrows to Err
-  .exhaustive()
-```
+import { attempt, match, P, type Result } from 'massaman'
 
-The values are equivalent to the inline structural patterns:
+type Config = { port: number }
 
-```typescript
-// These two are interchangeable:
-match(result)
-  .with(P.ok, ({ value }) => …)
-  .with(P.err, ({ error }) => …)
-  .exhaustive()
+const parseConfig = (raw: string): Result<Config> =>
+  attempt(() => JSON.parse(raw) as Config)
 
-match(result)
-  .with({ ok: true }, ({ value }) => …)
-  .with({ ok: false }, ({ error }) => …)
+const message = match(parseConfig(input))
+  .with(P.ok(), ({ value }) => `Listening on ${value.port}`)
+  .with(P.err(P.instanceOf(SyntaxError)), ({ error }) =>
+    `Invalid JSON: ${error.message}`,
+  )
+  .with(P.err(), ({ error }) => `Could not load config: ${error.message}`)
   .exhaustive()
 ```
 
-Use `P.ok` / `P.err` for readability. Use the inline form when you're already extending the pattern with additional fields:
+The unsafe operation is isolated in `parseConfig`. Everything after it handles typed data, and every result variant is covered.
 
-```typescript
-// Spread the pattern to add constraints
-match(result)
-  .with({ ...P.ok, value: { name: 'jane' } }, () => 'jane!')
-  .with(P.ok, ({ value }) => `got ${value.name}`)
-  .with(P.err, ({ error }) => `err: ${error.message}`)
-  .exhaustive()
-```
+## When not to use it
 
-## Names and namespaces
+Do not wrap every branch in a `Result`.
 
-The same word appears in multiple places — here's the map:
+- Use a domain union such as `User | NotFound` when both variants are normal outcomes.
+- Let programmer errors fail loudly; they are bugs, not recoverable domain values.
+- Use `unwrap` only where crashing is the intended policy, such as required boot configuration.
 
-| Form | Namespace | What it is |
-|---|---|---|
-| `type Ok<T>`, `type Err` | type | shape of a `Result` variant |
-| `ok()`, `err()` | value (function) | constructors — make a `Result` |
-| `P.ok`, `P.err` | value (property of `P`) | patterns — match a `Result` in `match()` |
-| `isOk()`, `isErr()` | value (function) | type guards — narrow a `Result` in `if` |
+`Result` describes expected failure. It is not a replacement for every union or every exception.
 
-The forms don't collide because they live in different syntactic contexts: a type annotation, a function call, a namespace property access, or an `if` guard. Pick whichever the situation needs.
+## Related reference
 
-## Error normalization
-
-Whatever you `throw` or `reject` with, `Result` will give you an `Error`:
-
-```typescript
-attempt(() => { throw 'oops' })          // err.error = Error('oops')
-attempt(() => { throw new Error('x') })  // err.error = Error('x')
-attempt(() => { throw { code: 42 } })    // err.error = Error('{"code":42}', { cause: { code: 42 } })
-```
-
-`result.error` is always an `Error` you can `.message` and inspect uniformly. The original thrown value is preserved on `error.cause` when it wasn't already an `Error`.
-
-## When NOT to use Result
-
-- **Programmer errors** (out-of-bounds, missing argument that should always be there) — throw. These are bugs, not values.
-- **Truly fatal conditions at boot** — let it crash. Use `unwrap` if you want a one-liner.
-- **Already-typed unions** — if you have `User | NotFound`, use that. `Result<User | NotFound>` would just add a useless `Err` layer.
-
-## Compare: throw vs Result
-
-```typescript
-// Throw — caller has to remember
-function parseConfig(raw: string): Config {
-  return JSON.parse(raw) // might throw
-}
-try {
-  const config = parseConfig(raw)
-  useConfig(config)
-} catch (e) {
-  // what type is e? what threw? do I rethrow?
-}
-
-// Result — failure is visible in the type
-function parseConfig(raw: string): Result<Config> {
-  return attempt(() => JSON.parse(raw) as Config)
-}
-const config = parseConfig(raw)
-if (isOk(config)) useConfig(config.value)
-else log(config.error)
-```
-
-The Result version pushes failure into the type signature — impossible to forget at the call site.
-
-## Related
-
-- [`attempt`](../reference/control/attempt.md), [`attemptAsync`](../reference/control/attemptAsync.md)
-- [`ok`](../reference/control/ok.md), [`err`](../reference/control/err.md)
-- [`isOk`](../reference/control/isOk.md), [`isErr`](../reference/control/isErr.md), [`unwrap`](../reference/control/unwrap.md)
-- [`P`](../reference/match/P.md) — pattern primitives including `P.ok` / `P.err`
-- [Pattern matching concept guide](./match.md)
+- [`attempt`](../reference/control/attempt.md) and [`attemptAsync`](../reference/control/attemptAsync.md)
+- [`ok`](../reference/control/ok.md), [`err`](../reference/control/err.md), [`isOk`](../reference/control/isOk.md), and [`isErr`](../reference/control/isErr.md)
+- [`unwrap`](../reference/control/unwrap.md) and [`toError`](../reference/conversion/toError.md)
+- [`AbortError`](../reference/error/AbortError.md) and [`TimeoutError`](../reference/error/TimeoutError.md)
+- [Pattern Matching](./match.md)

@@ -1,0 +1,68 @@
+---
+title: "isIterable"
+description: "Checks if a value is iterable."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# isIterable <Badge color="#c85a3e">es-toolkit</Badge>
+
+Checks if a value is iterable.
+
+```typescript
+const result = isIterable(value);
+```
+
+## Usage
+
+### `isIterable(value)`
+
+Use `isIterable` to check whether a value implements the iterable protocol — that is, whether it has a `Symbol.iterator` method. Arrays, strings, `Set`, `Map`, typed arrays, and generators are iterable; plain objects, `null`, and `undefined` are not.
+
+```typescript
+import { isIterable } from 'es-toolkit/predicate';
+
+// Iterable values
+console.log(isIterable([1, 2, 3])); // true
+console.log(isIterable('abc')); // true
+console.log(isIterable(new Set([1, 2, 3]))); // true
+console.log(isIterable(new Map())); // true
+
+// Non-iterable values
+console.log(isIterable({ a: 1 })); // false
+console.log(isIterable(123)); // false
+console.log(isIterable(null)); // false
+```
+
+It can also be used as a type guard in TypeScript.
+
+```typescript
+function collect(value: unknown): unknown[] {
+  // Inside this branch, `value` is narrowed to `Iterable<unknown>`
+  if (isIterable(value)) {
+    return [...value];
+  }
+  return [];
+}
+```
+
+#### Parameters
+
+<Field name="value" type="unknown" required>
+The value to check.
+</Field>
+
+#### Returns
+
+Returns `true` if the value is iterable, `false` otherwise.
+
+```typescript
+value is Iterable<unknown>
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/reference/predicate/isIterable.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

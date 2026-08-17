@@ -7,6 +7,12 @@ dist/
 build/
 out/
 
+# Ciderpress generated outputs
+.ciderpress/README.md
+.ciderpress/cache/
+.ciderpress/content/
+.ciderpress/dist/
+
 # Turborepo
 .turbo/
 

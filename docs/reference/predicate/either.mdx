@@ -1,0 +1,54 @@
+---
+description: "Returns a predicate that checks if a value satisfies either predicate."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# either
+
+Returns a predicate that checks if a value satisfies either predicate.
+
+Binary OR combinator — shorthand for `anyPass([f, g])`. When both inputs
+are type guards, the result narrows to the union of their target types.
+
+```typescript
+const isNilOrEmpty = either(isNil, (s: string) => s === '')
+isNilOrEmpty(null)
+```
+
+## Usage
+
+### `either<T>(f: (value: T) => boolean, g: (value: T) => boolean)`
+
+Returns a predicate that checks if a value satisfies either predicate.
+
+Binary OR combinator — shorthand for `anyPass([f, g])`. When both inputs
+are type guards, the result narrows to the union of their target types.
+
+```typescript
+import { either } from 'massaman'
+// or:  import { either } from 'massaman/predicate'
+
+const isNilOrEmpty = either(isNil, (s: string) => s === '')
+isNilOrEmpty(null)
+```
+
+#### Parameters
+
+<Field name="f" type="(value: T) =&gt; boolean" required>
+the first predicate.
+</Field>
+
+
+<Field name="g" type="(value: T) =&gt; boolean" required>
+the second predicate.
+</Field>
+
+
+#### Returns
+
+a predicate that returns `true` when either predicate passes.
+
+```typescript
+(value: T) => boolean
+```

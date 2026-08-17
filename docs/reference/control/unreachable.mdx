@@ -1,0 +1,56 @@
+---
+description: "Marks a code path as logically impossible and throws if execution reaches it."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# unreachable
+
+Marks a code path as logically impossible and throws if execution reaches it.
+
+```typescript
+return unreachable('caller pre-validated the input')
+```
+
+## Usage
+
+### `unreachable(message?)`
+
+Use `unreachable` as a runtime assertion for invariants the type system cannot express. Its `never` return type allows it in any expression position. Reaching the call indicates a bug in the program or invalid data crossing a boundary.
+
+```typescript
+import { unreachable } from 'massaman/control'
+
+function parseDigit(input: string): number {
+  const parsed = Number.parseInt(input, 10)
+
+  if (Number.isNaN(parsed)) {
+    return unreachable('caller pre-validated the input')
+  }
+
+  return parsed
+}
+```
+
+#### Parameters
+
+<Field name="message" type="string">
+optional context appended to the thrown error message.
+</Field>
+
+#### Returns
+
+never returns; the function always throws.
+
+```typescript
+never
+```
+
+#### Throws
+
+An `Error` with `entered unreachable code`, optionally followed by `message`.
+
+## See also
+
+- [`todo`](./todo.md) — unfinished behavior
+- [`unimplemented`](./unimplemented.md) — intentionally unsupported behavior

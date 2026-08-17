@@ -1,0 +1,121 @@
+---
+title: "rangeRight"
+description: "Creates an array of numbers in reverse order within a specified range and step."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# rangeRight <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates an array of numbers in reverse order within a specified range and step.
+
+```typescript
+const numbers = rangeRight(end);
+const numbers = rangeRight(start, end, step?);
+```
+
+## Usage
+
+### `rangeRight(end)`
+
+Use `rangeRight` when you need a consecutive array of numbers in reverse order from the end value to 0. It's like `range` but the result comes from the back.
+
+```typescript
+import { rangeRight } from 'es-toolkit/math';
+
+// Create an array from 3 to 0 in reverse order.
+const numbers1 = rangeRight(4);
+console.log(numbers1); // [3, 2, 1, 0]
+
+// Reverse indices of an array
+const items = ['a', 'b', 'c', 'd', 'e'];
+const reverseIndices = rangeRight(items.length);
+reverseIndices.forEach(i => {
+  console.log(items[i]); // Outputs 'e', 'd', 'c', 'b', 'a' in order
+});
+```
+
+#### Parameters
+
+<Field name="end" type="number" required>
+The end value (exclusive). Starts from 0.
+</Field>
+
+#### Returns
+
+Returns a reverse array of numbers generated from the end value to 0.
+
+```typescript
+number[]
+```
+
+### `rangeRight(start, end, step?)`
+
+Use `rangeRight` when you need a consecutive array of numbers in reverse order with a specified start value, end value, and step. It's like `range` but the result comes from the back.
+
+```typescript
+import { rangeRight } from 'es-toolkit/math';
+
+// Create an array from 4 to 1 in reverse order.
+const numbers2 = rangeRight(1, 5);
+console.log(numbers2); // [4, 3, 2, 1]
+
+// Create an array from 15 to 0 with decrements of 5.
+const numbers3 = rangeRight(0, 20, 5);
+console.log(numbers3); // [15, 10, 5, 0]
+
+// Can also go in the negative direction.
+const numbers4 = rangeRight(-5, 0, 1);
+console.log(numbers4); // [-1, -2, -3, -4, -5]
+
+// Can go from smaller to larger numbers.
+const numbers5 = rangeRight(5, 0, -1);
+console.log(numbers5); // [1, 2, 3, 4, 5]
+```
+
+Useful when you need reverse order for countdowns or pagination.
+
+```typescript
+import { rangeRight } from 'es-toolkit/math';
+
+// Create a countdown
+const countdown = rangeRight(0, 11);
+console.log(countdown); // [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+
+// Pagination from last page to first page
+const pageNumbers = rangeRight(1, 11);
+console.log(pageNumbers); // [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+```
+
+#### Parameters
+
+<Field name="start" type="number" required>
+The start value. Included in the result array.
+</Field>
+
+<Field name="end" type="number" required>
+The end value. Not included in the result array.
+</Field>
+
+<Field name="step" type="number">
+The increment between each number. Must be a non-zero integer. Defaults to `1`.
+</Field>
+
+#### Returns
+
+Returns a reverse array of numbers generated with the specified range and step.
+
+```typescript
+number[]
+```
+
+#### Throws
+
+- Throws an error if `step` is 0 or not an integer.
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/reference/math/rangeRight.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./packages/tsconfig/node.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": ["*.ts"],
+  "exclude": ["node_modules", ".ciderpress/content", ".ciderpress/dist", ".ciderpress/cache"]
+}

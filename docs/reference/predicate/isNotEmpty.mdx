@@ -1,0 +1,43 @@
+---
+description: "Checks if a value is not empty."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# isNotEmpty
+
+Checks if a value is not empty. Complement of `isEmpty`.
+
+```typescript
+isNotEmpty('hello') // true
+isNotEmpty([]) // false
+```
+
+## Usage
+
+### `isNotEmpty(value: string | object)`
+
+Checks if a value is not empty. Complement of `isEmpty`.
+
+```typescript
+import { isNotEmpty } from 'massaman'
+// or:  import { isNotEmpty } from 'massaman/predicate'
+
+isNotEmpty('hello') // true
+isNotEmpty([]) // false
+```
+
+#### Parameters
+
+<Field name="value" type="string | object" required>
+the value to test.
+</Field>
+
+
+#### Returns
+
+whether the supported value contains at least one element or own enumerable property.
+
+```typescript
+boolean
+```

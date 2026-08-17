@@ -1,0 +1,43 @@
+---
+description: "Checks if a value is a finite number."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# isFiniteNumber
+
+Checks if a value is a finite number.
+
+```typescript
+isFiniteNumber(42) // true
+isFiniteNumber(Infinity) // false
+```
+
+## Usage
+
+### `isFiniteNumber(value: unknown)`
+
+Checks if a value is a finite number.
+
+```typescript
+import { isFiniteNumber } from 'massaman'
+// or:  import { isFiniteNumber } from 'massaman/predicate'
+
+isFiniteNumber(42) // true
+isFiniteNumber(Infinity) // false
+```
+
+#### Parameters
+
+<Field name="value" type="unknown" required>
+the value to test.
+</Field>
+
+
+#### Returns
+
+whether `value` is a finite number; a `true` result narrows it to `number`.
+
+```typescript
+value is number
+```

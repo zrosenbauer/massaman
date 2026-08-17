@@ -1,0 +1,51 @@
+---
+title: "drop"
+description: "Creates a function that drops values from the beginning of an array."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# drop (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that drops values from the beginning of an array. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, drop(count));
+```
+
+::: info
+
+Prefer the original es-toolkit [`drop`](../../reference/array/drop.md) in ordinary code. Use this `fp` variant when composing transformations with [`pipe`](./pipe.md).
+
+:::
+
+## Usage
+
+`drop` removes the first `count` values from the piped array. It is lazy-capable inside [`pipe`](./pipe.md).
+
+```typescript
+import { drop, pipe } from 'es-toolkit/fp';
+
+pipe([1, 2, 3, 4], drop(2)); // => [3, 4]
+```
+
+#### Parameters
+
+<Field name="count" type="number" required>
+The number of values to drop from the beginning.
+</Field>
+
+#### Returns
+
+A function that maps a `readonly T[]` to the remaining values.
+
+```typescript
+(array: readonly T[]) => T[]
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/drop.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

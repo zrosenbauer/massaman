@@ -4,6 +4,9 @@
   "private": true,
   "description": "massaman — a comprehensive functional programming library and utilities for TypeScript",
   "type": "module",
+  "imports": {
+    "#site/*": "./.ciderpress/*.ts"
+  },
   "scripts": {
     "prepare": "lefthook install",
     "build": "turbo run build",
@@ -18,6 +21,10 @@
     "docs:sync": "zx scripts/docs-sync.mjs",
     "docs:sync:check": "zx scripts/docs-sync.mjs --check",
     "docs:stub-originals": "zx scripts/docs-stub-originals.mjs",
+    "docs:dev": "node node_modules/ciderpress/dist/cli.mjs dev",
+    "docs:build": "node node_modules/ciderpress/dist/cli.mjs build && node scripts/docs-base.mjs",
+    "docs:check": "node node_modules/ciderpress/dist/cli.mjs check",
+    "docs:serve": "node node_modules/ciderpress/dist/cli.mjs serve",
     "validate": "turbo run typecheck test && pnpm lint && pnpm format:check && pnpm docs:sync:check",
     "clean": "turbo run clean:build clean:turbo clean:npm && pnpm clean:docs-cache",
     "clean:turbo": "pnpm dlx rimraf -g '**/.turbo'",
@@ -31,10 +38,12 @@
   "devDependencies": {
     "@changesets/changelog-github": "^0.7.0",
     "@changesets/cli": "^2.31.0",
+    "@ciderpress/theme": "1.0.0-rc.4",
     "@commitlint/cli": "^21.0.2",
     "@commitlint/config-conventional": "^21.0.2",
     "@commitlint/types": "^21.0.1",
     "@types/node": "catalog:",
+    "ciderpress": "1.0.0-rc.10",
     "eslint-plugin-functional": "^10.0.0",
     "eslint-plugin-security": "^4.0.0",
     "lefthook": "^2.1.9",

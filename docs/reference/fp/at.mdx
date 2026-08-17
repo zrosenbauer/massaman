@@ -1,0 +1,51 @@
+---
+title: "at"
+description: "Creates a function that returns the values at the given indices."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# at (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that returns the values at the given indices. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, at(indices));
+```
+
+::: info
+
+Prefer the original es-toolkit [`at`](../../reference/array/at.md) in ordinary code. Use this `fp` variant when composing transformations with [`pipe`](./pipe.md).
+
+:::
+
+## Usage
+
+`at` reads values from the piped array at each index in `indices`. Negative indices count from the end, matching `Array.prototype.at`.
+
+```typescript
+import { at, pipe } from 'es-toolkit/fp';
+
+pipe(['a', 'b', 'c'], at([0, -1])); // => ['a', 'c']
+```
+
+#### Parameters
+
+<Field name="indices" type="number[]" required>
+The indices to read from the piped array.
+</Field>
+
+#### Returns
+
+A function that maps a `readonly T[]` to the selected values.
+
+```typescript
+(array: readonly T[]) => T[]
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/at.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

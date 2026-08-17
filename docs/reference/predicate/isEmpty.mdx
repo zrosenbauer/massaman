@@ -1,0 +1,57 @@
+---
+description: "Checks if a value is empty."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# isEmpty
+
+Checks if a value is empty.
+
+- Strings: `''`
+- Arrays: `length === 0`
+- Maps/Sets: `size === 0`
+- Objects: no own enumerable keys
+
+```typescript
+isEmpty('') // true
+isEmpty([]) // true
+isEmpty({}) // true
+isEmpty(new Map()) // true
+```
+
+## Usage
+
+### `isEmpty(value: string | object)`
+
+Checks if a value is empty.
+
+- Strings: `''`
+- Arrays: `length === 0`
+- Maps/Sets: `size === 0`
+- Objects: no own enumerable keys
+
+```typescript
+import { isEmpty } from 'massaman'
+// or:  import { isEmpty } from 'massaman/predicate'
+
+isEmpty('') // true
+isEmpty([]) // true
+isEmpty({}) // true
+isEmpty(new Map()) // true
+```
+
+#### Parameters
+
+<Field name="value" type="string | object" required>
+the value to test.
+</Field>
+
+
+#### Returns
+
+whether the supported value contains no elements or own enumerable properties.
+
+```typescript
+boolean
+```

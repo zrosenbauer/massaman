@@ -1,0 +1,54 @@
+---
+title: "uniqWith"
+description: "Creates a function that removes duplicates using a custom equality function."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# uniqWith (Functional Programming) <Badge color="#c85a3e">es-toolkit</Badge>
+
+Creates a function that removes duplicates using a custom equality function. Use it with [`pipe`](./pipe.md).
+
+```typescript
+const result = pipe(array, uniqWith(areItemsEqual));
+```
+
+::: info
+
+Prefer the original es-toolkit [`uniqWith`](../../reference/array/uniqWith.md) in ordinary code. Use this `fp` variant when composing transformations with [`pipe`](./pipe.md).
+
+:::
+
+## Usage
+
+`uniqWith` keeps the first value that does not match a previously kept value according to `areItemsEqual`. It is lazy-capable inside [`pipe`](./pipe.md).
+
+```typescript
+import { pipe, uniqWith } from 'es-toolkit/fp';
+
+pipe(
+  [{ id: 1 }, { id: 1 }, { id: 2 }],
+  uniqWith((a, b) => a.id === b.id)
+); // => [{ id: 1 }, { id: 2 }]
+```
+
+#### Parameters
+
+<Field name="areItemsEqual" type="(item: T, other: T) =&gt; boolean" required>
+The function that decides whether two values are equal.
+</Field>
+
+#### Returns
+
+A function that maps a `readonly T[]` to a duplicate-free array by custom equality.
+
+```typescript
+(array: readonly T[]) => T[]
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/fp/reference/uniqWith.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

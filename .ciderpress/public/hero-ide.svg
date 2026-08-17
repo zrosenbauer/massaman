@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="640" viewBox="0 0 1400 640" role="img" aria-labelledby="title description" xml:space="preserve">
+  <title id="title">Massaman examples in a split terminal editor</title>
+  <desc id="description">Two Vim-style panes showing exhaustive matching and asynchronous Result handling.</desc>
+  <defs>
+    <style>
+      .tab { font: 600 25px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      .code { font: 500 21px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      .line { fill: #66666f; }
+      .text { fill: #ededf0; }
+      .keyword { fill: #f472b6; }
+      .function { fill: #f87171; }
+      .string { fill: #a3e635; }
+      .property { fill: #c084fc; }
+    </style>
+  </defs>
+
+  <rect width="1400" height="640" fill="#020100" />
+  <rect width="650" height="58" fill="#070301" />
+  <rect x="650" width="750" height="58" fill="#070301" />
+  <rect y="55" width="650" height="3" fill="#c85a3e" />
+  <rect x="650" y="55" width="750" height="3" fill="#c85a3e" />
+  <line x1="650" x2="650" y1="0" y2="640" stroke="#332010" stroke-width="3" />
+  <text x="30" y="39" class="tab text">match.ts</text>
+  <text x="680" y="39" class="tab text">result.ts</text>
+
+  <g class="code">
+    <g class="line" text-anchor="end">
+      <text x="48" y="90">1</text><text x="48" y="120">2</text><text x="48" y="150">3</text>
+      <text x="48" y="180">4</text><text x="48" y="210">5</text><text x="48" y="240">6</text>
+      <text x="48" y="270">7</text><text x="48" y="300">8</text><text x="48" y="330">9</text>
+      <text x="48" y="360">10</text><text x="48" y="390">11</text><text x="48" y="420">12</text>
+      <text x="48" y="450">13</text><text x="48" y="480">14</text><text x="48" y="510">15</text>
+      <text x="48" y="540">16</text>
+    </g>
+    <text x="76" y="90"><tspan class="keyword">import</tspan><tspan class="text"> { match, P } </tspan><tspan class="keyword">from</tspan><tspan class="string"> 'massaman'</tspan></text>
+    <text x="76" y="150"><tspan class="keyword">const</tspan><tspan class="text"> view = </tspan><tspan class="function">match</tspan><tspan class="text">(state)</tspan></text>
+    <text x="100" y="180"><tspan class="property">.with</tspan><tspan class="text">({</tspan></text>
+    <text x="124" y="210"><tspan class="text">status: </tspan><tspan class="string">'ready'</tspan><tspan class="text">,</tspan></text>
+    <text x="124" y="240"><tspan class="text">data: { role: </tspan><tspan class="string">'admin'</tspan><tspan class="text"> },</tspan></text>
+    <text x="100" y="270"><tspan class="text">}, ({ data }) =&gt; </tspan><tspan class="function">render</tspan><tspan class="text">(data))</tspan></text>
+    <text x="100" y="300"><tspan class="property">.with</tspan><tspan class="text">({</tspan></text>
+    <text x="124" y="330"><tspan class="text">status: </tspan><tspan class="string">'error'</tspan><tspan class="text">,</tspan></text>
+    <text x="124" y="360"><tspan class="text">error: P.</tspan><tspan class="function">instanceOf</tspan><tspan class="text">(Error),</tspan></text>
+    <text x="100" y="390"><tspan class="text">}, ({ error }) =&gt; </tspan><tspan class="function">report</tspan><tspan class="text">(error))</tspan></text>
+    <text x="100" y="420"><tspan class="property">.with</tspan><tspan class="text">({</tspan></text>
+    <text x="124" y="450"><tspan class="text">status: </tspan><tspan class="string">'loading'</tspan><tspan class="text">,</tspan></text>
+    <text x="124" y="480"><tspan class="text">progress: P.number.</tspan><tspan class="function">gte</tspan><tspan class="text">(0),</tspan></text>
+    <text x="100" y="510"><tspan class="text">}, ({ progress }) =&gt; </tspan><tspan class="function">show</tspan><tspan class="text">(progress))</tspan></text>
+    <text x="100" y="540"><tspan class="property">.exhaustive</tspan><tspan class="text">()</tspan></text>
+
+    <g class="line" text-anchor="end">
+      <text x="698" y="90">1</text><text x="698" y="120">2</text><text x="698" y="150">3</text>
+      <text x="698" y="180">4</text><text x="698" y="210">5</text><text x="698" y="240">6</text>
+      <text x="698" y="270">7</text><text x="698" y="300">8</text><text x="698" y="330">9</text>
+      <text x="698" y="360">10</text><text x="698" y="390">11</text><text x="698" y="420">12</text>
+      <text x="698" y="450">13</text><text x="698" y="480">14</text>
+    </g>
+    <text x="714" y="90"><tspan class="keyword">import</tspan><tspan class="text"> { attemptAsync, isErr, isOk } </tspan><tspan class="keyword">from</tspan><tspan class="string"> 'massaman'</tspan></text>
+    <text x="714" y="150"><tspan class="keyword">const</tspan><tspan class="text"> result = </tspan><tspan class="keyword">await</tspan><tspan class="text"> </tspan><tspan class="function">attemptAsync</tspan><tspan class="text">(() =&gt; {</tspan></text>
+    <text x="738" y="180"><tspan class="keyword">return</tspan><tspan class="text"> </tspan><tspan class="function">fetchUser</tspan><tspan class="text">()</tspan></text>
+    <text x="714" y="210" class="text">})</text>
+    <text x="714" y="270"><tspan class="keyword">if</tspan><tspan class="text"> (</tspan><tspan class="function">isOk</tspan><tspan class="text">(result)) {</tspan></text>
+    <text x="738" y="300"><tspan class="keyword">return</tspan><tspan class="text"> </tspan><tspan class="function">use</tspan><tspan class="text">(result.value)</tspan></text>
+    <text x="714" y="330" class="text">}</text>
+    <text x="714" y="390"><tspan class="keyword">if</tspan><tspan class="text"> (</tspan><tspan class="function">isErr</tspan><tspan class="text">(result)) {</tspan></text>
+    <text x="738" y="420"><tspan class="text">console.</tspan><tspan class="function">log</tspan><tspan class="text">(result.error.message)</tspan></text>
+    <text x="738" y="450"><tspan class="keyword">return</tspan><tspan class="text"> result.error</tspan></text>
+    <text x="714" y="480" class="text">}</text>
+  </g>
+</svg>

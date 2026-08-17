@@ -1,0 +1,66 @@
+---
+title: "dropRight"
+description: "Returns a new array with the specified number of elements removed from the end."
+---
+
+import { Badge, Field } from '@ciderpress/ui/theme'
+
+# dropRight <Badge color="#c85a3e">es-toolkit</Badge>
+
+Returns a new array with the specified number of elements removed from the end.
+
+```typescript
+const dropped = dropRight(arr, itemsCount);
+```
+
+## Usage
+
+### `dropRight(arr, itemsCount)`
+
+Use `dropRight` when you want to remove some elements from the end of an array. It removes the specified number of elements from the end and returns a new array with the remaining elements.
+
+```typescript
+import { dropRight } from 'es-toolkit/array';
+
+// Remove the last 2 elements from the array.
+dropRight([1, 2, 3, 4, 5], 2);
+// Returns: [1, 2, 3]
+
+// If the count is greater than the array length, it returns an empty array.
+dropRight([1, 2, 3], 5);
+// Returns: []
+```
+
+If you pass a negative number or 0, it returns a new array with the same elements as the original.
+
+```typescript
+import { dropRight } from 'es-toolkit/array';
+
+dropRight([1, 2, 3], 0); // [1, 2, 3]
+dropRight([1, 2, 3], -2); // [1, 2, 3]
+```
+
+#### Parameters
+
+<Field name="arr" type="T[]" required>
+The array to remove elements from.
+</Field>
+
+<Field name="itemsCount" type="number" required>
+The number of elements to remove from the end of the array.
+</Field>
+
+#### Returns
+
+A new array with the specified number of elements removed from the end.
+
+```typescript
+T[]
+```
+
+<details>
+<summary>Source: es-toolkit</summary>
+
+Re-exported verbatim from [`es-toolkit`](https://es-toolkit.dev/reference/array/dropRight.html). Implementation, edge cases, and performance behavior are owned upstream. This page mirrors the documentation at the pinned version; the linked source is authoritative.
+
+</details>

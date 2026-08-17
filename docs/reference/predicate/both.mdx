@@ -1,0 +1,54 @@
+---
+description: "Returns a predicate that checks if a value satisfies both predicates."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# both
+
+Returns a predicate that checks if a value satisfies both predicates.
+
+Binary AND combinator — shorthand for `allPass([f, g])`. When both inputs
+are type guards, the result narrows to the intersection of their target types.
+
+```typescript
+const isPositiveEven = both((n: number) => n > 0, (n: number) => n % 2 === 0)
+isPositiveEven(4)
+```
+
+## Usage
+
+### `both<T>(f: (value: T) => boolean, g: (value: T) => boolean)`
+
+Returns a predicate that checks if a value satisfies both predicates.
+
+Binary AND combinator — shorthand for `allPass([f, g])`. When both inputs
+are type guards, the result narrows to the intersection of their target types.
+
+```typescript
+import { both } from 'massaman'
+// or:  import { both } from 'massaman/predicate'
+
+const isPositiveEven = both((n: number) => n > 0, (n: number) => n % 2 === 0)
+isPositiveEven(4)
+```
+
+#### Parameters
+
+<Field name="f" type="(value: T) =&gt; boolean" required>
+the first predicate.
+</Field>
+
+
+<Field name="g" type="(value: T) =&gt; boolean" required>
+the second predicate.
+</Field>
+
+
+#### Returns
+
+a predicate that returns `true` only when both predicates pass.
+
+```typescript
+(value: T) => boolean
+```

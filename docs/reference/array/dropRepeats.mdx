@@ -1,0 +1,61 @@
+---
+description: "Removes consecutively repeated elements from an array using strict equality (===)."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# dropRepeats
+
+Removes consecutively repeated elements from an array using strict
+equality (`===`).
+
+Only adjacent duplicates are removed — non-adjacent duplicates are kept.
+Use `uniq` to remove all duplicates regardless of position.
+
+Quirks (inherent to `===`):
+- `NaN !== NaN`, so adjacent `NaN`s are *not* collapsed.
+- `-0 === 0`, so adjacent `-0` and `0` *are* collapsed.
+- Object/array elements compare by reference, not structure.
+
+```typescript
+dropRepeats([1, 1, 2, 3, 3, 2, 1])
+// [1, 2, 3, 2, 1]
+```
+
+## Usage
+
+### `dropRepeats<T>(array: readonly T[])`
+
+Removes consecutively repeated elements from an array using strict
+equality (`===`).
+
+Only adjacent duplicates are removed — non-adjacent duplicates are kept.
+Use `uniq` to remove all duplicates regardless of position.
+
+Quirks (inherent to `===`):
+- `NaN !== NaN`, so adjacent `NaN`s are *not* collapsed.
+- `-0 === 0`, so adjacent `-0` and `0` *are* collapsed.
+- Object/array elements compare by reference, not structure.
+
+```typescript
+import { dropRepeats } from 'massaman'
+// or:  import { dropRepeats } from 'massaman/array'
+
+dropRepeats([1, 1, 2, 3, 3, 2, 1])
+// [1, 2, 3, 2, 1]
+```
+
+#### Parameters
+
+<Field name="array" type="readonly T[]" required>
+the source array.
+</Field>
+
+
+#### Returns
+
+a new array with consecutive duplicate elements removed.
+
+```typescript
+T[]
+```
