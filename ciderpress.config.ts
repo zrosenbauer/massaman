@@ -2,6 +2,14 @@ import { defineConfig, type IconId, type Page } from 'ciderpress'
 
 import { brandColor, theme } from '#site/theme'
 
+// Single source of truth for the version on the site: the published
+// package's own manifest, so the hero eyebrow can't drift from the release.
+// Imported by relative path rather than as `massaman/package.json` because
+// the package's `exports` map does not expose `./package.json`, and as a JSON
+// import rather than `readFileSync` because this config is bundled into the
+// client build, where `node:fs` cannot resolve.
+import pkg from './packages/massaman/package.json'
+
 const referencePage = (title: string, slug: string, icon: IconId): Page => ({
   title,
   path: `/reference/${slug}`,
@@ -29,7 +37,7 @@ export default defineConfig({
   feedback: false,
   home: {
     hero: {
-      label: 'Functional TypeScript, without a framework',
+      label: `v${pkg.version} · MIT`,
       tagline:
         'A functional TypeScript utility library with Rust-inspired Result types and exhaustive pattern matching, built on es-toolkit and ts-pattern.',
       actions: [
@@ -47,112 +55,155 @@ export default defineConfig({
         },
       ],
       demo: {
+        type: 'image',
         src: '/hero-ide.svg',
         alt: 'Split TypeScript editor showing match and attemptAsync with Result handling',
       },
     },
-    proof: {
-      lead: 'built on',
-      names: ['es-toolkit', 'ts-pattern', 'TypeScript'],
-    },
-    features: {
-      columns: 3,
-      heading: {
+    blocks: [
+      {
+        type: 'proof',
+        lead: 'built on',
+        names: ['es-toolkit', 'ts-pattern', 'TypeScript'],
+      },
+      {
+        type: 'features',
+        columns: 3,
         label: 'The good parts',
         title: 'Small functions. Strong guarantees.',
-        subtitle:
-          'Use the flat import surface or pull from focused subpaths. Every export tree-shakes.',
+        body: 'Use the flat import surface or pull from focused subpaths. Every export tree-shakes.',
+        items: [
+          {
+            title: 'Errors are values',
+            description: 'Wrap unsafe work in Result and keep failure visible in the type.',
+            icon: { id: 'pixelarticons:shield', color: brandColor },
+            link: '/concepts/result',
+          },
+          {
+            title: 'Exhaustive matching',
+            description: 'Match typed patterns and let TypeScript catch every unhandled case.',
+            icon: { id: 'pixelarticons:git-branch', color: brandColor },
+            link: '/concepts/match',
+          },
+          {
+            title: 'Composable by default',
+            description:
+              'Build data flows from small functions instead of mutation and hidden state.',
+            icon: { id: 'pixelarticons:zap', color: brandColor },
+            link: '/concepts/composition',
+          },
+          {
+            title: 'One utility surface',
+            description:
+              'Array, object, string, math, promise, and predicate helpers under one roof.',
+            icon: { id: 'pixelarticons:card-stack', color: brandColor },
+            link: '/reference',
+          },
+          {
+            title: 'Types stay sharp',
+            description:
+              'Variadic predicates and type-level tests preserve inference through the pipeline.',
+            icon: { id: 'pixelarticons:check-double', color: brandColor },
+            link: '/reference/predicate',
+          },
+          {
+            title: 'Pay for what you import',
+            description: 'ESM-only, side-effect free, and split into focused public subpaths.',
+            icon: { id: 'pixelarticons:chart', color: brandColor },
+            link: '/installation',
+          },
+        ],
       },
-      items: [
-        {
-          title: 'Errors are values',
-          description: 'Wrap unsafe work in Result and keep failure visible in the type.',
-          icon: { id: 'pixelarticons:shield', color: brandColor },
-          link: '/concepts/result',
-        },
-        {
-          title: 'Exhaustive matching',
-          description: 'Match typed patterns and let TypeScript catch every unhandled case.',
-          icon: { id: 'pixelarticons:git-branch', color: brandColor },
-          link: '/concepts/match',
-        },
-        {
-          title: 'Composable by default',
-          description:
-            'Build data flows from small functions instead of mutation and hidden state.',
-          icon: { id: 'pixelarticons:zap', color: brandColor },
-          link: '/concepts/composition',
-        },
-        {
-          title: 'One utility surface',
-          description:
-            'Array, object, string, math, promise, and predicate helpers under one roof.',
-          icon: { id: 'pixelarticons:card-stack', color: brandColor },
-          link: '/reference',
-        },
-        {
-          title: 'Types stay sharp',
-          description:
-            'Variadic predicates and type-level tests preserve inference through the pipeline.',
-          icon: { id: 'pixelarticons:check-double', color: brandColor },
-          link: '/reference/predicate',
-        },
-        {
-          title: 'Pay for what you import',
-          description: 'ESM-only, side-effect free, and split into focused public subpaths.',
-          icon: { id: 'pixelarticons:chart', color: brandColor },
-          link: '/installation',
-        },
-      ],
-    },
-    showcase: {
-      columns: 3,
-      source: ['/installation', '/concepts', '/reference'],
-      heading: {
-        label: 'Pick a route',
-        title: 'Start where the problem is.',
-        subtitle: 'Install it, learn the model, or jump directly to a function.',
-      },
-    },
-    split: {
-      label: 'Result + pattern matching',
-      title: 'Handle failure as data.',
-      body: 'Catch unsafe code at the edge, then handle each outcome with typed values and exhaustive matching.',
-      bullets: [
-        'Thrown values normalize to Error',
-        'Ok and Err narrow without casts',
-        'P.ok and P.err cover both outcomes',
-      ],
-      cta: {
-        text: 'Read the Result guide',
-        href: '/concepts/result',
-        variant: 'secondary',
-        icon: 'pixelarticons:arrow-right',
-      },
-      visual: {
-        language: 'ts',
-        code: `const result = attempt(() => JSON.parse(input))
+      {
+        type: 'tabs',
+        orientation: 'horizontal',
+        label: 'Result + pattern matching',
+        title: 'Handle failure as data.',
+        body: 'One task, written both ways. Assume fetchUser() throws a Response on HTTP failure.',
+        items: [
+          {
+            label: 'Without massaman',
+            icon: { id: 'pixelarticons:alert', color: brandColor },
+            title: 'Exceptions, then manual narrowing',
+            body: 'The catch block receives unknown, so every branch has to re-establish what the failure was before it can say anything about it.',
+            bullets: [
+              'message is a let, reassigned across branches',
+              'unknown must be narrowed before the status is readable',
+              'Nothing tells you when a case is missing',
+            ],
+            visual: {
+              type: 'code',
+              language: 'ts',
+              code: `let message: string
 
-return match(result)
-  .with(P.ok(), ({ value }) => use(value))
-  .with(P.err(), ({ error }) => report(error))
+try {
+  const user = await fetchUser(userId)
+  message = \`Welcome, \${user.name}\`
+} catch (error: unknown) {
+  if (error instanceof Response) {
+    if (error.status === 404) {
+      message = 'User not found'
+    } else if (error.status >= 500) {
+      message = 'The service is unavailable'
+    } else {
+      message = \`Request failed: \${error.status}\`
+    }
+  } else if (error instanceof Error) {
+    message = \`Could not load user: \${error.message}\`
+  } else {
+    message = \`Could not load user: \${String(error)}\`
+  }
+}`,
+            },
+          },
+          {
+            label: 'With massaman',
+            icon: { id: 'pixelarticons:check', color: brandColor },
+            title: 'Failure as a value',
+            body: 'attemptAsync turns the throw into a Result, so the whole thing collapses into one expression that produces message directly.',
+            bullets: [
+              'message is a const, assigned once',
+              'Thrown non-Errors normalize and keep the original as error.cause',
+              'exhaustive() fails typechecking on an unhandled case',
+            ],
+            cta: {
+              text: 'Read the Result guide',
+              href: '/concepts/result',
+              variant: 'secondary',
+              icon: 'pixelarticons:arrow-right',
+            },
+            visual: {
+              type: 'code',
+              language: 'ts',
+              code: `const user = await attemptAsync(() => fetchUser(userId))
+
+const message = match(user)
+  .with(P.err({ cause: { status: 404 } }), () => 'User not found')
+  .with(P.err({ cause: { status: P.number.gte(500) } }), () =>
+    'The service is unavailable',
+  )
+  .with(P.ok(), ({ value }) => \`Welcome, \${value.name}\`)
+  .with(P.err(), ({ error }) => \`Could not load user: \${error.message}\`)
   .exhaustive()`,
+            },
+          },
+        ],
       },
-    },
-    cta: {
-      title: 'Start with one function.',
-      subtitle: 'Install massaman, import what you need, and keep the rest out of your bundle.',
-      actions: [
-        { text: 'Get started', href: '/installation', variant: 'primary' },
-        {
-          text: 'View on GitHub',
-          href: 'https://github.com/zrosenbauer/massaman',
-          variant: 'secondary',
-          icon: 'simple-icons:github',
-        },
-      ],
-    },
-    layout: ['hero', 'proof', 'features', 'split', 'showcase', 'cta'],
+      {
+        type: 'cta',
+        title: 'Start with one function.',
+        body: 'Install massaman, import what you need, and keep the rest out of your bundle.',
+        actions: [
+          { text: 'Get started', href: '/installation', variant: 'primary' },
+          {
+            text: 'View on GitHub',
+            href: 'https://github.com/zrosenbauer/massaman',
+            variant: 'secondary',
+            icon: 'simple-icons:github',
+          },
+        ],
+      },
+    ],
   },
   topbar: {
     nav: [

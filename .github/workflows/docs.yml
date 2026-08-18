@@ -37,6 +37,28 @@ jobs:
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
+      - name: Resolve commit metadata
+        id: meta
+        if: github.event_name == 'pull_request'
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: echo "short_sha=${HEAD_SHA:0:7}" >> "$GITHUB_OUTPUT"
+
+      - name: Mark preview as deploying
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
+        with:
+          header: docs-preview
+          message: |
+            ### Docs Preview
+
+            |            |                                                                                                                                        |
+            | :--------- | :------------------------------------------------------------------------------------------------------------------------------------- |
+            | **Status** | Deploying                                                                                                                              |
+            | **Preview** | Building the site...                                                                                                                  |
+            | **Commit** | [`${{ steps.meta.outputs.short_sha }}`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.event.pull_request.head.sha }}) |
+            | **Run**    | [View logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})                                        |
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
@@ -48,12 +70,22 @@ jobs:
           node-version: 26
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm docs:build
+      - name: Install dependencies
+        id: install
+        run: |
+          set -o pipefail
+          pnpm install --frozen-lockfile 2>&1 | tee /tmp/docs.log
+
+      - name: Build docs
+        id: build
         env:
           CIDERPRESS_BASE: /
+        run: |
+          set -o pipefail
+          pnpm docs:build 2>&1 | tee -a /tmp/docs.log
 
-      - id: deploy
+      - name: Deploy to Cloudflare Pages
+        id: deploy
         uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -61,7 +93,7 @@ jobs:
           command: pages deploy .ciderpress/dist --project-name=massaman --branch=${{ github.head_ref || github.ref_name }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Comment preview URL
+      - name: Mark preview as deployed
         if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
         with:
@@ -69,8 +101,65 @@ jobs:
           message: |
             ### Docs Preview
 
-            [${{ steps.deploy.outputs.pages-deployment-alias-url || steps.deploy.outputs.deployment-url }}](${{ steps.deploy.outputs.pages-deployment-alias-url || steps.deploy.outputs.deployment-url }})
+            |            |                                                                                                                                        |
+            | :--------- | :------------------------------------------------------------------------------------------------------------------------------------- |
+            | **Status** | Deployed                                                                                                                               |
+            | **Preview** | ${{ steps.deploy.outputs.pages-deployment-alias-url || steps.deploy.outputs.deployment-url }}                                          |
+            | **Commit** | [`${{ steps.meta.outputs.short_sha }}`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.event.pull_request.head.sha }}) |
+            | **Run**    | [View logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})                                        |
 
-            ---
+      - name: Collect failure details
+        id: failure
+        if: failure() && github.event_name == 'pull_request'
+        env:
+          INSTALL_OUTCOME: ${{ steps.install.outcome }}
+          BUILD_OUTCOME: ${{ steps.build.outcome }}
+          DEPLOY_OUTCOME: ${{ steps.deploy.outcome }}
+        run: |
+          if [ "$INSTALL_OUTCOME" = "failure" ]; then
+            phase="Install dependencies"
+          elif [ "$BUILD_OUTCOME" = "failure" ]; then
+            phase="Build docs"
+          elif [ "$DEPLOY_OUTCOME" = "failure" ]; then
+            phase="Deploy to Cloudflare Pages"
+          else
+            phase="Unknown"
+          fi
+          echo "phase=$phase" >> "$GITHUB_OUTPUT"
 
-            Latest commit built: [${{ github.event.pull_request.head.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.event.pull_request.head.sha }})
+          # Heredoc delimiter is stripped from the payload so log content can't
+          # terminate the block early and inject arbitrary step outputs.
+          {
+            echo "log<<DOCS_LOG_EOF"
+            if [ "$DEPLOY_OUTCOME" = "failure" ] || [ ! -s /tmp/docs.log ]; then
+              echo "No captured output for this phase - see the workflow run log."
+            else
+              tail -n 40 /tmp/docs.log \
+                | sed -e 's/\x1b\[[0-9;]*[a-zA-Z]//g' -e '/DOCS_LOG_EOF/d'
+            fi
+            echo "DOCS_LOG_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Mark preview as failed
+        if: failure() && github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
+        with:
+          header: docs-preview
+          message: |
+            ### Docs Preview
+
+            |            |                                                                                                                                        |
+            | :--------- | :------------------------------------------------------------------------------------------------------------------------------------- |
+            | **Status** | Failed at ${{ steps.failure.outputs.phase }}                                                                                           |
+            | **Preview** | Unavailable                                                                                                                           |
+            | **Commit** | [`${{ steps.meta.outputs.short_sha }}`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.event.pull_request.head.sha }}) |
+            | **Run**    | [View logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})                                        |
+
+            <details>
+            <summary>Error output</summary>
+
+            ```text
+            ${{ steps.failure.outputs.log }}
+            ```
+
+            </details>
