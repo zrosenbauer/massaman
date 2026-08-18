@@ -47,112 +47,115 @@ export default defineConfig({
         },
       ],
       demo: {
+        type: 'image',
         src: '/hero-ide.svg',
         alt: 'Split TypeScript editor showing match and attemptAsync with Result handling',
       },
     },
-    proof: {
-      lead: 'built on',
-      names: ['es-toolkit', 'ts-pattern', 'TypeScript'],
-    },
-    features: {
-      columns: 3,
-      heading: {
+    blocks: [
+      {
+        type: 'proof',
+        lead: 'built on',
+        names: ['es-toolkit', 'ts-pattern', 'TypeScript'],
+      },
+      {
+        type: 'features',
+        columns: 3,
         label: 'The good parts',
         title: 'Small functions. Strong guarantees.',
-        subtitle:
-          'Use the flat import surface or pull from focused subpaths. Every export tree-shakes.',
+        body: 'Use the flat import surface or pull from focused subpaths. Every export tree-shakes.',
+        items: [
+          {
+            title: 'Errors are values',
+            description: 'Wrap unsafe work in Result and keep failure visible in the type.',
+            icon: { id: 'pixelarticons:shield', color: brandColor },
+            link: '/concepts/result',
+          },
+          {
+            title: 'Exhaustive matching',
+            description: 'Match typed patterns and let TypeScript catch every unhandled case.',
+            icon: { id: 'pixelarticons:git-branch', color: brandColor },
+            link: '/concepts/match',
+          },
+          {
+            title: 'Composable by default',
+            description:
+              'Build data flows from small functions instead of mutation and hidden state.',
+            icon: { id: 'pixelarticons:zap', color: brandColor },
+            link: '/concepts/composition',
+          },
+          {
+            title: 'One utility surface',
+            description:
+              'Array, object, string, math, promise, and predicate helpers under one roof.',
+            icon: { id: 'pixelarticons:card-stack', color: brandColor },
+            link: '/reference',
+          },
+          {
+            title: 'Types stay sharp',
+            description:
+              'Variadic predicates and type-level tests preserve inference through the pipeline.',
+            icon: { id: 'pixelarticons:check-double', color: brandColor },
+            link: '/reference/predicate',
+          },
+          {
+            title: 'Pay for what you import',
+            description: 'ESM-only, side-effect free, and split into focused public subpaths.',
+            icon: { id: 'pixelarticons:chart', color: brandColor },
+            link: '/installation',
+          },
+        ],
       },
-      items: [
-        {
-          title: 'Errors are values',
-          description: 'Wrap unsafe work in Result and keep failure visible in the type.',
-          icon: { id: 'pixelarticons:shield', color: brandColor },
-          link: '/concepts/result',
+      {
+        type: 'split',
+        label: 'Result + pattern matching',
+        title: 'Handle failure as data.',
+        body: 'Catch unsafe code at the edge, then handle each outcome with typed values and exhaustive matching.',
+        bullets: [
+          'Thrown values normalize to Error',
+          'Ok and Err narrow without casts',
+          'P.ok and P.err cover both outcomes',
+        ],
+        cta: {
+          text: 'Read the Result guide',
+          href: '/concepts/result',
+          variant: 'secondary',
+          icon: 'pixelarticons:arrow-right',
         },
-        {
-          title: 'Exhaustive matching',
-          description: 'Match typed patterns and let TypeScript catch every unhandled case.',
-          icon: { id: 'pixelarticons:git-branch', color: brandColor },
-          link: '/concepts/match',
-        },
-        {
-          title: 'Composable by default',
-          description:
-            'Build data flows from small functions instead of mutation and hidden state.',
-          icon: { id: 'pixelarticons:zap', color: brandColor },
-          link: '/concepts/composition',
-        },
-        {
-          title: 'One utility surface',
-          description:
-            'Array, object, string, math, promise, and predicate helpers under one roof.',
-          icon: { id: 'pixelarticons:card-stack', color: brandColor },
-          link: '/reference',
-        },
-        {
-          title: 'Types stay sharp',
-          description:
-            'Variadic predicates and type-level tests preserve inference through the pipeline.',
-          icon: { id: 'pixelarticons:check-double', color: brandColor },
-          link: '/reference/predicate',
-        },
-        {
-          title: 'Pay for what you import',
-          description: 'ESM-only, side-effect free, and split into focused public subpaths.',
-          icon: { id: 'pixelarticons:chart', color: brandColor },
-          link: '/installation',
-        },
-      ],
-    },
-    showcase: {
-      columns: 3,
-      source: ['/installation', '/concepts', '/reference'],
-      heading: {
-        label: 'Pick a route',
-        title: 'Start where the problem is.',
-        subtitle: 'Install it, learn the model, or jump directly to a function.',
-      },
-    },
-    split: {
-      label: 'Result + pattern matching',
-      title: 'Handle failure as data.',
-      body: 'Catch unsafe code at the edge, then handle each outcome with typed values and exhaustive matching.',
-      bullets: [
-        'Thrown values normalize to Error',
-        'Ok and Err narrow without casts',
-        'P.ok and P.err cover both outcomes',
-      ],
-      cta: {
-        text: 'Read the Result guide',
-        href: '/concepts/result',
-        variant: 'secondary',
-        icon: 'pixelarticons:arrow-right',
-      },
-      visual: {
-        language: 'ts',
-        code: `const result = attempt(() => JSON.parse(input))
+        visual: {
+          type: 'code',
+          language: 'ts',
+          code: `const result = attempt(() => JSON.parse(input))
 
 return match(result)
   .with(P.ok(), ({ value }) => use(value))
   .with(P.err(), ({ error }) => report(error))
   .exhaustive()`,
-      },
-    },
-    cta: {
-      title: 'Start with one function.',
-      subtitle: 'Install massaman, import what you need, and keep the rest out of your bundle.',
-      actions: [
-        { text: 'Get started', href: '/installation', variant: 'primary' },
-        {
-          text: 'View on GitHub',
-          href: 'https://github.com/zrosenbauer/massaman',
-          variant: 'secondary',
-          icon: 'simple-icons:github',
         },
-      ],
-    },
-    layout: ['hero', 'proof', 'features', 'split', 'showcase', 'cta'],
+      },
+      {
+        type: 'showcase',
+        columns: 3,
+        source: ['/installation', '/concepts', '/reference'],
+        label: 'Pick a route',
+        title: 'Start where the problem is.',
+        body: 'Install it, learn the model, or jump directly to a function.',
+      },
+      {
+        type: 'cta',
+        title: 'Start with one function.',
+        body: 'Install massaman, import what you need, and keep the rest out of your bundle.',
+        actions: [
+          { text: 'Get started', href: '/installation', variant: 'primary' },
+          {
+            text: 'View on GitHub',
+            href: 'https://github.com/zrosenbauer/massaman',
+            variant: 'secondary',
+            icon: 'simple-icons:github',
+          },
+        ],
+      },
+    ],
   },
   topbar: {
     nav: [
