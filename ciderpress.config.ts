@@ -2,6 +2,14 @@ import { defineConfig, type IconId, type Page } from 'ciderpress'
 
 import { brandColor, theme } from '#site/theme'
 
+// Single source of truth for the version on the site: the published
+// package's own manifest, so the hero eyebrow can't drift from the release.
+// Imported by relative path rather than as `massaman/package.json` because
+// the package's `exports` map does not expose `./package.json`, and as a JSON
+// import rather than `readFileSync` because this config is bundled into the
+// client build, where `node:fs` cannot resolve.
+import pkg from './packages/massaman/package.json'
+
 const referencePage = (title: string, slug: string, icon: IconId): Page => ({
   title,
   path: `/reference/${slug}`,
@@ -29,7 +37,7 @@ export default defineConfig({
   feedback: false,
   home: {
     hero: {
-      label: 'Functional TypeScript, without a framework',
+      label: `v${pkg.version} · MIT`,
       tagline:
         'A functional TypeScript utility library with Rust-inspired Result types and exhaustive pattern matching, built on es-toolkit and ts-pattern.',
       actions: [
@@ -107,39 +115,79 @@ export default defineConfig({
         ],
       },
       {
-        type: 'split',
+        type: 'tabs',
+        orientation: 'vertical',
         label: 'Result + pattern matching',
         title: 'Handle failure as data.',
-        body: 'Catch unsafe code at the edge, then handle each outcome with typed values and exhaustive matching.',
-        bullets: [
-          'Thrown values normalize to Error',
-          'Ok and Err narrow without casts',
-          'P.ok and P.err cover both outcomes',
-        ],
-        cta: {
-          text: 'Read the Result guide',
-          href: '/concepts/result',
-          variant: 'secondary',
-          icon: 'pixelarticons:arrow-right',
-        },
-        visual: {
-          type: 'code',
-          language: 'ts',
-          code: `const result = attempt(() => JSON.parse(input))
+        body: 'One task, written both ways. Assume fetchUser() throws a Response on HTTP failure.',
+        items: [
+          {
+            label: 'Without massaman',
+            icon: { id: 'pixelarticons:alert', color: brandColor },
+            title: 'Exceptions, then manual narrowing',
+            body: 'The catch block receives unknown, so every branch has to re-establish what the failure was before it can say anything about it.',
+            bullets: [
+              'message is a let, reassigned across branches',
+              'unknown must be narrowed before the status is readable',
+              'Nothing tells you when a case is missing',
+            ],
+            visual: {
+              type: 'code',
+              language: 'ts',
+              code: `let message: string
 
-return match(result)
-  .with(P.ok(), ({ value }) => use(value))
-  .with(P.err(), ({ error }) => report(error))
+try {
+  const user = await fetchUser(userId)
+  message = \`Welcome, \${user.name}\`
+} catch (error: unknown) {
+  if (error instanceof Response) {
+    if (error.status === 404) {
+      message = 'User not found'
+    } else if (error.status >= 500) {
+      message = 'The service is unavailable'
+    } else {
+      message = \`Request failed: \${error.status}\`
+    }
+  } else if (error instanceof Error) {
+    message = \`Could not load user: \${error.message}\`
+  } else {
+    message = \`Could not load user: \${String(error)}\`
+  }
+}`,
+            },
+          },
+          {
+            label: 'With massaman',
+            icon: { id: 'pixelarticons:check', color: brandColor },
+            title: 'Failure as a value',
+            body: 'attemptAsync turns the throw into a Result, so the whole thing collapses into one expression that produces message directly.',
+            bullets: [
+              'message is a const, assigned once',
+              'Thrown non-Errors normalize and keep the original as error.cause',
+              'exhaustive() fails typechecking on an unhandled case',
+            ],
+            cta: {
+              text: 'Read the Result guide',
+              href: '/concepts/result',
+              variant: 'secondary',
+              icon: 'pixelarticons:arrow-right',
+            },
+            visual: {
+              type: 'code',
+              language: 'ts',
+              code: `const user = await attemptAsync(() => fetchUser(userId))
+
+const message = match(user)
+  .with(P.err({ cause: { status: 404 } }), () => 'User not found')
+  .with(P.err({ cause: { status: P.number.gte(500) } }), () =>
+    'The service is unavailable',
+  )
+  .with(P.ok(), ({ value }) => \`Welcome, \${value.name}\`)
+  .with(P.err(), ({ error }) => \`Could not load user: \${error.message}\`)
   .exhaustive()`,
-        },
-      },
-      {
-        type: 'showcase',
-        columns: 3,
-        source: ['/installation', '/concepts', '/reference'],
-        label: 'Documentation',
-        title: 'Skip to the part you need.',
-        body: 'Setup takes a minute, the concepts take ten, and the reference covers everything after that.',
+            },
+          },
+        ],
       },
       {
         type: 'cta',
