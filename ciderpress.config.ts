@@ -116,7 +116,7 @@ export default defineConfig({
       },
       {
         type: 'tabs',
-        orientation: 'vertical',
+        orientation: 'horizontal',
         label: 'Result + pattern matching',
         title: 'Handle failure as data.',
         body: 'One task, written both ways. Assume fetchUser() throws a Response on HTTP failure.',
