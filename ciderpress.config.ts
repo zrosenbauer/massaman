@@ -137,9 +137,9 @@ return match(result)
         type: 'showcase',
         columns: 3,
         source: ['/installation', '/concepts', '/reference'],
-        label: 'Pick a route',
-        title: 'Start where the problem is.',
-        body: 'Install it, learn the model, or jump directly to a function.',
+        label: 'Documentation',
+        title: 'Skip to the part you need.',
+        body: 'Setup takes a minute, the concepts take ten, and the reference covers everything after that.',
       },
       {
         type: 'cta',
