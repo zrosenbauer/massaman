@@ -68,7 +68,9 @@ if (isOk(result)) {
 }
 ```
 
-## Why?
+## Why Massaman?
+
+Currying is a core functional programming technique, and its name makes curry-the-food jokes inevitable. Massaman is a delicious Thai curry known for its rich blend of spices. This library continues the pun with its own rich blend of functional patterns.
 
 Two Rust patterns I keep wanting in TypeScript: `match` for exhaustive branching, and `Result` for errors that compose without throws.
 
