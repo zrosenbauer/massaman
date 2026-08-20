@@ -95,7 +95,7 @@ jobs:
           command: pages deploy ../.ciderpress/dist --project-name=massaman --branch=${{ github.head_ref || github.ref_name }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           packageManager: npm
-          workingDirectory: scripts
+          workingDirectory: .github
 
       - name: Mark preview as deployed
         if: github.event_name == 'pull_request'
