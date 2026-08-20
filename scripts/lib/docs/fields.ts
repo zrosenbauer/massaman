@@ -6,41 +6,81 @@ const SECTION_HEADING = /^#{2,4} /u
 const RETURN_BOUNDARY = /^(?:#{2,4} |---$)/u
 const PARAMETER = /^- `([^`]+)` \(`([^`]+)`(?:, (optional))?\):\s*(.*)$/u
 const RETURN = /^\(`([^`]+)`\):\s*(.*)$/u
+const ATTRIBUTE_ENTITIES = new Map([
+  ['&', '&amp;'],
+  ['"', '&quot;'],
+  ['<', '&lt;'],
+  ['>', '&gt;'],
+])
 
-const escapeAttribute = (value) =>
-  value
-    .replaceAll('&', '&amp;')
-    .replaceAll('"', '&quot;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
+type Field = {
+  name: string
+  type: string
+  optional: boolean
+  body: string[]
+}
 
-const requiredAttribute = (optional) => {
+type FieldState = {
+  fields: Field[]
+  current: Field | null
+  valid: boolean
+}
+
+type TransformState = {
+  output: string[]
+  skipUntil: number
+  count: number
+}
+
+type Section = {
+  end: number
+  replacement: string[]
+}
+
+type TransformResult = {
+  content: string
+  count: number
+  changed: boolean
+}
+
+const escapeAttribute = (value: string): string =>
+  value.replace(/[&"<>]/gu, (character: string) => ATTRIBUTE_ENTITIES.get(character) ?? character)
+
+const requiredAttribute = (optional: boolean): string => {
   if (optional) return ''
   return ' required'
 }
 
-const appendCurrent = (fields, current) => {
+const appendCurrent = (fields: Field[], current: Field | null): Field[] => {
   if (current === null) return fields
   return [...fields, current]
 }
 
-const renderField = ({ name, type, optional, body }) => {
+const renderField = ({ name, type, optional, body }: Field): string => {
   const required = requiredAttribute(optional)
   const description = body.join('\n').trimEnd()
 
   return `<Field name="${escapeAttribute(name)}" type="${escapeAttribute(type)}"${required}>\n${description}\n</Field>`
 }
 
-const parseFields = (lines) => {
-  const parsed = lines.reduce(
+const parseFields = (lines: string[]): Field[] | null => {
+  const parsed = lines.reduce<FieldState>(
     (state, line) => {
       const match = line.match(PARAMETER)
 
       if (match === null) {
         if (state.current === null) {
-          return { ...state, valid: line.trim() === '' && state.valid }
+          return {
+            fields: state.fields,
+            current: state.current,
+            valid: line.trim() === '' && state.valid,
+          }
         }
-        return { ...state, current: { ...state.current, body: [...state.current.body, line] } }
+        return {
+          fields: state.fields,
+          current: { ...state.current, body: state.current.body.concat(line) },
+          valid: state.valid,
+        }
       }
 
       const fields = appendCurrent(state.fields, state.current)
@@ -63,7 +103,7 @@ const parseFields = (lines) => {
   return fields
 }
 
-const transformParameterSection = (lines, start) => {
+const transformParameterSection = (lines: string[], start: number): Section | null => {
   const contentStart = blankLineOffset(lines[start + 1]) + start + 1
   const relativeEnd = lines.slice(contentStart).findIndex((line) => SECTION_HEADING.test(line))
   const end = sectionEnd(lines.length, contentStart, relativeEnd)
@@ -76,18 +116,18 @@ const transformParameterSection = (lines, start) => {
   }
 }
 
-const blankLineOffset = (line) => {
+const blankLineOffset = (line: string | undefined): number => {
   if (line?.trim() === '') return 1
   return 0
 }
 
-const sectionEnd = (lineCount, contentStart, relativeEnd) => {
+const sectionEnd = (lineCount: number, contentStart: number, relativeEnd: number): number => {
   if (relativeEnd === -1) return lineCount
   return contentStart + relativeEnd
 }
 
-const transformSections = (lines) => {
-  const transformed = lines.reduce(
+const transformSections = (lines: string[]): TransformState => {
+  const transformed = lines.reduce<TransformState>(
     (state, line, index) => {
       if (index < state.skipUntil) return state
       if (line !== PARAMETERS_HEADING) return { ...state, output: [...state.output, line] }
@@ -106,14 +146,14 @@ const transformSections = (lines) => {
   return transformed
 }
 
-const trimBlankLines = (lines) => {
+const trimBlankLines = (lines: string[]): string[] => {
   const start = lines.findIndex((line) => line.trim() !== '')
   if (start === -1) return []
   const reversedEnd = lines.toReversed().findIndex((line) => line.trim() !== '')
   return lines.slice(start, lines.length - reversedEnd)
 }
 
-const transformReturnSection = (lines, start) => {
+const transformReturnSection = (lines: string[], start: number): Section | null => {
   const contentStart = blankLineOffset(lines[start + 1]) + start + 1
   const match = lines[contentStart]?.match(RETURN)
   if (match === null || match === undefined) return null
@@ -127,8 +167,8 @@ const transformReturnSection = (lines, start) => {
   }
 }
 
-const transformReturns = (lines) =>
-  lines.reduce(
+const transformReturns = (lines: string[]): TransformState =>
+  lines.reduce<TransformState>(
     (state, line, index) => {
       if (index < state.skipUntil) return state
       if (line !== RETURNS_HEADING) return { ...state, output: [...state.output, line] }
@@ -144,23 +184,23 @@ const transformReturns = (lines) =>
     { output: [], skipUntil: 0, count: 0 }
   )
 
-const normalizeFieldGroups = (content) =>
+const normalizeFieldGroups = (content: string): string =>
   content
     .replace(LEGACY_FIELD_IMPORT, FIELD_IMPORT)
     .replaceAll('<FieldGroup title="Parameters">', PARAMETERS_HEADING)
     .replaceAll(/\n\n<\/FieldGroup>(?=\n\n#### Returns)/gu, '')
 
-const addFieldImport = (content) => {
+const addFieldImport = (content: string): string => {
   if (content.includes(FIELD_IMPORT)) return content
   return `${FIELD_IMPORT}\n\n${content}`
 }
 
-const addFieldImportWhenNeeded = (content, parameterCount) => {
+const addFieldImportWhenNeeded = (content: string, parameterCount: number): string => {
   if (parameterCount === 0) return content
   return addFieldImport(content)
 }
 
-export const transformReferenceFields = (content) => {
+export const transformReferenceFields = (content: string): TransformResult => {
   const normalized = normalizeFieldGroups(content)
   const parameters = transformSections(normalized.split('\n'))
   const returns = transformReturns(parameters.output)

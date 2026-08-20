@@ -18,11 +18,11 @@
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "fix": "turbo run format:fix lint:fix",
-    "docs:sync": "zx scripts/docs-sync.mjs",
-    "docs:sync:check": "zx scripts/docs-sync.mjs --check",
-    "docs:stub-originals": "zx scripts/docs-stub-originals.mjs",
+    "docs:sync": "pnpm --filter=@massaman/scripts docs sync",
+    "docs:sync:check": "pnpm --filter=@massaman/scripts docs sync --check",
+    "docs:stub-originals": "pnpm --filter=@massaman/scripts docs stub",
     "docs:dev": "node node_modules/ciderpress/dist/cli.mjs dev",
-    "docs:build": "node node_modules/ciderpress/dist/cli.mjs build && node scripts/docs-base.mjs",
+    "docs:build": "node node_modules/ciderpress/dist/cli.mjs build && pnpm --filter=@massaman/scripts docs build",
     "docs:check": "node node_modules/ciderpress/dist/cli.mjs check",
     "docs:serve": "node node_modules/ciderpress/dist/cli.mjs serve",
     "validate": "turbo run typecheck test && pnpm lint && pnpm format:check && pnpm docs:sync:check",
@@ -54,8 +54,7 @@
     "tsx": "catalog:",
     "turbo": "^2.10.10",
     "typescript": "^6.0.3",
-    "vitest": "catalog:",
-    "zx": "^8.8.5"
+    "vitest": "catalog:"
   },
   "engines": {
     "node": ">=26.0.0"

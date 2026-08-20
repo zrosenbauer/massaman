@@ -10,7 +10,8 @@ on:
       - 'docs/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
-      - 'scripts/docs-base.mjs'
+      - 'scripts/docs.ts'
+      - 'scripts/lib/docs/**'
   pull_request:
     branches: [main]
     paths:
@@ -20,7 +21,8 @@ on:
       - 'docs/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
-      - 'scripts/docs-base.mjs'
+      - 'scripts/docs.ts'
+      - 'scripts/lib/docs/**'
   workflow_dispatch:
 
 permissions:

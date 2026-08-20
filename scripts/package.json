@@ -1,0 +1,16 @@
+{
+  "name": "@massaman/scripts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "docs": "zx docs.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "cac": "^7.0.0",
+    "typescript": "^7.0.2",
+    "zx": "^8.8.5"
+  }
+}

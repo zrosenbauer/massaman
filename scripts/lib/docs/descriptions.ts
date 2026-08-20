@@ -1,7 +1,7 @@
 const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n)*/u
 const DESCRIPTION = /^description:\s*.*$/mu
 
-export function withReferenceDescription(content) {
+export function withReferenceDescription(content: string): string {
   const description = extractReferenceDescription(content)
   const match = content.match(FRONTMATTER)
 
@@ -16,7 +16,7 @@ export function withReferenceDescription(content) {
   return content.replace(FRONTMATTER, `---\n${nextMatter}\n---\n\n`)
 }
 
-export function extractReferenceDescription(content) {
+export function extractReferenceDescription(content: string): string {
   const body = content
     .replace(FRONTMATTER, '')
     .replace(/<details>[\s\S]*?<\/details>/gu, '')

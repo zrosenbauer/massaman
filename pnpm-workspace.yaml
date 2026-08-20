@@ -1,5 +1,16 @@
 packages:
   - packages/*
+  - scripts
+
+blockExoticSubdeps: true
+minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+  - '@rspack/*'
+  - '@turbo/*'
+  - es-toolkit
+  - ts-pattern
+  - turbo
+trustPolicy: no-downgrade
 
 catalog:
   '@types/node': ^26.2.0

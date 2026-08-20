@@ -1,7 +1,8 @@
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
 
-const DIST = path.resolve('.ciderpress/dist')
+const ROOT = path.resolve(import.meta.dirname, '../../..')
+const DIST = path.join(ROOT, '.ciderpress', 'dist')
 const BASE = process.env.CIDERPRESS_BASE ?? '/'
 const TEXT_EXTENSIONS = new Set(['.css', '.html', '.js'])
 const THEME_OVERRIDES = `<style data-massaman-theme>
@@ -79,40 +80,45 @@ html[data-cp-theme='midnight'][data-cp-variant='dark'] {
 }
 </style>`
 
-const files = (await fs.readdir(DIST, { recursive: true })).filter((file) =>
-  TEXT_EXTENSIONS.has(path.extname(file))
-)
+export const buildDocs = async (): Promise<void> => {
+  const files = (await fs.readdir(DIST, { recursive: true })).filter((file) =>
+    TEXT_EXTENSIONS.has(path.extname(file))
+  )
 
-const changed = await Promise.all(
-  files.map(async (file) => {
-    const target = path.join(DIST, file)
-    const content = await fs.readFile(target, 'utf8')
-    const rebased = content
-      .replaceAll('/static/', `${BASE}static/`)
-      .replaceAll('href="/icon.svg"', `href="${BASE}icon.svg"`)
-      .replaceAll('.p="/",', `.p="${BASE}",`)
-      .replaceAll('clamp(40px, 6.5vw, 76px)', 'clamp(34px, 4.5vw, 58px)')
-      .replaceAll('var(--cp-header-logo-height,28px)', 'var(--cp-header-logo-height,44px)')
-      .replaceAll(
-        '.cp-hero-demo--image{padding:0}',
-        '.cp-hero-demo--image{padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}'
-      )
-      .replaceAll('.cp-hero-demo__img{border-radius:inherit', '.cp-hero-demo__img{border-radius:0')
-      .replaceAll(
-        'layout:["hero","proof","features","split","showcase","cta"]',
-        'layout:["hero","trust","features","split","workspaces","cta"]'
-      )
+  const changed = await Promise.all(
+    files.map(async (file) => {
+      const target = path.join(DIST, file)
+      const content = await fs.readFile(target, 'utf8')
+      const rebased = content
+        .replaceAll('/static/', `${BASE}static/`)
+        .replaceAll('href="/icon.svg"', `href="${BASE}icon.svg"`)
+        .replaceAll('.p="/",', `.p="${BASE}",`)
+        .replaceAll('clamp(40px, 6.5vw, 76px)', 'clamp(34px, 4.5vw, 58px)')
+        .replaceAll('var(--cp-header-logo-height,28px)', 'var(--cp-header-logo-height,44px)')
+        .replaceAll(
+          '.cp-hero-demo--image{padding:0}',
+          '.cp-hero-demo--image{padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}'
+        )
+        .replaceAll(
+          '.cp-hero-demo__img{border-radius:inherit',
+          '.cp-hero-demo__img{border-radius:0'
+        )
+        .replaceAll(
+          'layout:["hero","proof","features","split","showcase","cta"]',
+          'layout:["hero","trust","features","split","workspaces","cta"]'
+        )
 
-    const themed =
-      path.extname(file) === '.html' && !rebased.includes('data-massaman-theme')
-        ? rebased.replace('</head>', `${THEME_OVERRIDES}</head>`)
-        : rebased
+      const themed =
+        path.extname(file) === '.html' && !rebased.includes('data-massaman-theme')
+          ? rebased.replace('</head>', `${THEME_OVERRIDES}</head>`)
+          : rebased
 
-    if (content === themed) return false
+      if (content === themed) return false
 
-    await fs.writeFile(target, themed)
-    return true
-  })
-)
+      await fs.writeFile(target, themed)
+      return true
+    })
+  )
 
-console.log(`rebased ${changed.filter(Boolean).length} documentation assets to ${BASE}`)
+  console.log(`rebased ${changed.filter(Boolean).length} documentation assets to ${BASE}`)
+}
