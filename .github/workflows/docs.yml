@@ -10,7 +10,8 @@ on:
       - 'docs/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
-      - 'scripts/docs-base.mjs'
+      - 'scripts/docs.ts'
+      - 'scripts/lib/docs/**'
   pull_request:
     branches: [main]
     paths:
@@ -20,7 +21,8 @@ on:
       - 'docs/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
-      - 'scripts/docs-base.mjs'
+      - 'scripts/docs.ts'
+      - 'scripts/lib/docs/**'
   workflow_dispatch:
 
 permissions:
@@ -63,7 +65,7 @@ jobs:
 
       - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
         with:
-          version: 10.32.1
+          version: 11.22.0
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
@@ -90,8 +92,10 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy .ciderpress/dist --project-name=massaman --branch=${{ github.head_ref || github.ref_name }}
+          command: pages deploy ${{ github.workspace }}/.ciderpress/dist --project-name=massaman --branch=${{ github.head_ref || github.ref_name }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          packageManager: npm
+          workingDirectory: /tmp
 
       - name: Mark preview as deployed
         if: github.event_name == 'pull_request'

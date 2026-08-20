@@ -1,0 +1,20 @@
+{
+  "name": "@massaman/scripts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "predocs": "pnpm --filter=massaman run build",
+    "docs": "zx docs.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "massaman": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "cac": "catalog:",
+    "typescript": "catalog:",
+    "zx": "catalog:"
+  }
+}

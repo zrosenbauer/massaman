@@ -119,7 +119,7 @@ massaman/
 | [changesets](https://github.com/changesets/changesets)                                                          | Versioning and publishing             |
 | [lefthook](https://lefthook.dev) + [commitlint](https://commitlint.js.org)                                      | Git hooks and conventional commits    |
 
-Node `>= 26.0.0`, pnpm `10.32.1` (pinned via `packageManager`).
+Node `>= 26.0.0`, pnpm `11.22.0` (pinned via `packageManager`).
 
 ## Commands
 
