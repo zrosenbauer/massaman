@@ -21,6 +21,12 @@ const referencePage = (title: string, slug: string, icon: IconId): Page => ({
 export default defineConfig({
   title: 'massaman',
   description: 'A rich blend of functional patterns.',
+  seo: {
+    origin: 'https://massaman.dev',
+    socialImage: '/og.png',
+    openGraph: { siteName: 'massaman', type: 'website', locale: 'en_US' },
+    twitter: { card: 'summary_large_image' },
+  },
   theme,
   brand: {
     logo: '/logo.svg',
