@@ -7,10 +7,13 @@
     "docs": "zx docs.ts",
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "massaman": "workspace:*"
+  },
   "devDependencies": {
-    "@types/node": "^26.2.0",
-    "cac": "^7.0.0",
-    "typescript": "^7.0.2",
-    "zx": "^8.8.5"
+    "@types/node": "catalog:",
+    "cac": "catalog:",
+    "typescript": "catalog:",
+    "zx": "catalog:"
   }
 }

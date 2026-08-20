@@ -88,16 +88,13 @@ export async function syncDocs({ check }: { check: boolean }): Promise<void> {
 
   const classifications = await classifyAllExports()
 
-  const errors: string[] = []
-
-  await migrateHandWrittenFields(errors, check)
+  const migrationErrors = await migrateHandWrittenFields(check)
   const results = await Promise.all(
     classifications.map((classification) =>
       processClassification(classification, { check, es, tsp, upstreamDir })
     )
   )
   const manifest = results.flatMap(({ entry }) => (entry === null ? [] : [entry]))
-  errors.push(...results.flatMap((result) => result.errors))
   const wrote = results.reduce((count, result) => count + result.wrote, 0)
   const proxyHandWritten = results.reduce((count, result) => count + result.handWritten, 0)
   const locals = results.reduce((count, result) => count + result.local, 0)
@@ -105,9 +102,18 @@ export async function syncDocs({ check }: { check: boolean }): Promise<void> {
   // Orphan detection: proxy .md on disk that no longer maps to a re-export.
   // We can't blanket-flag all .md (originals are hand-written), so we scope to
   // "looks like a proxy" — has the canonical callout marker on line 3.
-  await detectOrphans(manifest, errors)
-  await detectPlaceholderPages(errors)
-  await normalizeReferenceDescriptions(errors, check)
+  const [orphanErrors, placeholderErrors, descriptionErrors] = await Promise.all([
+    detectOrphans(manifest),
+    detectPlaceholderPages(),
+    normalizeReferenceDescriptions(check),
+  ])
+  const errors = [
+    ...migrationErrors,
+    ...results.flatMap((result) => result.errors),
+    ...orphanErrors,
+    ...placeholderErrors,
+    ...descriptionErrors,
+  ].toSorted()
 
   if (!check) {
     await fs.outputJson(
@@ -205,16 +211,23 @@ async function processClassification(
 
   const upstreamUrl = upstreamDocUrl(es, classification.upstreamArea, classification.name)
   const original = await fs.readFile(upstreamMd, 'utf8')
-  const transformed = withProxyTitle(
-    withReferenceDescription(
-      decorateProxyPage(
-        transformReferenceFields(original).content,
-        classification.name,
-        upstreamUrl
-      )
-    ),
-    classification.name
+  const described = withReferenceDescription(
+    decorateProxyPage(
+      transformReferenceFields(original).content,
+      classification.name,
+      upstreamUrl
+    )
   )
+  if (!described.ok) {
+    return {
+      entry: null,
+      errors: [`reference description failed for ${refBase(classification)}: ${described.error.message}`],
+      wrote: 0,
+      handWritten: 0,
+      local: 0,
+    }
+  }
+  const transformed = withProxyTitle(described.value, classification.name)
   const outPath = path.join(DOCS_REF, classification.massamanArea, `${classification.name}.mdx`)
   const stalePath = path.join(DOCS_REF, classification.massamanArea, `${classification.name}.md`)
   const errors = check
@@ -459,7 +472,7 @@ async function existingRef(c: Reference, fallback = false): Promise<string | nul
   return null
 }
 
-async function detectOrphans(manifest: ManifestEntry[], errors: string[]): Promise<void> {
+async function detectOrphans(manifest: ManifestEntry[]): Promise<string[]> {
   const expected = new Set(manifest.map((c) => c.expectedFile).filter(Boolean))
   const areas = (await fs.readdir(DOCS_REF).catch(() => [])) as string[]
   const candidates = await Promise.all(
@@ -483,7 +496,7 @@ async function detectOrphans(manifest: ManifestEntry[], errors: string[]): Promi
       return `orphan proxy page (no matching re-export): ${relativePath}`
     })
   )
-  errors.push(...orphanChecks.filter((error): error is string => error !== null))
+  return orphanChecks.filter((error): error is string => error !== null)
 }
 
 const PLACEHOLDER_MARKERS = [
@@ -493,64 +506,60 @@ const PLACEHOLDER_MARKERS = [
   'realistic, end-to-end example',
 ]
 
-async function detectPlaceholderPages(errors: string[]): Promise<void> {
-  const areas = await fs.readdir(DOCS_REF).catch(() => [])
-  const pages = (
-    await Promise.all(
-      areas.map(async (area: string) => {
-        const areaPath = path.join(DOCS_REF, area)
-        const stat = await fs.stat(areaPath).catch(() => null)
-        if (!stat?.isDirectory()) return []
-        return (await fs.readdir(areaPath))
-          .filter((file: string) => file.endsWith('.md') || file.endsWith('.mdx'))
-          .map((file: string) => path.join(areaPath, file))
-      })
-    )
-  ).flat()
-
-  await Promise.all(
-    pages.map(async (page: string) => {
+async function detectPlaceholderPages(): Promise<string[]> {
+  const checks = await Promise.all(
+    (await referencePages()).map(async (page): Promise<string | null> => {
       const content = await fs.readFile(page, 'utf8')
       const marker = PLACEHOLDER_MARKERS.find((candidate) => content.includes(candidate))
-      if (marker === undefined) return
-      errors.push(`placeholder content (${marker}): ${path.relative(ROOT, page)}`)
+      if (marker === undefined) return null
+      return `placeholder content (${marker}): ${path.relative(ROOT, page)}`
     })
   )
+  return checks.filter((error): error is string => error !== null)
 }
 
-async function normalizeReferenceDescriptions(errors: string[], check: boolean): Promise<void> {
-  const areas = (await fs.readdir(DOCS_REF).catch(() => [])) as string[]
-  const pages = (
-    await Promise.all(
-      areas.map(async (area: string) => {
-        const areaPath = path.join(DOCS_REF, area)
-        const stat = await fs.stat(areaPath).catch(() => null)
-        if (!stat?.isDirectory()) return []
-        return (await fs.readdir(areaPath))
-          .filter((file: string) => file.endsWith('.md') || file.endsWith('.mdx'))
-          .map((file: string) => path.join(areaPath, file))
-      })
-    )
-  ).flat()
-
-  await Promise.all(
-    pages.map(async (page: string) => {
+async function normalizeReferenceDescriptions(check: boolean): Promise<string[]> {
+  const checks = await Promise.all(
+    (await referencePages()).map(async (page): Promise<string | null> => {
       const content = await fs.readFile(page, 'utf8')
       const normalized = withReferenceDescription(content)
-      if (content === normalized) return
+      if (!normalized.ok) {
+        return `reference description failed for ${path.relative(ROOT, page)}: ${normalized.error.message}`
+      }
+      if (content === normalized.value) return null
 
       if (check) {
-        errors.push(`reference description drift: ${path.relative(ROOT, page)}`)
-        return
+        return `reference description drift: ${path.relative(ROOT, page)}`
       }
-      await fs.writeFile(page, normalized)
+      await fs.writeFile(page, normalized.value)
+      return null
     })
   )
+  return checks.filter((error): error is string => error !== null)
 }
 
-async function migrateHandWrittenFields(errors: string[], check: boolean): Promise<void> {
+async function migrateHandWrittenFields(check: boolean): Promise<string[]> {
+  const checks = await Promise.all(
+    (await referencePages()).map(async (referencePath): Promise<string | null> => {
+      const original = await fs.readFile(referencePath, 'utf8')
+      const transformed = transformReferenceFields(original)
+      if (!transformed.changed) return null
+      const mdxPath = referencePath.replace(/\.md$/u, '.mdx')
+      const relative = path.relative(ROOT, referencePath)
+
+      if (check) return `reference field markup drift: ${relative}`
+
+      await fs.outputFile(mdxPath, transformed.content)
+      if (referencePath !== mdxPath) await fs.remove(referencePath)
+      return null
+    })
+  )
+  return checks.filter((error): error is string => error !== null)
+}
+
+async function referencePages(): Promise<string[]> {
   const areas = (await fs.readdir(DOCS_REF).catch(() => [])) as string[]
-  const referencePaths = (
+  return (
     await Promise.all(
       areas.map(async (area: string) => {
         const areaPath = path.join(DOCS_REF, area)
@@ -563,22 +572,4 @@ async function migrateHandWrittenFields(errors: string[], check: boolean): Promi
       })
     )
   ).flat()
-
-  await Promise.all(
-    referencePaths.map(async (referencePath: string) => {
-      const original = await fs.readFile(referencePath, 'utf8')
-      const transformed = transformReferenceFields(original)
-      if (!transformed.changed) return
-      const mdxPath = referencePath.replace(/\.md$/u, '.mdx')
-      const relative = path.relative(ROOT, referencePath)
-
-      if (check) {
-        errors.push(`reference field markup drift: ${relative}`)
-        return
-      }
-
-      await fs.outputFile(mdxPath, transformed.content)
-      if (referencePath !== mdxPath) await fs.remove(referencePath)
-    })
-  )
 }

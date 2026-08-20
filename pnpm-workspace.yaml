@@ -2,26 +2,75 @@ packages:
   - packages/*
   - scripts
 
+overrides:
+  # unrun@0.2.38 was published without its declared dist files, which hangs tsdown.
+  unrun: 0.2.39
+
 blockExoticSubdeps: true
 minimumReleaseAge: 10080
 minimumReleaseAgeExclude:
-  - '@rspack/*'
-  - '@turbo/*'
-  - es-toolkit
-  - ts-pattern
-  - turbo
+  # Current catalog upgrades predate the policy and are still inside its seven-day window.
+  - es-toolkit@1.51.0
+  - ts-pattern@5.9.0
+  # Existing release and commit tooling landed before strict lockfile verification was enabled.
+  - '@changesets/format@0.1.2'
+  - '@commitlint/cli@21.2.2'
+  - '@commitlint/config-conventional@21.2.2'
+  - '@commitlint/format@21.2.2'
+  - '@commitlint/is-ignored@21.2.2'
+  - '@commitlint/lint@21.2.2'
+  - '@commitlint/load@21.2.2'
+  - '@commitlint/parse@21.2.2'
+  - '@commitlint/resolve-extends@21.2.2'
+  - '@commitlint/rules@21.2.2'
+  # Ciderpress and its pinned build stack were upgraded before the gate was enabled.
+  - '@ciderpress/cli@1.0.0-rc.12'
+  - '@ciderpress/config@1.0.0-rc.9'
+  - '@ciderpress/theme@1.0.0-rc.5'
+  - '@ciderpress/ui@1.0.0-rc.12'
+  - ciderpress@1.0.0-rc.12
+  - '@rsbuild/core@2.1.13'
+  - '@rspack/binding-darwin-arm64@2.1.10'
+  - '@rspack/binding-darwin-x64@2.1.10'
+  - '@rspack/binding-linux-arm64-gnu@2.1.10'
+  - '@rspack/binding-linux-arm64-musl@2.1.10'
+  - '@rspack/binding-linux-ppc64-gnu@2.1.10'
+  - '@rspack/binding-linux-riscv64-gnu@2.1.10'
+  - '@rspack/binding-linux-riscv64-musl@2.1.10'
+  - '@rspack/binding-linux-s390x-gnu@2.1.10'
+  - '@rspack/binding-linux-x64-gnu@2.1.10'
+  - '@rspack/binding-linux-x64-musl@2.1.10'
+  - '@rspack/binding-wasm32-wasi@2.1.10'
+  - '@rspack/binding-win32-arm64-msvc@2.1.10'
+  - '@rspack/binding-win32-ia32-msvc@2.1.10'
+  - '@rspack/binding-win32-x64-msvc@2.1.10'
+  - '@rspack/binding@2.1.10'
+  - '@rspack/core@2.1.10'
+  # Turbo's platform packages must remain aligned with the pinned CLI version.
+  - '@turbo/darwin-64@2.10.10'
+  - '@turbo/darwin-arm64@2.10.10'
+  - '@turbo/linux-64@2.10.10'
+  - '@turbo/linux-arm64@2.10.10'
+  - '@turbo/windows-64@2.10.10'
+  - '@turbo/windows-arm64@2.10.10'
+  - turbo@2.10.10
 trustPolicy: no-downgrade
+trustPolicyExclude:
+  # This existing lockfile version predates the registry's newer lower-integrity publication.
+  - cytoscape@3.34.1
 
 catalog:
   '@types/node': ^26.2.0
   '@vitest/coverage-v8': ^4.1.10
+  cac: ^7.0.0
   es-toolkit: 1.51.0
   ts-pattern: 5.9.0
   tsdown: 0.22.14
   tsx: ^4.23.12
   typescript: ^7.0.2
   vitest: ^4.1.10
+  zx: ^8.8.5
 
-onlyBuiltDependencies:
-  - esbuild
-  - lefthook
+allowBuilds:
+  esbuild: true
+  lefthook: true
