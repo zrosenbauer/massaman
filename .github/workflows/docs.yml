@@ -92,10 +92,10 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ../.ciderpress/dist --project-name=massaman --branch=${{ github.head_ref || github.ref_name }}
+          command: pages deploy ${{ github.workspace }}/.ciderpress/dist --project-name=massaman --branch=${{ github.head_ref || github.ref_name }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           packageManager: npm
-          workingDirectory: .github
+          workingDirectory: /tmp
 
       - name: Mark preview as deployed
         if: github.event_name == 'pull_request'
