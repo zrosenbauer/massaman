@@ -46,29 +46,25 @@ minimumReleaseAgeExclude:
   - '@rspack/binding-win32-x64-msvc@2.1.10'
   - '@rspack/binding@2.1.10'
   - '@rspack/core@2.1.10'
-  # Turbo's platform packages must remain aligned with the pinned CLI version.
-  - '@turbo/darwin-64@2.10.10'
-  - '@turbo/darwin-arm64@2.10.10'
-  - '@turbo/linux-64@2.10.10'
-  - '@turbo/linux-arm64@2.10.10'
-  - '@turbo/windows-64@2.10.10'
-  - '@turbo/windows-arm64@2.10.10'
-  - turbo@2.10.10
 trustPolicy: no-downgrade
 trustPolicyExclude:
   # This existing lockfile version predates the registry's newer lower-integrity publication.
   - cytoscape@3.34.1
 
 catalog:
+  '@changesets/cli': ^3.0.1
   '@types/node': ^26.2.0
-  '@vitest/coverage-v8': ^4.1.10
+  '@vitest/coverage-v8': ^4.1.11
   cac: ^7.0.0
   es-toolkit: 1.51.0
+  oxfmt: ^0.64.0
+  oxlint: ^1.79.0
   ts-pattern: 5.9.0
   tsdown: 0.22.14
   tsx: ^4.23.12
+  turbo: ^2.10.11
   typescript: ^7.0.2
-  vitest: ^4.1.10
+  vitest: ^4.1.11
   zx: ^8.8.5
 
 allowBuilds:
