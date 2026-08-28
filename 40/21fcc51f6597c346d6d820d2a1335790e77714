@@ -1,0 +1,23 @@
+pnpm-workspace.yaml
+  s_9d9b00db28e542::t_3a4862ccbede79 55,60-61,65
+package.json
+  s_9d9b00db28e542::t_3a4862ccbede79 40,50-51,55
+pnpm-lock.yaml
+  s_9d9b00db28e542::t_febdd84e677b19 9-11,24-29,39-41,63,93,96,108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "4021fcc51f6597c346d6d820d2a1335790e77714",
+  "prompts": {},
+  "sessions": {
+    "s_9d9b00db28e542": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fb96d7268ffeaRR0bcYeTpaVul",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Zac Rosenbauer <me@zrosenbauer.com>"
+    }
+  }
+}
