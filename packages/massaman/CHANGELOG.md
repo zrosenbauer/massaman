@@ -1,5 +1,11 @@
 # massaman
 
+## 0.5.1
+
+### Patch Changes
+
+- [#20](https://github.com/zrosenbauer/massaman/pull/20) [`7daecce`](https://github.com/zrosenbauer/massaman/commit/7daecce434cbe7b214c0234001e9e0f8cada6b05) Thanks [@zrosenbauer](https://github.com/zrosenbauer)! - Refresh the development toolchain to the latest compatible package versions.
+
 ## 0.5.0
 
 ### Minor Changes
