@@ -1,0 +1,21 @@
+pnpm-workspace.yaml
+  s_1c1e8a7e6076b2::t_71b3a7e0865fe1 8-16
+pnpm-lock.yaml
+  s_1c1e8a7e6076b2::t_9c95c66558429f 54-58,120,148,1693,2316-2318,2536-2537,2881-2882,2885-2886,4034-4035,4040,4093,4227,4863,5698,5709,5715,5835,6052,6265,6371,6517,6617,6925,6930,8426,8431,8441,8444,8461
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "3ef00dd2c5bf68a15dcb4da5f0b613b6ddee55c3",
+  "prompts": {},
+  "sessions": {
+    "s_1c1e8a7e6076b2": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f6ef540ebffeD1rATSpubG4dDv",
+        "model": "hf:moonshotai/Kimi-K3"
+      },
+      "human_author": "Zac Rosenbauer <me@zrosenbauer.com>"
+    }
+  }
+}
