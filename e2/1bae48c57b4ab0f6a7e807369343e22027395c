@@ -1,0 +1,23 @@
+pnpm-workspace.yaml
+  s_1c1e8a7e6076b2::t_5c51dcc1e76d4c 35-40
+package.json
+  s_1c1e8a7e6076b2::t_edc0fefcea111a 46
+pnpm-lock.yaml
+  s_1c1e8a7e6076b2::t_84f09e95d8b601 86-87,296-297,301-302,310-311,318-323,326,659-660,665-666,1254-1255,1259-1266,1271-1272,2020-2021,2025,3081-3084,3158-3159,3905-3908,4143-4145,4323,4326-4329,4332,4340,4343,4364,4366,4368-4369,4379,4381,4390-4396,4398-4399,4407,4409,4411-4414,4416-4417,4729,4737,4872,4876,5167,5173,5215-5219,5221,5223,5881,5883-5887,7014-7018,7208,8199-8202,8445-8446
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "e21bae48c57b4ab0f6a7e807369343e22027395c",
+  "prompts": {},
+  "sessions": {
+    "s_1c1e8a7e6076b2": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f6ef540ebffeD1rATSpubG4dDv",
+        "model": "hf:moonshotai/Kimi-K3"
+      },
+      "human_author": "Zac Rosenbauer <me@zrosenbauer.com>"
+    }
+  }
+}
