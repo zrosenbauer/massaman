@@ -5,6 +5,15 @@ packages:
 overrides:
   # unrun@0.2.38 was published without its declared dist files, which hangs tsdown.
   unrun: 0.2.39
+  # GHSA-fx2h-pf6j-xcff, GHSA-v6wh-96g9-6wx3 — vite server.fs.deny bypass + UNC path hash disclosure (transitive via vitest).
+  vite: ^8.0.16
+  # GHSA-ggr8-5vv4-36mx — stack exhaustion merging recursive object graphs (transitive via eslint-plugin-functional).
+  deepmerge-ts: ^8.0.0
+  # GHSA-{5jgf-p345-68v8,f65p-4m7j-42xc,fph4-wmhf-6fwf,jqff-g426-hqxp} — fast-uri SSRF + host confusion (transitive via ajv).
+  fast-uri: ^3.1.6
+  # GHSA-2883-xcg3-v3hh — maxTotalMergeKeys does not limit CPU for empty merge sources (transitive via gray-matter / cosmiconfig).
+  js-yaml@^3.0.0: ^3.15.2
+  js-yaml@^4.0.0: ^4.3.2
 
 blockExoticSubdeps: true
 minimumReleaseAge: 10080
