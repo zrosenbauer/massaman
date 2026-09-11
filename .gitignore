@@ -23,6 +23,7 @@ out/
 
 # IDE
 .idea/
+.serena/
 .vscode/*
 !.vscode/launch.json
 !.vscode/settings.json
