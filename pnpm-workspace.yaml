@@ -32,12 +32,12 @@ minimumReleaseAgeExclude:
   - '@commitlint/parse@21.2.2'
   - '@commitlint/resolve-extends@21.2.2'
   - '@commitlint/rules@21.2.2'
-  # Ciderpress and its pinned build stack were upgraded before the gate was enabled.
-  - '@ciderpress/cli@1.0.0-rc.12'
-  - '@ciderpress/config@1.0.0-rc.9'
-  - '@ciderpress/theme@1.0.0-rc.5'
-  - '@ciderpress/ui@1.0.0-rc.12'
-  - ciderpress@1.0.0-rc.12
+  # Ciderpress 1.0.0-rc.16 and its pinned build stack are still inside the seven-day window.
+  - '@ciderpress/cli@1.0.0-rc.16'
+  - '@ciderpress/config@1.0.0-rc.13'
+  - '@ciderpress/theme@1.0.0-rc.8'
+  - '@ciderpress/ui@1.0.0-rc.16'
+  - ciderpress@1.0.0-rc.16
   - '@rsbuild/core@2.1.13'
   - '@rspack/binding-darwin-arm64@2.1.10'
   - '@rspack/binding-darwin-x64@2.1.10'
