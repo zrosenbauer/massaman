@@ -27,7 +27,7 @@ const interactionStyle: CSSProperties = {
   zIndex: 1,
 }
 
-export function ThaiTextileHeroBackground() {
+export function HeroBackground() {
   const backgroundRef = useRef<HTMLDivElement>(null)
   const gradientRef = useRef<SVGRadialGradientElement>(null)
   const cellRef = useRef<SVGRectElement>(null)
@@ -74,7 +74,7 @@ export function ThaiTextileHeroBackground() {
 
   return (
     <div ref={backgroundRef} className="massaman-hero-background" style={backgroundStyle}>
-      <img src="/hero-concepts/03-thai-textile.svg" alt="" style={artStyle} />
+      <img src="/hero-background.svg" alt="" style={artStyle} />
       <svg
         className="massaman-hero-background__interaction"
         viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
@@ -159,6 +159,6 @@ export function ThaiTextileHeroBackground() {
   )
 }
 
-export function thaiTextileHeroBanner() {
-  return <ThaiTextileHeroBackground />
+export function heroBackgroundBanner() {
+  return <HeroBackground />
 }
