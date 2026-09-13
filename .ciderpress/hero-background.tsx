@@ -27,6 +27,10 @@ const interactionStyle: CSSProperties = {
   zIndex: 1,
 }
 
+/**
+ * Renders the animated hero artwork and cursor-reactive weave overlay.
+ * @returns A pointer-transparent background for the Ciderpress hero.
+ */
 export function HeroBackground() {
   const backgroundRef = useRef<HTMLDivElement>(null)
   const gradientRef = useRef<SVGRadialGradientElement>(null)
@@ -159,6 +163,10 @@ export function HeroBackground() {
   )
 }
 
+/**
+ * Supplies the interactive background through Ciderpress's banner hook.
+ * @returns The hero background element.
+ */
 export function heroBackgroundBanner() {
   return <HeroBackground />
 }
