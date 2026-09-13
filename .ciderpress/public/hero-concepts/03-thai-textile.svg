@@ -1,0 +1,287 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 720" role="img" aria-label="Abstract geometric woven background">
+  <defs>
+    <linearGradient id="field" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0402"/>
+      <stop offset="0.42" stop-color="#020100"/>
+      <stop offset="0.74" stop-color="#020100"/>
+      <stop offset="1" stop-color="#0b0402"/>
+    </linearGradient>
+    <linearGradient id="edge-glow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#df7955" stop-opacity="0.22"/>
+      <stop offset="0.48" stop-color="#332010" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#c85a3e" stop-opacity="0.2"/>
+    </linearGradient>
+    <pattern id="fine-weft" width="18" height="18" patternUnits="userSpaceOnUse">
+      <path d="M0 2H18M0 8H18M0 14H18" stroke="#e99575" stroke-opacity="0.055" stroke-width="1"/>
+      <path d="M3 0V18M12 0V18" stroke="#332010" stroke-opacity="0.16" stroke-width="1"/>
+    </pattern>
+    <clipPath id="top-band">
+      <path d="M0 0H1440V132L1324 116 1188 139 1050 109 905 130 756 101 612 128 462 104 314 136 168 110 0 138Z"/>
+    </clipPath>
+    <clipPath id="bottom-band">
+      <path d="M0 584L133 608 270 581 405 615 548 590 689 625 832 590 976 618 1119 582 1280 610 1440 576V720H0Z"/>
+    </clipPath>
+    <style>
+      .motion-layer {
+        pointer-events: none;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .motion-layer {
+          display: none;
+        }
+      }
+    </style>
+  </defs>
+
+  <rect width="1440" height="720" fill="#020100"/>
+  <rect width="1440" height="720" fill="url(#field)"/>
+  <rect width="1440" height="720" fill="url(#fine-weft)"/>
+
+  <g class="motion-layer" aria-hidden="true">
+    <rect x="270" y="36" width="3" height="3" fill="#c85a3e" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.11;0;0" keyTimes="0;0.64;0.69;0.75;1" dur="11s" begin="-2.4s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="396" y="90" width="5" height="5" fill="#df7955" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.08;0;0" keyTimes="0;0.73;0.77;0.84;1" dur="16s" begin="-8.1s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="540" y="18" width="3" height="3" fill="#e99575" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.14;0;0" keyTimes="0;0.48;0.52;0.58;1" dur="9s" begin="-3.7s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="684" y="72" width="5" height="5" fill="#c85a3e" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.07;0;0" keyTimes="0;0.81;0.85;0.9;1" dur="18s" begin="-12.2s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="828" y="36" width="3" height="3" fill="#df7955" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.12;0;0" keyTimes="0;0.57;0.61;0.68;1" dur="13s" begin="-1.3s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="954" y="90" width="5" height="5" fill="#e99575" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.06;0;0" keyTimes="0;0.69;0.73;0.79;1" dur="15s" begin="-9.8s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="1098" y="18" width="3" height="3" fill="#c85a3e" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.15;0;0" keyTimes="0;0.42;0.47;0.53;1" dur="8s" begin="-4.6s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="1224" y="72" width="5" height="5" fill="#df7955" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.09;0;0" keyTimes="0;0.76;0.8;0.87;1" dur="17s" begin="-6.9s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="1350" y="108" width="3" height="3" fill="#e99575" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.13;0;0" keyTimes="0;0.6;0.65;0.71;1" dur="12s" begin="-10.4s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="144" y="18" width="5" height="5" fill="#c85a3e" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.08;0;0" keyTimes="0;0.7;0.74;0.8;1" dur="14s" begin="-5.5s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="216" y="648" width="3" height="3" fill="#df7955" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.12;0;0" keyTimes="0;0.53;0.57;0.63;1" dur="10s" begin="-7.2s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="342" y="684" width="5" height="5" fill="#e99575" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.07;0;0" keyTimes="0;0.79;0.83;0.89;1" dur="18s" begin="-2.8s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="486" y="612" width="3" height="3" fill="#c85a3e" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.16;0;0" keyTimes="0;0.46;0.5;0.56;1" dur="7s" begin="-3.1s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="630" y="666" width="5" height="5" fill="#df7955" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.1;0;0" keyTimes="0;0.67;0.72;0.78;1" dur="13s" begin="-9.4s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="774" y="630" width="3" height="3" fill="#e99575" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.06;0;0" keyTimes="0;0.75;0.79;0.85;1" dur="16s" begin="-4.2s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="918" y="684" width="5" height="5" fill="#c85a3e" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.13;0;0" keyTimes="0;0.55;0.6;0.66;1" dur="11s" begin="-8.7s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="1062" y="612" width="3" height="3" fill="#df7955" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.09;0;0" keyTimes="0;0.72;0.76;0.82;1" dur="15s" begin="-1.9s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="1206" y="666" width="5" height="5" fill="#e99575" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.14;0;0" keyTimes="0;0.49;0.54;0.61;1" dur="9s" begin="-6.2s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="1332" y="630" width="3" height="3" fill="#c85a3e" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.08;0;0" keyTimes="0;0.77;0.81;0.88;1" dur="17s" begin="-13.5s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="72" y="684" width="5" height="5" fill="#df7955" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.11;0;0" keyTimes="0;0.62;0.67;0.73;1" dur="12s" begin="-5.8s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="36" y="180" width="3" height="3" fill="#e99575" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.07;0;0" keyTimes="0;0.8;0.84;0.9;1" dur="18s" begin="-11.6s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="72" y="270" width="5" height="5" fill="#c85a3e" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.15;0;0" keyTimes="0;0.44;0.49;0.55;1" dur="8s" begin="-2.7s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="18" y="360" width="3" height="3" fill="#df7955" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.09;0;0" keyTimes="0;0.7;0.75;0.82;1" dur="14s" begin="-9.1s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="72" y="450" width="5" height="5" fill="#e99575" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.12;0;0" keyTimes="0;0.58;0.62;0.68;1" dur="10s" begin="-4.9s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="36" y="540" width="3" height="3" fill="#c85a3e" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.06;0;0" keyTimes="0;0.82;0.86;0.92;1" dur="17s" begin="-7.6s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="90" y="594" width="5" height="5" fill="#df7955" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.13;0;0" keyTimes="0;0.51;0.56;0.62;1" dur="9s" begin="-1.1s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="1386" y="162" width="3" height="3" fill="#e99575" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.1;0;0" keyTimes="0;0.66;0.71;0.77;1" dur="13s" begin="-8.3s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="1350" y="252" width="5" height="5" fill="#c85a3e" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.07;0;0" keyTimes="0;0.78;0.82;0.88;1" dur="16s" begin="-3.4s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="1404" y="342" width="3" height="3" fill="#df7955" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.14;0;0" keyTimes="0;0.47;0.52;0.59;1" dur="8s" begin="-6.7s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="1350" y="432" width="5" height="5" fill="#e99575" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.08;0;0" keyTimes="0;0.74;0.78;0.84;1" dur="15s" begin="-10.8s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="1386" y="522" width="3" height="3" fill="#c85a3e" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.11;0;0" keyTimes="0;0.61;0.65;0.72;1" dur="11s" begin="-2.2s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="1332" y="576" width="5" height="5" fill="#df7955" opacity="0">
+      <animate attributeName="opacity" values="0;0;0.06;0;0" keyTimes="0;0.83;0.87;0.93;1" dur="18s" begin="-14.1s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <g clip-path="url(#top-band)" fill="none" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M-30 18H104L128 42H230L256 68H354L382 40H488L516 70H618L648 38H752L784 72H884L916 42H1024L1052 70H1156L1186 36H1290L1320 66H1470" stroke="#332010" stroke-width="18" opacity="0.55"/>
+    <path d="M-30 18H104L128 42H230L256 68H354L382 40H488L516 70H618L648 38H752L784 72H884L916 42H1024L1052 70H1156L1186 36H1290L1320 66H1470" stroke="#c85a3e" stroke-width="5" opacity="0.62"/>
+    <path d="M-20 92H92L122 62H214L246 94H340L374 62H466L500 96H594L628 62H724L758 96H850L884 60H984L1018 94H1112L1148 58H1242L1278 92H1460" stroke="#020100" stroke-width="15"/>
+    <path d="M-20 92H92L122 62H214L246 94H340L374 62H466L500 96H594L628 62H724L758 96H850L884 60H984L1018 94H1112L1148 58H1242L1278 92H1460" stroke="#df7955" stroke-width="4" opacity="0.52"/>
+    <path d="M0 116H1440M0 124H1440" stroke="#e99575" stroke-width="2" opacity="0.2"/>
+  </g>
+
+  <g clip-path="url(#bottom-band)" fill="none" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M-20 686H92L126 652H222L254 684H350L386 648H480L514 682H614L650 646H748L782 684H878L916 646H1014L1050 680H1150L1186 644H1286L1322 678H1460" stroke="#332010" stroke-width="20" opacity="0.64"/>
+    <path d="M-20 686H92L126 652H222L254 684H350L386 648H480L514 682H614L650 646H748L782 684H878L916 646H1014L1050 680H1150L1186 644H1286L1322 678H1460" stroke="#c85a3e" stroke-width="5" opacity="0.65"/>
+    <path d="M-20 620H78L112 654H208L244 618H338L374 654H470L506 616H600L638 654H736L772 614H870L906 652H1006L1042 612H1142L1178 650H1278L1316 610H1460" stroke="#020100" stroke-width="16"/>
+    <path d="M-20 620H78L112 654H208L244 618H338L374 654H470L506 616H600L638 654H736L772 614H870L906 652H1006L1042 612H1142L1178 650H1278L1316 610H1460" stroke="#e99575" stroke-width="4" opacity="0.5"/>
+    <path d="M0 592H1440M0 600H1440" stroke="#df7955" stroke-width="2" opacity="0.2"/>
+  </g>
+
+  <g fill="none" stroke-linejoin="miter">
+    <path d="M0 0L174 0 246 72 174 144 88 144 20 212 20 308" stroke="#332010" stroke-width="22" opacity="0.42"/>
+    <path d="M0 0L174 0 246 72 174 144 88 144 20 212 20 308" stroke="#df7955" stroke-width="5" opacity="0.72"/>
+    <path d="M-72 72L30-30 132 72 30 174Z" stroke="#c85a3e" stroke-width="7" opacity="0.92"/>
+    <path d="M-45 72L30-3 105 72 30 147Z" stroke="#e99575" stroke-width="4" opacity="0.78"/>
+    <path d="M-18 72L30 24 78 72 30 120Z" stroke="#f3ecdf" stroke-width="2" opacity="0.52"/>
+    <path d="M2 72L30 44 58 72 30 100Z" fill="#332010" stroke="#df7955" stroke-width="3" opacity="0.9"/>
+    <path d="M20 212L70 262 20 312-30 262ZM20 244L38 262 20 280 2 262Z" stroke="#e99575" stroke-width="3" opacity="0.54"/>
+    <path d="M92 144V202L66 228V294L94 322V386L68 412V478" stroke="#020100" stroke-width="14"/>
+    <path d="M92 144V202L66 228V294L94 322V386L68 412V478" stroke="#c85a3e" stroke-width="4" opacity="0.48"/>
+    <path d="M38 188V238L64 264V330L36 358V424L62 450V516" stroke="#df7955" stroke-width="3" opacity="0.34"/>
+  </g>
+
+  <g transform="translate(1420 42) rotate(3)" fill="none" stroke-linejoin="miter">
+    <path d="M-142-88L-28-202 86-88-28 26Z" stroke="#332010" stroke-width="24" opacity="0.64"/>
+    <path d="M-142-88L-28-202 86-88-28 26Z" stroke="#c85a3e" stroke-width="7" opacity="0.92"/>
+    <path d="M-112-88L-28-172 56-88-28-4Z" stroke="#df7955" stroke-width="5" opacity="0.82"/>
+    <path d="M-78-88L-28-138 22-88-28-38Z" stroke="#f3ecdf" stroke-width="2" opacity="0.55"/>
+    <path d="M-28 26V88L-60 120V184L-28 216V278L-62 312V382" stroke="#020100" stroke-width="16"/>
+    <path d="M-28 26V88L-60 120V184L-28 216V278L-62 312V382" stroke="#e99575" stroke-width="5" opacity="0.65"/>
+    <path d="M-92 50V108L-66 134V198L-94 226V292L-68 318V430" stroke="#c85a3e" stroke-width="3" opacity="0.44"/>
+    <path d="M-28 88L20 136-28 184-76 136ZM-28 116L-8 136-28 156-48 136Z" stroke="#df7955" stroke-width="3" opacity="0.7"/>
+    <path d="M-62 312L-10 364-62 416-114 364ZM-62 342L-40 364-62 386-84 364Z" stroke="#e99575" stroke-width="3" opacity="0.5"/>
+  </g>
+
+  <g transform="translate(10 704) rotate(-2)" fill="none" stroke-linejoin="miter">
+    <path d="M-98 0L24-122 146 0 24 122Z" stroke="#332010" stroke-width="26" opacity="0.65"/>
+    <path d="M-98 0L24-122 146 0 24 122Z" stroke="#c85a3e" stroke-width="7" opacity="0.88"/>
+    <path d="M-66 0L24-90 114 0 24 90Z" stroke="#e99575" stroke-width="5" opacity="0.76"/>
+    <path d="M-34 0L24-58 82 0 24 58Z" stroke="#f3ecdf" stroke-width="2" opacity="0.5"/>
+    <path d="M24-30L54 0 24 30-6 0Z" fill="#0b0402" stroke="#df7955" stroke-width="4"/>
+    <path d="M146 0H210L242-32H308L342 2H408" stroke="#020100" stroke-width="16"/>
+    <path d="M146 0H210L242-32H308L342 2H408" stroke="#df7955" stroke-width="4" opacity="0.58"/>
+    <path d="M116-28H180L212 4H278L312-30H378" stroke="#e99575" stroke-width="3" opacity="0.4"/>
+  </g>
+
+  <g transform="translate(1435 686) rotate(2)" fill="none" stroke-linejoin="miter">
+    <path d="M-162 0L-48-114 66 0-48 114Z" stroke="#332010" stroke-width="24" opacity="0.7"/>
+    <path d="M-162 0L-48-114 66 0-48 114Z" stroke="#df7955" stroke-width="7" opacity="0.9"/>
+    <path d="M-130 0L-48-82 34 0-48 82Z" stroke="#c85a3e" stroke-width="5" opacity="0.86"/>
+    <path d="M-98 0L-48-50 2 0-48 50Z" stroke="#f3ecdf" stroke-width="2" opacity="0.58"/>
+    <path d="M-76 0L-48-28-20 0-48 28Z" fill="#0b0402" stroke="#e99575" stroke-width="3"/>
+    <path d="M-162 0H-222L-254-32H-320L-352 0H-422" stroke="#020100" stroke-width="16"/>
+    <path d="M-162 0H-222L-254-32H-320L-352 0H-422" stroke="#e99575" stroke-width="4" opacity="0.6"/>
+  </g>
+
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M0 524H148L178 494H270L302 526H398" stroke="#020100" stroke-width="14"/>
+    <path d="M0 524H148L178 494H270L302 526H398" stroke="#c85a3e" stroke-width="3" opacity="0.34"/>
+    <path d="M1042 194H1130L1162 226H1254L1286 194H1440" stroke="#020100" stroke-width="14"/>
+    <path d="M1042 194H1130L1162 226H1254L1286 194H1440" stroke="#df7955" stroke-width="3" opacity="0.3"/>
+    <path d="M1080 516H1170L1204 482H1294L1328 516H1440" stroke="#020100" stroke-width="14"/>
+    <path d="M1080 516H1170L1204 482H1294L1328 516H1440" stroke="#c85a3e" stroke-width="3" opacity="0.36"/>
+  </g>
+
+  <g fill="none" stroke-linejoin="miter">
+    <path d="M654 96L718 160 782 96" stroke="#020100" stroke-width="15"/>
+    <path d="M654 96L718 160 782 96" stroke="#e99575" stroke-width="3" opacity="0.45"/>
+    <path d="M679 96L718 135 757 96" stroke="#df7955" stroke-width="3" opacity="0.55"/>
+    <path d="M650 622L716 556 784 624" stroke="#020100" stroke-width="15"/>
+    <path d="M650 622L716 556 784 624" stroke="#c85a3e" stroke-width="3" opacity="0.44"/>
+    <path d="M678 622L716 584 756 624" stroke="#e99575" stroke-width="3" opacity="0.46"/>
+    <path d="M700 160V218L716 234 732 218V160M700 556V500L716 484 732 500V556" stroke="#332010" stroke-width="3" opacity="0.34"/>
+    <path d="M686 234L716 264 746 234 716 204ZM686 484L716 454 746 484 716 514Z" stroke="#df7955" stroke-width="2" opacity="0.18"/>
+  </g>
+
+  <g opacity="0.22" fill="none" stroke="url(#edge-glow)" stroke-width="2">
+    <path d="M0 352H118L146 324H260"/>
+    <path d="M1440 348H1320L1292 376H1184"/>
+    <path d="M0 370H126L154 342H270"/>
+    <path d="M1440 366H1312L1284 394H1176"/>
+  </g>
+
+  <g class="motion-layer" aria-hidden="true" fill="none">
+    <g clip-path="url(#top-band)">
+      <path d="M-30 18H104L128 42H230L256 68H354L382 40H488L516 70H618L648 38H752L784 72H884L916 42H1024L1052 70H1156L1186 36H1290L1320 66H1470" pathLength="1" stroke="#c85a3e" stroke-width="8" stroke-linecap="round" stroke-dasharray="0.05 0.95" opacity="0.24">
+        <animate attributeName="stroke-dashoffset" from="1" to="0" dur="15s" begin="-4s" repeatCount="indefinite"/>
+      </path>
+      <path d="M-30 18H104L128 42H230L256 68H354L382 40H488L516 70H618L648 38H752L784 72H884L916 42H1024L1052 70H1156L1186 36H1290L1320 66H1470" pathLength="1" stroke="#e99575" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.026 0.974" opacity="0.62">
+        <animate attributeName="stroke-dashoffset" from="1" to="0" dur="15s" begin="-4s" repeatCount="indefinite"/>
+      </path>
+    </g>
+    <g clip-path="url(#bottom-band)">
+      <path d="M-20 686H92L126 652H222L254 684H350L386 648H480L514 682H614L650 646H748L782 684H878L916 646H1014L1050 680H1150L1186 644H1286L1322 678H1460" pathLength="1" stroke="#c85a3e" stroke-width="8" stroke-linecap="round" stroke-dasharray="0.045 0.955" opacity="0.22">
+        <animate attributeName="stroke-dashoffset" from="0" to="1" dur="18s" begin="-11s" repeatCount="indefinite"/>
+      </path>
+      <path d="M-20 686H92L126 652H222L254 684H350L386 648H480L514 682H614L650 646H748L782 684H878L916 646H1014L1050 680H1150L1186 644H1286L1322 678H1460" pathLength="1" stroke="#df7955" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.022 0.978" opacity="0.58">
+        <animate attributeName="stroke-dashoffset" from="0" to="1" dur="18s" begin="-11s" repeatCount="indefinite"/>
+      </path>
+    </g>
+    <path d="M92 144V202L66 228V294L94 322V386L68 412V478" pathLength="1" stroke="#c85a3e" stroke-width="7" stroke-linecap="round" stroke-dasharray="0.1 0.9" opacity="0.2">
+      <animate attributeName="stroke-dashoffset" from="1" to="0" dur="12s" begin="-7s" repeatCount="indefinite"/>
+    </path>
+    <path d="M92 144V202L66 228V294L94 322V386L68 412V478" pathLength="1" stroke="#e99575" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.052 0.948" opacity="0.56">
+      <animate attributeName="stroke-dashoffset" from="1" to="0" dur="12s" begin="-7s" repeatCount="indefinite"/>
+    </path>
+    <g transform="translate(1420 42) rotate(3)">
+      <path d="M-28 26V88L-60 120V184L-28 216V278L-62 312V382" pathLength="1" stroke="#c85a3e" stroke-width="8" stroke-linecap="round" stroke-dasharray="0.09 0.91" opacity="0.2">
+        <animate attributeName="stroke-dashoffset" from="0" to="1" dur="14s" begin="-2s" repeatCount="indefinite"/>
+      </path>
+      <path d="M-28 26V88L-60 120V184L-28 216V278L-62 312V382" pathLength="1" stroke="#f3ecdf" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.04 0.96" opacity="0.5">
+        <animate attributeName="stroke-dashoffset" from="0" to="1" dur="14s" begin="-2s" repeatCount="indefinite"/>
+      </path>
+    </g>
+    <g transform="translate(10 704) rotate(-2)">
+      <path d="M146 0H210L242-32H308L342 2H408" pathLength="1" stroke="#c85a3e" stroke-width="7" stroke-linecap="round" stroke-dasharray="0.14 0.86" opacity="0.22">
+        <animate attributeName="stroke-dashoffset" from="1" to="0" dur="10s" begin="-6s" repeatCount="indefinite"/>
+      </path>
+      <path d="M146 0H210L242-32H308L342 2H408" pathLength="1" stroke="#e99575" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.07 0.93" opacity="0.58">
+        <animate attributeName="stroke-dashoffset" from="1" to="0" dur="10s" begin="-6s" repeatCount="indefinite"/>
+      </path>
+    </g>
+    <g transform="translate(1435 686) rotate(2)">
+      <path d="M-162 0H-222L-254-32H-320L-352 0H-422" pathLength="1" stroke="#c85a3e" stroke-width="7" stroke-linecap="round" stroke-dasharray="0.14 0.86" opacity="0.2">
+        <animate attributeName="stroke-dashoffset" from="0" to="1" dur="11s" begin="-3s" repeatCount="indefinite"/>
+      </path>
+      <path d="M-162 0H-222L-254-32H-320L-352 0H-422" pathLength="1" stroke="#f3ecdf" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.065 0.935" opacity="0.48">
+        <animate attributeName="stroke-dashoffset" from="0" to="1" dur="11s" begin="-3s" repeatCount="indefinite"/>
+      </path>
+    </g>
+    <path d="M700 160V218L716 234 732 218V160M700 556V500L716 484 732 500V556" pathLength="1" stroke="#c85a3e" stroke-width="6" stroke-linecap="round" stroke-dasharray="0.07 0.93" opacity="0.18">
+      <animate attributeName="stroke-dashoffset" from="1" to="0" dur="20s" begin="-13s" repeatCount="indefinite"/>
+    </path>
+    <path d="M700 160V218L716 234 732 218V160M700 556V500L716 484 732 500V556" pathLength="1" stroke="#e99575" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="0.032 0.968" opacity="0.5">
+      <animate attributeName="stroke-dashoffset" from="1" to="0" dur="20s" begin="-13s" repeatCount="indefinite"/>
+    </path>
+    <path d="M686 234L716 264 746 234 716 204ZM686 484L716 454 746 484 716 514Z" pathLength="1" stroke="#df7955" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.055 0.945" opacity="0.46">
+      <animate attributeName="stroke-dashoffset" from="0" to="1" dur="16s" begin="-9s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+</svg>

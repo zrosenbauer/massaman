@@ -2,6 +2,7 @@ import { defineConfig, type IconId, type Page } from 'ciderpress'
 
 import { brandColor, theme } from '#site/theme'
 
+import { thaiTextileHeroBanner } from './.ciderpress/hero-background'
 // Single source of truth for the version on the site: the published
 // package's own manifest, so the hero eyebrow can't drift from the release.
 // Imported by relative path rather than as `massaman/package.json` because
@@ -30,6 +31,7 @@ export default defineConfig({
   theme,
   brand: {
     logo: '/logo.svg',
+    banner: thaiTextileHeroBanner,
     favicon: { src: '/icon.svg', type: 'image/svg+xml' },
     loader: {
       content: '/icon.svg',
