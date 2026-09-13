@@ -1,0 +1,51 @@
+package.json
+  s_1c1e8a7e6076b2::t_6fb819f1865f93 46,53
+.ciderpress/public/hero-concepts/03-thai-textile.svg
+  s_78095a7e049663::t_9c7e404c47900b 39,140-145,148-153,156,159-163,165,169-173,175,181-186,188,192-197,199
+  s_78095a7e049663::t_ccdf96ccb9615b 24-34,40-138,227-284
+  s_ad4e92c347e8ae::t_7b9db92e1d0848 139
+  s_78095a7e049663::t_65e9fb19a542d3 1-23,35-38,146-147,154-155,157-158,164,166-168,174,176-180,187,189-191,198,200-226,285-287
+ciderpress.config.ts
+  s_1c1e8a7e6076b2::t_46c088b4b249d5 5,34
+.ciderpress/hero-background.tsx
+  s_1c1e8a7e6076b2::t_9d49d284c2a92f 58,63
+  s_1c1e8a7e6076b2::t_aecf79aee8ea0d 1,5-28,76-77,82,133-138
+  s_1c1e8a7e6076b2::t_46c088b4b249d5 2-4,29-57,59-62,64-75,78-81,83-132,139-164
+tsconfig.json
+  s_1c1e8a7e6076b2::t_54653920ebad32 5
+  s_1c1e8a7e6076b2::t_de35cb32c2be11 6
+pnpm-lock.yaml
+  s_1c1e8a7e6076b2::t_13944774e7b9ae 85-87,106-108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "b087416849190b87fa97be0530447e9ede080e00",
+  "prompts": {},
+  "sessions": {
+    "s_1c1e8a7e6076b2": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f6ef540ebffeD1rATSpubG4dDv",
+        "model": "hf:moonshotai/Kimi-K3"
+      },
+      "human_author": "Zac Rosenbauer <me@zrosenbauer.com>"
+    },
+    "s_78095a7e049663": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f6d874b18ffeVdcBSP5mz7PWF2",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Zac Rosenbauer <me@zrosenbauer.com>"
+    },
+    "s_ad4e92c347e8ae": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f6d7d93b4ffebbrh3ljGMAj7vy",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Zac Rosenbauer <me@zrosenbauer.com>"
+    }
+  }
+}
