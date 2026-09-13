@@ -1,0 +1,19 @@
+.ciderpress/hero-background.tsx
+  s_1c1e8a7e6076b2::t_1db20ad66a4580 30-33,166-169
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "865bc99614208d8efe50331793388c1dd2a072ad",
+  "prompts": {},
+  "sessions": {
+    "s_1c1e8a7e6076b2": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f6ef540ebffeD1rATSpubG4dDv",
+        "model": "hf:moonshotai/Kimi-K3"
+      },
+      "human_author": "Zac Rosenbauer <me@zrosenbauer.com>"
+    }
+  }
+}
