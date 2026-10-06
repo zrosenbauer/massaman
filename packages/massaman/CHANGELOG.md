@@ -1,5 +1,11 @@
 # massaman
 
+## 0.5.2
+
+### Patch Changes
+
+- [#25](https://github.com/zrosenbauer/massaman/pull/25) [`843e749`](https://github.com/zrosenbauer/massaman/commit/843e749adb5542246658e6f81fe998c24304299c) Thanks [@zrosenbauer](https://github.com/zrosenbauer)! - Preserve specific `Error` types with the new `Result<T, E>` and `Err<E>` error parameters.
+
 ## 0.5.1
 
 ### Patch Changes
