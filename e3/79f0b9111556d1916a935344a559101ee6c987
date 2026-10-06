@@ -1,0 +1,31 @@
+docs/reference/control/err.mdx
+  s_9b1a1ea97bda30::t_658a00ae0919f0 34,37,39-41,45
+packages/massaman/src/control/result.ts
+  s_9b1a1ea97bda30::t_658a00ae0919f0 11-21,30-34
+  s_9b1a1ea97bda30::t_6b91cdcc6fecab 5-10
+  s_9b1a1ea97bda30::t_f20eaf4f3154bf 35
+packages/massaman/src/control/result.test.ts
+  s_9b1a1ea97bda30::t_658a00ae0919f0 49-60
+docs/concepts/result.md
+  s_9b1a1ea97bda30::t_658a00ae0919f0 51,56-57,59-65,70,75-76
+docs/reference/match/P.md
+  s_9b1a1ea97bda30::t_658a00ae0919f0 79-80
+packages/massaman/src/control/result.test-d.ts
+  s_9b1a1ea97bda30::t_658a00ae0919f0 38-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e379f0b9111556d1916a935344a559101ee6c987",
+  "prompts": {},
+  "sessions": {
+    "s_9b1a1ea97bda30": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_eee4da3c4ffeGG7l5ClxN4fAMO",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Zac Rosenbauer <me@zrosenbauer.com>"
+    }
+  }
+}
