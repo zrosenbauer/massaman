@@ -4,6 +4,20 @@ import { describe, expectTypeOf, it } from 'vitest'
 import type { Result } from '../control/types.js'
 import { P } from './match.js'
 
+type Failure = Error & ({ kind: 'not-found'; id: string } | { kind: 'forbidden' })
+
+function checkTypedError(result: Result<string, Failure>) {
+  match(result)
+    .with(P.ok(), () => null)
+    .with(P.err({ kind: 'not-found' }), (matched) => {
+      expectTypeOf(matched.error).toEqualTypeOf<Error & { kind: 'not-found'; id: string }>()
+    })
+    .with(P.err({ kind: 'forbidden' }), (matched) => {
+      expectTypeOf(matched.error).toEqualTypeOf<Error & { kind: 'forbidden' }>()
+    })
+    .exhaustive()
+}
+
 describe('P.ok pattern value', () => {
   it('creates a typed matcher', () => {
     expectTypeOf(P.ok({ id: P.string })).not.toBeAny()
@@ -52,6 +66,10 @@ describe('P.err pattern value', () => {
     }
     expectTypeOf(check).parameter(0).toEqualTypeOf<Result<string>>()
   })
+
+  it('narrows typed error payloads', () => {
+    expectTypeOf(checkTypedError).parameter(0).toEqualTypeOf<Result<string, Failure>>()
+  })
 })
 
 describe('P preserves ts-pattern primitives after spread', () => {
@@ -67,6 +85,7 @@ describe('Ok / Err type aliases from massaman/match', () => {
   it('are re-exported alongside the P value', () => {
     type OkAlias<T> = import('./match.js').Ok<T>
     type ErrAlias = import('./match.js').Err
+    type TypedErrAlias = import('./match.js').Err<TypeError>
 
     expectTypeOf<OkAlias<number>>().toEqualTypeOf<{
       readonly ok: true
@@ -78,5 +97,6 @@ describe('Ok / Err type aliases from massaman/match', () => {
       readonly value: null
       readonly error: Error
     }>()
+    expectTypeOf<TypedErrAlias['error']>().toEqualTypeOf<TypeError>()
   })
 })

@@ -70,4 +70,4 @@ export type Ok<T> = OkType<T>
 /**
  * The `Err` variant of a `Result<T>`. See {@link Ok} for the co-location note.
  */
-export type Err = ErrType
+export type Err<E extends Error = Error> = ErrType<E>

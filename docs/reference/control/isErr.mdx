@@ -10,7 +10,7 @@ Type guard that narrows a [`Result`](../../concepts/result.md) to `Err`.
 
 ```typescript
 if (isErr(result)) {
-  // result.error is Error
+  // result.error is E
 }
 ```
 
@@ -33,7 +33,7 @@ return respond.ok(user.value)
 
 #### Parameters
 
-<Field name="result" type="Result&lt;T&gt;" required>
+<Field name="result" type="Result&lt;T, E&gt;" required>
 the result to test.
 </Field>
 
@@ -42,7 +42,7 @@ the result to test.
 `true` if the result is a failure.
 
 ```typescript
-result is Err
+result is Err&lt;E&gt;
 ```
 
 ## See also
