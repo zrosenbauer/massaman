@@ -3,12 +3,35 @@ import { isNil } from 'es-toolkit/predicate'
 import type { Err, Ok, Result } from './types.js'
 
 /**
+ * Checks whether a value exposes the required structural `Error` fields.
+ * @param value - The value to inspect
+ * @returns Whether the value has string `name` and `message` fields
+ * @private
+ */
+function isErrorLike(value: unknown): value is Error {
+  return (
+    typeof value === 'object' &&
+    !isNil(value) &&
+    'name' in value &&
+    typeof value.name === 'string' &&
+    'message' in value &&
+    typeof value.message === 'string'
+  )
+}
+
+/**
  * Minimal error coercion used internally by `err()`. Kept local to avoid
  * pulling the full conversion module into the `massaman/control` bundle.
  */
 function coerceError(thrown: unknown): Error {
   if (thrown instanceof Error) {
     return thrown
+  }
+  if (isErrorLike(thrown)) {
+    return Object.defineProperties(
+      new Error(thrown.message, { cause: thrown }),
+      Object.getOwnPropertyDescriptors(thrown)
+    )
   }
   if (typeof thrown === 'string') {
     return new Error(thrown)

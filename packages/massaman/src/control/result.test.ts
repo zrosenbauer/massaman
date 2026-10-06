@@ -46,6 +46,18 @@ describe('err', () => {
     expect(result).toEqual({ ok: false, value: null, error })
   })
 
+  it('preserves fields from a structural Error value', () => {
+    const error: Error & { readonly status: 404 } = {
+      name: 'HttpError',
+      message: 'Spec not found',
+      status: 404,
+    }
+    const result = err(error)
+
+    expect(result.error).toBeInstanceOf(Error)
+    expect(result.error).toMatchObject(error)
+  })
+
   it('creates an Err result with a string', () => {
     const result = err('something went wrong')
 

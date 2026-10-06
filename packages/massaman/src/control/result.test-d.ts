@@ -35,6 +35,16 @@ describe('err()', () => {
     expectTypeOf(err(failure).error).toEqualTypeOf<NotFoundError>()
   })
 
+  it('preserves structural Error fields', () => {
+    const failure: Error & { readonly status: 404 } = {
+      name: 'HttpError',
+      message: 'missing spec',
+      status: 404,
+    }
+
+    expectTypeOf(err(failure).error).toEqualTypeOf<Error & { readonly status: 404 }>()
+  })
+
   it('normalizes non-Error values to Error', () => {
     expectTypeOf(err('oops').error).toEqualTypeOf<Error>()
   })

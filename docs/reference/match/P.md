@@ -76,8 +76,8 @@ A pattern can discriminate typed domain errors directly:
 ```typescript
 match(result)
   .with(P.ok(), ({ value }) => respond(200, value))
-  .with(P.err({ kind: 'not-found' }), () => respond(404))
-  .with(P.err({ kind: 'forbidden' }), () => respond(403))
+  .with(P.err({ status: 404 }), ({ error }) => respond(error.status))
+  .with(P.err({ status: 403 }), ({ error }) => respond(error.status))
   .exhaustive()
 ```
 

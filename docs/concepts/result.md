@@ -48,29 +48,32 @@ Construct `ok` and `err` in functions that model fallibility directly. Use `atte
 
 ## Typed errors
 
-Use an `Error` intersection or interface when callers need to distinguish expected failure kinds. `err` preserves that specific type instead of widening it to `Error`.
+Use an `Error` intersection or interface when callers need to map expected failures to protocol behavior. `err` preserves that specific type instead of widening it to `Error`.
 
 ```typescript
 import { err, match, ok, P, type Result } from 'massaman'
 
-type SpecFailure = Error &
-  ({ kind: 'not-found'; id: string } | { kind: 'forbidden' })
+type HttpError<Status extends number> = Error & { readonly status: Status }
+type SpecFailure = HttpError<403> | HttpError<404>
 
-const notFound = (id: string): SpecFailure =>
-  Object.assign(new Error(`Spec ${id} not found`), {
-    kind: 'not-found' as const,
-    id,
+const httpError = <const Status extends number>(
+  status: Status,
+  message: string,
+): HttpError<Status> =>
+  Object.assign(new Error(message), {
+    name: 'HttpError',
+    status,
   })
 
 const loadSpec = (id: string): Result<Spec, SpecFailure> => {
   if (id === 'known') return ok(spec)
-  return err(notFound(id))
+  return err(httpError(404, `Spec ${id} not found`))
 }
 
 match(loadSpec(id))
   .with(P.ok(), ({ value }) => respond(200, value))
-  .with(P.err({ kind: 'not-found' }), () => respond(404))
-  .with(P.err({ kind: 'forbidden' }), () => respond(403))
+  .with(P.err({ status: 404 }), ({ error }) => respond(error.status))
+  .with(P.err({ status: 403 }), ({ error }) => respond(error.status))
   .exhaustive()
 ```
 

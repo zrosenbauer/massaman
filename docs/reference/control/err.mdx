@@ -31,18 +31,18 @@ err({ code: 'EBADF', fd: 3 })
 // { ok: false, value: null, error: Error('{"code":"EBADF","fd":3}', { cause: { code: 'EBADF', fd: 3 } }) }
 ```
 
-Use a typed `Error` when callers need to distinguish domain failures:
+Use a typed `Error` when callers need to map domain failures to HTTP responses:
 
 ```typescript
-type NotFoundError = Error & { kind: 'not-found'; id: string }
+type HttpError<Status extends number> = Error & { readonly status: Status }
 
-const error: NotFoundError = Object.assign(new Error('Spec not found'), {
-  kind: 'not-found' as const,
-  id: 'spec-1',
+const error: HttpError<404> = Object.assign(new Error('Spec not found'), {
+  name: 'HttpError',
+  status: 404 as const,
 })
 
 const result = err(error)
-// Err<NotFoundError>
+// Err<HttpError<404>>
 ```
 
 #### Parameters
