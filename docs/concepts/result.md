@@ -4,11 +4,11 @@ Massaman treats expected failure as data. A fallible operation returns a `Result
 
 ```typescript
 type Ok<T> = { ok: true; value: T; error: null }
-type Err = { ok: false; value: null; error: Error }
-type Result<T> = Ok<T> | Err
+type Err<E extends Error = Error> = { ok: false; value: null; error: E }
+type Result<T, E extends Error = Error> = Ok<T> | Err<E>
 ```
 
-Thrown and rejected values still exist at unsafe boundaries. `attempt`, `attemptAsync`, and `err` normalize those values into an `Error` before returning an `Err`.
+The error parameter preserves specific `Error` types while defaulting to `Error` for existing `Result<T>` call sites. Thrown and rejected values still exist at unsafe boundaries; `attempt`, `attemptAsync`, and `err` normalize non-Error values before returning an `Err`.
 
 ## Why it matters
 
@@ -27,7 +27,7 @@ This creates a clear boundary:
 | `attempt(fn)` | Run synchronous unsafe work and return a `Result` |
 | `attemptAsync(fn)` | Run asynchronous unsafe work and return a promised `Result` |
 | `ok(value)` | Construct a successful result |
-| `err(error)` | Construct a failed result and normalize its error |
+| `err(error)` | Construct a failed result, preserving its `Error` subtype or normalizing a non-Error value |
 | `isOk(result)` / `isErr(result)` | Narrow a result with a type guard |
 | `P.ok(pattern?)` / `P.err(pattern?)` | Match a result structurally |
 | `unwrap(result, message?)` | Extract an `Ok` value or throw; use only at a deliberate crash boundary |
@@ -45,6 +45,36 @@ Use `Result` when failure is expected and the caller can respond:
 - enforcing a domain rule that can reject a value
 
 Construct `ok` and `err` in functions that model fallibility directly. Use `attempt` and `attemptAsync` around APIs that communicate failure by throwing or rejecting.
+
+## Typed errors
+
+Use an `Error` intersection or interface when callers need to distinguish expected failure kinds. `err` preserves that specific type instead of widening it to `Error`.
+
+```typescript
+import { err, match, ok, P, type Result } from 'massaman'
+
+type SpecFailure = Error &
+  ({ kind: 'not-found'; id: string } | { kind: 'forbidden' })
+
+const notFound = (id: string): SpecFailure =>
+  Object.assign(new Error(`Spec ${id} not found`), {
+    kind: 'not-found' as const,
+    id,
+  })
+
+const loadSpec = (id: string): Result<Spec, SpecFailure> => {
+  if (id === 'known') return ok(spec)
+  return err(notFound(id))
+}
+
+match(loadSpec(id))
+  .with(P.ok(), ({ value }) => respond(200, value))
+  .with(P.err({ kind: 'not-found' }), () => respond(404))
+  .with(P.err({ kind: 'forbidden' }), () => respond(403))
+  .exhaustive()
+```
+
+The payload must remain an `Error`, so stack traces, causes, and error-boundary behavior stay consistent. Passing a string, object, or other non-Error value to `err` still produces `Err<Error>`.
 
 ## Complete example
 

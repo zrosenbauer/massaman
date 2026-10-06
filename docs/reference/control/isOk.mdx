@@ -18,7 +18,7 @@ if (isOk(result)) {
 
 ### `isOk(result)`
 
-`isOk` is how you discriminate a `Result` in TypeScript — inside the truthy branch, `result.value` is `T`; in the falsy branch, `result` is `Err` and `result.error` is `Error`.
+`isOk` is how you discriminate a `Result` in TypeScript — inside the truthy branch, `result.value` is `T`; in the falsy branch, `result` is `Err<E>` and preserves its specific error type.
 
 ```typescript
 import { attempt, isOk } from 'massaman'

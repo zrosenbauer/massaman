@@ -5,8 +5,6 @@ import type { Err, Ok, Result } from './types.js'
 /**
  * Minimal error coercion used internally by `err()`. Kept local to avoid
  * pulling the full conversion module into the `massaman/control` bundle.
- * For richer stringification (Maps, Sets, Errors with own props, circular
- * refs), import `toError` from `massaman/conversion`.
  */
 function coerceError(thrown: unknown): Error {
   if (thrown instanceof Error) {
@@ -51,6 +49,8 @@ export function ok<T>(value: T): Ok<T> {
  * // { ok: false, error: Error('fail') }
  * ```
  */
+export function err<E extends Error>(error: E): Err<E>
+export function err(error: unknown): Err
 export function err(error: unknown): Err {
   return { ok: false, value: null, error: coerceError(error) }
 }
@@ -69,7 +69,7 @@ export function err(error: unknown): Err {
  * }
  * ```
  */
-export function isOk<T>(result: Result<T>): result is Ok<T> {
+export function isOk<T, E extends Error>(result: Result<T, E>): result is Ok<T> {
   return result.ok === true
 }
 
@@ -87,7 +87,7 @@ export function isOk<T>(result: Result<T>): result is Ok<T> {
  * }
  * ```
  */
-export function isErr<T>(result: Result<T>): result is Err {
+export function isErr<T, E extends Error>(result: Result<T, E>): result is Err<E> {
   return result.ok === false
 }
 
@@ -109,7 +109,7 @@ export function isErr<T>(result: Result<T>): result is Err {
  * unwrap(err('fail'), 'config required') // throws Error('config required', { cause: Error('fail') })
  * ```
  */
-export function unwrap<T>(result: Result<T>, message?: string): T {
+export function unwrap<T, E extends Error>(result: Result<T, E>, message?: string): T {
   if (result.ok) {
     return result.value
   }

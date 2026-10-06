@@ -17,18 +17,22 @@ export interface Ok<T> {
  *
  * @example
  * ```ts
- * const result: Err = { ok: false, error: new Error('fail') }
+ * const result: Err<TypeError> = {
+ *   ok: false,
+ *   value: null,
+ *   error: new TypeError('fail'),
+ * }
  * ```
  */
-export interface Err {
+export interface Err<E extends Error = Error> {
   readonly ok: false
   readonly value: null
-  readonly error: Error
+  readonly error: E
 }
 
 /**
  * Discriminated union representing either success (`Ok`) or failure (`Err`).
- * Inspired by Rust's `Result<T, E>`, but errors are always `Error`.
+ * Inspired by Rust's `Result<T, E>`.
  *
  * @example
  * ```ts
@@ -37,4 +41,4 @@ export interface Err {
  * }
  * ```
  */
-export type Result<T> = Ok<T> | Err
+export type Result<T, E extends Error = Error> = Ok<T> | Err<E>

@@ -18,11 +18,24 @@ describe('ok()', () => {
 })
 
 describe('err()', () => {
-  it('returns Err', () => {
-    expectTypeOf(err(new Error('fail'))).toEqualTypeOf<Err>()
+  it('returns Err<E>', () => {
+    expectTypeOf(err(new Error('fail'))).toEqualTypeOf<Err<Error>>()
   })
 
-  it('has error property typed as Error', () => {
+  it('preserves the error payload type', () => {
+    interface NotFoundError extends Error {
+      readonly kind: 'not-found'
+      readonly id: string
+    }
+    const failure: NotFoundError = Object.assign(new Error('missing spec'), {
+      kind: 'not-found' as const,
+      id: 'spec-1',
+    })
+
+    expectTypeOf(err(failure).error).toEqualTypeOf<NotFoundError>()
+  })
+
+  it('normalizes non-Error values to Error', () => {
     expectTypeOf(err('oops').error).toEqualTypeOf<Error>()
   })
 
@@ -32,8 +45,14 @@ describe('err()', () => {
 })
 
 describe('Result<T>', () => {
-  it('is a union of Ok and Err', () => {
+  it('defaults the error type to Error', () => {
     expectTypeOf<Result<string>>().toEqualTypeOf<Ok<string> | Err>()
+  })
+
+  it('accepts a typed error parameter', () => {
+    type Failure = Error & ({ kind: 'not-found'; id: string } | { kind: 'forbidden' })
+
+    expectTypeOf<Result<string, Failure>>().toEqualTypeOf<Ok<string> | Err<Failure>>()
   })
 })
 
@@ -59,20 +78,30 @@ describe('isOk()', () => {
 
 describe('isErr()', () => {
   it('narrows Result to Err', () => {
-    const result: Result<number> = err('fail')
+    interface Failure extends Error {
+      readonly kind: 'failure'
+    }
+    const failure: Failure = Object.assign(new Error('fail'), {
+      kind: 'failure' as const,
+    })
+    const result: Result<number, Failure> = err(failure)
 
     if (isErr(result)) {
-      expectTypeOf(result).toEqualTypeOf<Err>()
-      expectTypeOf(result.error).toEqualTypeOf<Error>()
+      expectTypeOf(result).toEqualTypeOf<Err<Failure>>()
+      expectTypeOf(result.error).toEqualTypeOf<Failure>()
       expectTypeOf(result.value).toEqualTypeOf<null>()
     }
   })
 
   it('error is not null inside Err branch', () => {
-    const result: Result<string> = err(new Error('bad'))
+    interface BadError extends Error {
+      readonly kind: 'bad'
+    }
+    const failure: BadError = Object.assign(new Error('bad'), { kind: 'bad' as const })
+    const result: Result<string, BadError> = err(failure)
 
     if (isErr(result)) {
-      expectTypeOf(result.error).toEqualTypeOf<Error>()
+      expectTypeOf(result.error).toEqualTypeOf<BadError>()
     }
   })
 })

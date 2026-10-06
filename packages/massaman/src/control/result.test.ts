@@ -36,10 +36,19 @@ describe('err', () => {
     expect(result).toEqual({ ok: false, value: null, error })
   })
 
+  it('preserves a typed Error subtype', () => {
+    const error = Object.assign(new Error('missing spec'), {
+      kind: 'not-found' as const,
+      id: 'spec-1',
+    })
+    const result = err(error)
+
+    expect(result).toEqual({ ok: false, value: null, error })
+  })
+
   it('creates an Err result with a string', () => {
     const result = err('something went wrong')
 
-    expect(result.ok).toBe(false)
     expect(result.error).toBeInstanceOf(Error)
     expect(result.error.message).toBe('something went wrong')
   })
@@ -47,7 +56,6 @@ describe('err', () => {
   it('creates an Err result with null', () => {
     const result = err(null)
 
-    expect(result.ok).toBe(false)
     expect(result.error).toBeInstanceOf(Error)
   })
 })

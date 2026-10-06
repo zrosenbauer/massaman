@@ -29,11 +29,11 @@ const config = unwrap(
 )
 ```
 
-With no `message`, the original `Error` from `Err` is thrown directly. With a `message`, a new `Error` is thrown with the original preserved on `cause` — same shape as Rust's `expect`.
+With no `message`, the original typed `Error` from `Err<E>` is thrown directly. With a `message`, a new `Error` is thrown with the original preserved on `cause` — same shape as Rust's `expect`.
 
 #### Parameters
 
-<Field name="result" type="Result&lt;T&gt;" required>
+<Field name="result" type="Result&lt;T, E&gt;" required>
 the result to unwrap.
 </Field>
 
@@ -51,7 +51,7 @@ T
 
 #### Throws
 
-- The original `Error` from `Err`, if no `message` is provided.
+- The original `E extends Error` from `Err<E>`, if no `message` is provided.
 - A new `Error(message, { cause: original })`, if `message` is provided.
 
 ## See also

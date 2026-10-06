@@ -6,7 +6,7 @@ import { Field } from '@ciderpress/ui/theme'
 
 # err
 
-Constructs a failure [`Result`](../../concepts/result.md). Normalizes any thrown value into an `Error`.
+Constructs a failure [`Result`](../../concepts/result.md). Preserves specific `Error` types and normalizes non-Error values into `Error`.
 
 ```typescript
 const result = err(reason)
@@ -16,7 +16,7 @@ const result = err(reason)
 
 ### `err(reason)`
 
-Pass an `Error`, a string, or any other value. Strings are wrapped in `new Error(reason)`. Non-error, non-string values get `JSON.stringify`'d into the message and the original is preserved on `error.cause`.
+Pass an `Error`, a string, or any other value. `Error` instances are returned unchanged, including their specific subtype. Strings are wrapped in `new Error(reason)`. Non-error, non-string values get `JSON.stringify`'d into the message and the original is preserved on `error.cause`.
 
 ```typescript
 import { err } from 'massaman'
@@ -31,6 +31,20 @@ err({ code: 'EBADF', fd: 3 })
 // { ok: false, value: null, error: Error('{"code":"EBADF","fd":3}', { cause: { code: 'EBADF', fd: 3 } }) }
 ```
 
+Use a typed `Error` when callers need to distinguish domain failures:
+
+```typescript
+type NotFoundError = Error & { kind: 'not-found'; id: string }
+
+const error: NotFoundError = Object.assign(new Error('Spec not found'), {
+  kind: 'not-found' as const,
+  id: 'spec-1',
+})
+
+const result = err(error)
+// Err<NotFoundError>
+```
+
 #### Parameters
 
 <Field name="reason" type="unknown" required>
@@ -39,10 +53,10 @@ the failure value. Accepts anything — normalization to `Error` is the function
 
 #### Returns
 
-`{ ok: false, value: null, error: Error }`.
+`Err<E>` when given `E extends Error`; otherwise `Err<Error>`.
 
 ```typescript
-Err
+Err<E>
 ```
 
 ## See also

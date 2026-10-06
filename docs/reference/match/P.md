@@ -69,7 +69,17 @@ match(result)
 
 Matches the `Err` variant of a `Result<T>`. With no argument it is equivalent to `{ ok: false }`; with an argument it applies that pattern to `error`.
 
-Inside the `P.err()` arm, the matched value is narrowed to `Err` — `error` is `Error`, `value` is `null`.
+Inside the `P.err()` arm, the matched value is narrowed to `Err<E>` — `error` preserves the `Result`'s specific error type and `value` is `null`.
+
+A pattern can discriminate typed domain errors directly:
+
+```typescript
+match(result)
+  .with(P.ok(), ({ value }) => respond(200, value))
+  .with(P.err({ kind: 'not-found' }), () => respond(404))
+  .with(P.err({ kind: 'forbidden' }), () => respond(403))
+  .exhaustive()
+```
 
 ## Examples
 
