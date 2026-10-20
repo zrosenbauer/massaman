@@ -1,0 +1,108 @@
+---
+description: "Defines a callable error constructor from an object or a function."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# defineError
+
+Defines a callable error constructor from an object or a function. Every call uses [`createError`](./createError.md) to create a fresh native `Error` with a stack.
+
+## Usage
+
+### Static definitions
+
+Pass an object for an error that takes no arguments:
+
+```typescript
+import { defineError, err } from 'massaman'
+// or: import { defineError } from 'massaman/error'
+
+const unauthorized = defineError({
+  name: 'Unauthorized',
+  message: 'Sign in first',
+  status: 401,
+})
+
+const failure = unauthorized()
+const result = err(failure)
+
+unauthorized() !== unauthorized() // true: fresh instances
+```
+
+### Function definitions
+
+Pass a function when the message or custom fields depend on input. Its parameters become the constructor's parameters, including optional and rest parameters.
+
+```typescript
+const notFound = defineError((userId: string, cause?: unknown) => ({
+  name: 'NotFound',
+  message: `User ${userId} not found`,
+  userId,
+  cause,
+}))
+
+const failure = notFound('123')
+failure.name // 'NotFound'
+failure.userId // string
+
+type NotFound = ReturnType<typeof notFound>
+```
+
+Inline definitions infer literal names. If you declare the builder separately, preserve its literal name with `as const` or an explicit return type. A name that has already widened to `string` cannot discriminate an error union.
+
+The builder runs once per constructor call, not when `defineError` is called. Keep it pure. It returns exactly the object you would pass to `createError`; there are no per-field callback rules.
+
+### Explicit output and input contracts
+
+Use [`ErrorWith`](./ErrorWith.md) to declare the output. For function definitions, the second generic is the argument tuple:
+
+```typescript
+import { defineError, type ErrorWith } from 'massaman/error'
+
+type NotFound = ErrorWith<'NotFound', { readonly userId: string }>
+
+const notFound = defineError<NotFound, [userId: string, cause?: unknown]>(
+  (userId, cause) => ({
+    name: 'NotFound',
+    message: `User ${userId} not found`,
+    userId,
+    cause,
+  }),
+)
+
+notFound('123') // NotFound
+```
+
+Static definitions need only the output generic:
+
+```typescript
+type Unauthorized = ErrorWith<'Unauthorized', { readonly status: 401 }>
+
+const unauthorized = defineError<Unauthorized>({
+  name: 'Unauthorized',
+  message: 'Sign in first',
+  status: 401,
+})
+```
+
+These contracts are checked, not cast. Missing fields, wrong names, and incompatible argument types fail typechecking.
+
+#### Parameters
+
+<Field name="definition" type="object | (...args: Args) => object" required>
+A static error definition or a function returning one. Definitions require string `name` and `message`, accept optional `cause`, and can include custom data.
+</Field>
+
+#### Returns
+
+A function returning a native error with the inferred or explicit output type. Static definitions produce zero-argument functions; builder definitions preserve the builder's arguments.
+
+Call it normally, without `new`. Match errors by their literal `name`, not `instanceof notFound`. Custom fields are shallowly copied and readonly in TypeScript, not frozen at runtime. Builder exceptions propagate normally; use `attempt` around unsafe work rather than hiding it in a definition.
+
+## See also
+
+- [`createError`](./createError.md) — create a one-off error
+- [`ErrorWith`](./ErrorWith.md) — declare the output type
+- [`err`](../control/err.md) — wrap the instance in a failed Result
+- [Result & Errors](../../concepts/result.md) — match typed error variants

@@ -1,0 +1,87 @@
+---
+description: "Creates a native Error with a typed name and custom data."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# createError
+
+Creates a native `Error` with a typed name and custom data. Use it for one-off failures without writing an `Error` subclass.
+
+## Usage
+
+### `createError(definition)`
+
+```typescript
+import { createError, err } from 'massaman'
+// or: import { createError } from 'massaman/error'
+
+const failure = createError({
+  name: 'NotFound',
+  message: 'User not found',
+  userId: '123',
+})
+
+failure.name // 'NotFound', not string
+failure.userId // '123'
+failure instanceof Error // true
+
+const result = err(failure)
+result.error === failure // true
+```
+
+Every call creates a fresh native error with a stack. `message` and optional `cause` keep their native, non-enumerable descriptors. Custom fields are copied shallowly; the definition is not mutated.
+
+### Causes
+
+```typescript
+const cause = new Error('Database offline')
+
+const failure = createError({
+  name: 'LoadFailed',
+  message: 'Cannot load user',
+  userId: '123',
+  cause,
+})
+
+failure.cause === cause // true
+```
+
+`cause` accepts any value, just like native `ErrorOptions`. Omit it when there is no underlying failure.
+
+### Explicit output contracts
+
+Pass an error type when the returned value must satisfy an existing contract:
+
+```typescript
+import { createError, type ErrorWith } from 'massaman/error'
+
+type NotFound = ErrorWith<'NotFound', { readonly userId: string }>
+
+const failure = createError<NotFound>({
+  name: 'NotFound',
+  message: 'User not found',
+  userId: '123',
+})
+```
+
+Missing data, incompatible field types, and a different `name` fail typechecking. Native `stack` and `toString` come from `Error` construction, not from the output contract's input fields. The result is a native `Error`, not an instance of a custom subclass.
+
+#### Parameters
+
+<Field name="definition" type="object" required>
+An object with required string `name` and `message`, optional `cause`, and any custom data fields. Do not supply `stack`; each error gets its own native stack.
+</Field>
+
+#### Returns
+
+An `ErrorWith` preserving the inferred name and custom fields, or the explicit error type `E` when called as `createError<E>(definition)`.
+
+The name and custom fields are readonly in TypeScript. This does not freeze the instance or clone nested data. The function constructs errors; it does not validate untrusted data or throw the resulting instance.
+
+## See also
+
+- [`defineError`](./defineError.md) — define a reusable constructor
+- [`ErrorWith`](./ErrorWith.md) — describe a native error with custom data
+- [`err`](../control/err.md) — wrap an error in a failed Result
+- [`toError`](../conversion/toError.md) — normalize an unknown value
