@@ -77,7 +77,8 @@ export {
   zipWith,
 } from './array/index.js'
 
-export { AbortError, TimeoutError } from './error/index.js'
+export { AbortError, createError, defineError, TimeoutError } from './error/index.js'
+export type { ErrorWith } from './error/index.js'
 
 export {
   after,

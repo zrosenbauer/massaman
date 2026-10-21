@@ -1,0 +1,71 @@
+---
+description: "Describes a native Error with a literal name and readonly custom data."
+---
+
+# ErrorWith
+
+Describes a native `Error` with a literal name and readonly custom data. This is a type-only helper; it does not create an instance or require a class.
+
+## Usage
+
+### `ErrorWith<Name, Data>`
+
+```typescript
+import { defineError, type ErrorWith } from 'massaman'
+// or: import { defineError, type ErrorWith } from 'massaman/error'
+
+type NotFound = ErrorWith<'NotFound', { readonly userId: string }>
+
+const notFound = defineError<NotFound, [userId: string]>((userId) => ({
+  name: 'NotFound',
+  message: `User ${userId} not found`,
+  userId,
+}))
+
+const failure: NotFound = notFound('123')
+```
+
+`NotFound` includes native `message`, optional `cause` and `stack`, and `toString()`. Its `name` is the literal `'NotFound'`, and `userId` is a readonly string.
+
+Omit `Data` when the error has no custom fields:
+
+```typescript
+type Unauthorized = ErrorWith<'Unauthorized'>
+```
+
+### Error unions
+
+Use distinct names to discriminate expected failures:
+
+```typescript
+import { match, P, type Result } from 'massaman'
+
+type NotFound = ErrorWith<'NotFound', { readonly userId: string }>
+type Forbidden = ErrorWith<'Forbidden', { readonly permission: string }>
+
+const describe = (result: Result<string, NotFound | Forbidden>): string =>
+  match(result)
+    .with(P.ok(), ({ value }) => value)
+    .with(P.err({ name: 'NotFound' }), ({ error }) => `Missing user ${error.userId}`)
+    .with(P.err({ name: 'Forbidden' }), ({ error }) => `Missing permission ${error.permission}`)
+    .exhaustive()
+```
+
+Custom data unions are preserved too. `ErrorWith<'HttpError', NotFoundData | ForbiddenData>` retains the fields specific to each data variant.
+
+### Type parameters
+
+| Parameter | Meaning |
+|---|---|
+| `Name extends string` | The literal error name used for narrowing |
+| `Data extends object` | Custom fields; defaults to no additional fields |
+
+Native `Error` keys in `Data` are excluded. Set the name through `Name`, and use the native types for `message`, `cause`, `stack`, and `toString`. The helper makes the name and custom fields readonly, but does not freeze runtime values or make nested objects deeply readonly.
+
+This is a structural type, not a nominal brand. Errors with the same name and field types are compatible, regardless of which constructor created them.
+
+## See also
+
+- [`createError`](./createError.md) — create an instance with an optional explicit contract
+- [`defineError`](./defineError.md) — define a reusable typed constructor
+- [Result & Errors](../../concepts/result.md) — use errors as values

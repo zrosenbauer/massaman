@@ -28,6 +28,9 @@ This creates a clear boundary:
 | `attemptAsync(fn)` | Run asynchronous unsafe work and return a promised `Result` |
 | `ok(value)` | Construct a successful result |
 | `err(error)` | Construct a failed result, preserving its `Error` subtype or normalizing a non-Error value |
+| `createError(definition)` | Create a native error with a literal name and custom data |
+| `defineError(definition)` | Define a reusable error constructor from an object or function |
+| `ErrorWith<Name, Data>` | Describe the native error and its custom data |
 | `isOk(result)` / `isErr(result)` | Narrow a result with a type guard |
 | `P.ok(pattern?)` / `P.err(pattern?)` | Match a result structurally |
 | `unwrap(result, message?)` | Extract an `Ok` value or throw; use only at a deliberate crash boundary |
@@ -48,36 +51,49 @@ Construct `ok` and `err` in functions that model fallibility directly. Use `atte
 
 ## Typed errors
 
-Use an `Error` intersection or interface when callers need to map expected failures to protocol behavior. `err` preserves that specific type instead of widening it to `Error`.
+Use `defineError` for reusable domain errors without subclasses. `err` preserves their specific types, and literal names let pattern matching narrow each failure's data.
 
 ```typescript
-import { err, match, ok, P, type Result } from 'massaman'
+import { defineError, err, match, P, type ErrorWith, type Result } from 'massaman'
 
-type HttpError<Status extends number> = Error & { readonly status: Status }
-type SpecFailure = HttpError<403> | HttpError<404>
+type NotFound = ErrorWith<'NotFound', { readonly specId: string }>
+type Forbidden = ErrorWith<'Forbidden', { readonly permission: string }>
+type SpecFailure = NotFound | Forbidden
 
-const httpError = <const Status extends number>(
-  status: Status,
-  message: string,
-): HttpError<Status> =>
-  Object.assign(new Error(message), {
-    name: 'HttpError',
-    status,
-  })
+const notFound = defineError<NotFound, [specId: string]>((specId) => ({
+  name: 'NotFound',
+  message: `Spec ${specId} not found`,
+  specId,
+}))
 
-const loadSpec = (id: string): Result<Spec, SpecFailure> => {
-  if (id === 'known') return ok(spec)
-  return err(httpError(404, `Spec ${id} not found`))
-}
+const describe = (result: Result<string, SpecFailure>): string =>
+  match(result)
+    .with(P.ok(), ({ value }) => value)
+    .with(P.err({ name: 'NotFound' }), ({ error }) => `Missing spec ${error.specId}`)
+    .with(P.err({ name: 'Forbidden' }), ({ error }) => `Requires ${error.permission}`)
+    .exhaustive()
 
-match(loadSpec(id))
-  .with(P.ok(), ({ value }) => respond(200, value))
-  .with(P.err({ status: 404 }), ({ error }) => respond(error.status))
-  .with(P.err({ status: 403 }), ({ error }) => respond(error.status))
-  .exhaustive()
+describe(err(notFound('spec-1')))
+// 'Missing spec spec-1'
 ```
 
-The payload must remain an `Error`, so stack traces, causes, and error-boundary behavior stay consistent. Passing a string, object, or other non-Error value to `err` still produces `Err<Error>`.
+Inference is the default: omit the generics when the definition already describes the contract. An inline function definition infers its arguments and literal name. An object definition creates a zero-argument constructor. `ReturnType<typeof notFound>` extracts the instance type when you do not need to declare it upfront.
+
+For one-off errors, call `createError` directly:
+
+```typescript
+import { createError, err } from 'massaman'
+
+err(createError({
+  name: 'NotFound',
+  message: 'Spec not found',
+  specId: 'spec-1',
+}))
+```
+
+Both constructors create native `Error` instances with fresh stacks and optional causes. Custom data is shallowly copied; its fields are readonly in TypeScript, not frozen at runtime. Return errors through `err` for expected failures. Throw them only at a deliberate exception boundary.
+
+Existing `Error` intersections, interfaces, and subclasses still work. Passing a plain object directly to `err` still normalizes it into `Err<Error>`; use `createError` or `defineError` to preserve typed custom fields.
 
 ## Complete example
 
@@ -115,5 +131,6 @@ Do not wrap every branch in a `Result`.
 - [`attempt`](../reference/control/attempt.md) and [`attemptAsync`](../reference/control/attemptAsync.md)
 - [`ok`](../reference/control/ok.md), [`err`](../reference/control/err.md), [`isOk`](../reference/control/isOk.md), and [`isErr`](../reference/control/isErr.md)
 - [`unwrap`](../reference/control/unwrap.md) and [`toError`](../reference/conversion/toError.md)
+- [`createError`](../reference/error/createError.md), [`defineError`](../reference/error/defineError.md), and [`ErrorWith`](../reference/error/ErrorWith.md)
 - [`AbortError`](../reference/error/AbortError.md) and [`TimeoutError`](../reference/error/TimeoutError.md)
 - [Pattern Matching](./match.md)
