@@ -1,5 +1,11 @@
 # massaman
 
+## 0.5.3
+
+### Patch Changes
+
+- [#27](https://github.com/zrosenbauer/massaman/pull/27) [`53bd050`](https://github.com/zrosenbauer/massaman/commit/53bd050ce2d0047b9bd861cb4a17ae29e0c71f77) Thanks [@zrosenbauer](https://github.com/zrosenbauer)! - Add createError and defineError for typed native errors without subclasses, plus the ErrorWith type helper.
+
 ## 0.5.2
 
 ### Patch Changes
