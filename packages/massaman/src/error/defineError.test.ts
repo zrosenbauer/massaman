@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
-import { attempt } from '../control/attempt.js'
-import { err } from '../control/result.js'
-import { defineError as rootDefineError } from '../index.js'
-import { match, P } from '../match/index.js'
+import { attempt } from '@/control/attempt.js'
+import { err } from '@/control/result.js'
+import { defineError as rootDefineError } from '@/index.js'
+import { match, P } from '@/match/index.js'
+
 import { defineError } from './index.js'
 
 describe('defineError', () => {

@@ -1,8 +1,9 @@
 import { describe, expectTypeOf, it } from 'vitest'
 
-import { err } from '../control/result.js'
-import type { Err } from '../control/types.js'
-import type { ErrorWith as RootErrorWith } from '../index.js'
+import { err } from '@/control/result.js'
+import type { Err } from '@/control/types.js'
+import type { ErrorWith as RootErrorWith } from '@/index.js'
+
 import { createError, type ErrorWith } from './index.js'
 
 type NotFound = ErrorWith<'NotFound', { readonly userId: string }>

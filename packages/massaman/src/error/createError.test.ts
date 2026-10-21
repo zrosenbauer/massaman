@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest'
 
-import { err } from '../control/result.js'
-import { toError } from '../conversion/convert.js'
-import { createError as rootCreateError } from '../index.js'
+import { err } from '@/control/result.js'
+import { toError } from '@/conversion/convert.js'
+import { createError as rootCreateError } from '@/index.js'
+
 import { createError } from './index.js'
 
 describe('createError', () => {
