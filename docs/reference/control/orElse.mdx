@@ -1,0 +1,52 @@
+---
+description: "Pass an Err error to a recovery function returning another Result."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# orElse
+
+Pass an `Err` error to a recovery function returning another `Result`. An `Ok` passes through unchanged, without calling recovery. Inspired by Rust's `Result::or_else`.
+
+## Usage
+
+### `orElse(result, recover)`
+
+```typescript
+import { err, ok, orElse, type Result } from 'massaman/control'
+
+const primary: Result<string, TypeError> = err(new TypeError('Missing setting'))
+
+const recovered = orElse(primary, (error) => ok(`Default: ${error.message}`))
+// Ok('Default: Missing setting')
+
+const failed = orElse(primary, () => err(new RangeError('No backup available')))
+// Err<RangeError>; recovery can fail too.
+
+orElse(ok('configured'), () => ok('fallback'))
+// Original Ok('configured'); recovery is not called.
+```
+
+#### Parameters
+
+<Field name="result" type="Result&lt;T, E&gt;" required>
+The result to recover. Its error is passed through without normalization.
+</Field>
+
+<Field name="recover" type="(error: E) =&gt; Result&lt;U, F&gt;" required>
+Called once on failure, or not at all on success. Must return a synchronous Result.
+</Field>
+
+#### Returns
+
+`Result<T | U, F>`. The original success or recovery Result is returned by reference. The original error type is replaced by the recovery error type, not automatically retained. To retain the original error, return `err(error)` from recovery.
+
+#### Exceptions and async work
+
+Unexpected recovery exceptions propagate; this helper is not a `try/catch`. Use `attempt` around throwing recovery work. Async callbacks are not accepted; use an explicit `isOk` guard when recovery needs to await a Promise.
+
+## See also
+
+- [`andThen`](./andThen.md) — continue on success instead
+- [`unwrapOr`](./unwrapOr.md) — extract a plain value with a default
+- [Result & Errors](../../concepts/result.md)

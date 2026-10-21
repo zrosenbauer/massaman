@@ -266,18 +266,23 @@ export {
 } from './string/index.js'
 
 export {
+  andThen,
   assert,
   attempt,
   attemptAsync,
+  collectResults,
   err,
   invariant,
   isErr,
   isOk,
   ok,
+  orElse,
+  partitionResults,
   todo,
   unimplemented,
   unreachable,
   unwrap,
+  unwrapOr,
 } from './control/index.js'
 export type { Result } from './control/index.js'
 

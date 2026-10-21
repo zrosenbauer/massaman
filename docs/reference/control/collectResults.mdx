@@ -1,0 +1,57 @@
+---
+description: "Combine an array of Results into one Result."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# collectResults
+
+Combine an array of Results into one Result. If every item succeeds, return its values in order. Otherwise return the original first failure in input order. Inspired by Rust's `Iterator::collect` into `Result<Vec<T>, E>`.
+
+## Usage
+
+### `collectResults(results)`
+
+```typescript
+import { collectResults, err, ok } from 'massaman/control'
+
+collectResults([ok(1), ok(2), ok(3)])
+// Ok([1, 2, 3])
+
+const first = err('invalid email')
+collectResults([ok(1), first, err('missing name'), ok(4)])
+// The original first Err, not an aggregate error.
+
+collectResults([])
+// Ok([])
+```
+
+#### Parameters
+
+<Field name="results" type="readonly Result&lt;T, E&gt;[]" required>
+The already-created Results to combine. Accepts readonly arrays and does not mutate inputs.
+</Field>
+
+#### Returns
+
+`Result<T[], E>`. Success creates a new array, preserving value references and order. Failure returns the first `Err` by reference, preserving its original error and custom fields. Distinct value and error types are inferred as unions; this helper does not preserve tuple positions or accept records.
+
+#### Errors and partial successes
+
+The output contains neither partial successes nor later errors. The input remains unchanged. Use `partitionResults` if every success and every error matters, such as validating imported rows.
+
+#### Collection is not execution
+
+```typescript
+const parsed = collectResults(rows.map(parseRow))
+```
+
+`map` has already called `parseRow` for every row before collection starts. This helper cannot cancel that work or prevent exceptions thrown while creating the input. Use `attempt` at throwing boundaries. To stop running later operations after a failure, sequence individual Results with `andThen` instead.
+
+Promises are not awaited. For independent asynchronous operations, await their Results first, for example `collectResults(await Promise.all(tasks))`; all tasks may already be running.
+
+## See also
+
+- [`partitionResults`](./partitionResults.md) — retain every success and error
+- [`andThen`](./andThen.md) — sequence dependent fallible operations
+- [Result & Errors](../../concepts/result.md)

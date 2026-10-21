@@ -1,0 +1,62 @@
+---
+description: "Pass an Ok value to another function returning a Result."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# andThen
+
+Pass an `Ok` value to another function returning a `Result`. An `Err` passes through unchanged, without calling the function. Inspired by Rust's `Result::and_then`, exposed as a standalone function rather than a method.
+
+## Usage
+
+### `andThen(result, next)`
+
+```typescript
+import { andThen, err, ok, type Result } from 'massaman/control'
+
+const parseCount = (raw: string): Result<number, TypeError> => {
+  const count = Number(raw)
+  if (Number.isNaN(count)) {
+    return err(new TypeError('Expected a number'))
+  }
+  return ok(count)
+}
+
+const requirePositive = (count: number): Result<number, RangeError> => {
+  if (count <= 0) {
+    return err(new RangeError('Expected a positive count'))
+  }
+  return ok(count)
+}
+
+const count = andThen(parseCount('42'), requirePositive)
+// Result<number, TypeError | RangeError>; Ok(42)
+
+andThen(parseCount('invalid'), requirePositive)
+// Original parse failure; requirePositive is not called.
+```
+
+#### Parameters
+
+<Field name="result" type="Result&lt;T, E&gt;" required>
+The result to continue. Plain structurally compatible Results work too.
+</Field>
+
+<Field name="next" type="(value: T) =&gt; Result&lt;U, F&gt;" required>
+Called once with the success value, or not at all on failure. Must return a synchronous Result.
+</Field>
+
+#### Returns
+
+`Result<U, E | F>`. Returns the callback's Result or the original `Err` by reference. Unlike Rust's method, the input and callback may have different error types; their union is preserved.
+
+#### Exceptions and async work
+
+Unexpected callback exceptions propagate; `andThen` does not catch or normalize them. Use `attempt` at throwing boundaries. Async callbacks are not accepted: await `attemptAsync` first, then use `andThen` for synchronous continuation. For another async step, use an explicit `isErr` guard and await the operation.
+
+## See also
+
+- [`orElse`](./orElse.md) — continue on failure instead
+- [`attempt`](./attempt.md) / [`attemptAsync`](./attemptAsync.md) — capture unsafe work
+- [Result & Errors](../../concepts/result.md)

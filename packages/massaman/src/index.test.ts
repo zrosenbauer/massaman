@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import * as arrayBarrel from './array/index.js'
 import * as bigintBarrel from './bigint/index.js'
+import * as controlBarrel from './control/index.js'
 import * as root from './index.js'
 import * as mathBarrel from './math/index.js'
 import * as objectBarrel from './object/index.js'
@@ -16,6 +17,11 @@ import * as stringBarrel from './string/index.js'
  */
 describe('export surface', () => {
   const cases = [
+    ['andThen', controlBarrel],
+    ['orElse', controlBarrel],
+    ['unwrapOr', controlBarrel],
+    ['collectResults', controlBarrel],
+    ['partitionResults', controlBarrel],
     ['cartesianProduct', arrayBarrel],
     ['chunkBy', arrayBarrel],
     ['combinations', arrayBarrel],
