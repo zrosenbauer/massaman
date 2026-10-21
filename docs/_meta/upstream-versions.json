@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$comment": "Pinned versions of upstream packages whose docs we mirror. Update both this file and pnpm-workspace.yaml's catalog together, then run `pnpm docs:sync`.",
   "es-toolkit": {
-    "version": "1.51.0",
+    "version": "1.52.0",
     "repo": "toss/es-toolkit",
     "docsRoot": "docs/reference",
     "siteUrl": "https://es-toolkit.dev/reference",
@@ -13,7 +13,7 @@
     }
   },
   "ts-pattern": {
-    "version": "5.9.0",
+    "version": "5.9.2",
     "repo": "gvergnaud/ts-pattern",
     "$comment": "ts-pattern has no per-symbol .md upstream — pages under docs/reference/match/ are hand-written.",
     "siteUrl": "https://github.com/gvergnaud/ts-pattern#readme"
