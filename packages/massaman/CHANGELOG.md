@@ -1,5 +1,11 @@
 # massaman
 
+## 0.5.4
+
+### Patch Changes
+
+- [#29](https://github.com/zrosenbauer/massaman/pull/29) [`6bfb974`](https://github.com/zrosenbauer/massaman/commit/6bfb97484c8e89db67f5710f15606b6710c53c83) Thanks [@zrosenbauer](https://github.com/zrosenbauer)! - Update es-toolkit and ts-pattern to their latest releases.
+
 ## 0.5.3
 
 ### Patch Changes
