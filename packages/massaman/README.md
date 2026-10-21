@@ -113,8 +113,8 @@ match parsed {
 The equivalent in TypeScript using `massaman`:
 
 ```ts
-import { match, P } from 'massaman/match'
 import { attempt, isOk } from 'massaman/control'
+import { match, P } from 'massaman/match'
 
 match(action)
   .with({ type: 'load' }, () => 'loading')

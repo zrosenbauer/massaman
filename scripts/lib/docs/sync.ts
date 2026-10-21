@@ -446,15 +446,21 @@ function withProxyTitle(content: string, name: string): string {
   return content.replace(/^---\r?\n/u, `---\ntitle: ${JSON.stringify(name)}\n`)
 }
 
-// Upstream pages reference site-level docs (bundle-size, performance) via
-// relative .md paths that exist on es-toolkit.dev but not in our docs tree.
+// Upstream pages reference site-level docs and type utilities that exist on
+// es-toolkit.dev but not in our docs tree.
 // Rewrite them to absolute URLs so the links resolve.
 function rewriteUpstreamCrossRefs(content: string): string {
-  return content.replace(
-    /\(((?:\.\.\/)+)(bundle-size|performance)\.md(#[^)]*)?\)/g,
-    (_match: string, _depth: string, page: string, anchor: string | undefined) =>
-      `(https://es-toolkit.dev/${page}.html${anchor ?? ''})`
-  )
+  return content
+    .replace(
+      /\(((?:\.\.\/)+)(bundle-size|performance)\.md(#[^)]*)?\)/g,
+      (_match: string, _depth: string, page: string, anchor: string | undefined) =>
+        `(https://es-toolkit.dev/${page}.html${anchor ?? ''})`
+    )
+    .replace(
+      /\((?:\/|(?:\.\.\/)+)(types\/reference\/[^)#\s]+?)(?:\.md)?(#[^)]*)?\)/gu,
+      (_match: string, page: string, anchor: string | undefined) =>
+        `(https://es-toolkit.dev/${page}.html${anchor ?? ''})`
+    )
 }
 
 function refBase(c: Reference): string {

@@ -5,15 +5,21 @@ packages:
 overrides:
   # unrun@0.2.38 was published without its declared dist files, which hangs tsdown.
   unrun: 0.2.39
-  # GHSA-fx2h-pf6j-xcff, GHSA-v6wh-96g9-6wx3 — vite server.fs.deny bypass + UNC path hash disclosure (transitive via vitest).
-  vite: ^8.0.16
+  # Vite filesystem bypass and launch-editor command injection advisories (transitive via vitest).
+  vite: ^8.3.0
   # GHSA-ggr8-5vv4-36mx — stack exhaustion merging recursive object graphs (transitive via eslint-plugin-functional).
   deepmerge-ts: ^8.0.0
-  # GHSA-{5jgf-p345-68v8,f65p-4m7j-42xc,fph4-wmhf-6fwf,jqff-g426-hqxp} — fast-uri SSRF + host confusion (transitive via ajv).
-  fast-uri: ^3.1.6
+  # Fast-uri SSRF, host confusion, and host case normalization advisories (transitive via ajv).
+  fast-uri: ^3.1.8
   # GHSA-2883-xcg3-v3hh — maxTotalMergeKeys does not limit CPU for empty merge sources (transitive via gray-matter / cosmiconfig).
   js-yaml@^3.0.0: ^3.15.2
   js-yaml@^4.0.0: ^4.3.2
+  # GHSA-q2hr-2g5m-vwhr, GHSA-qhr7-859c-m2p7, GHSA-6j4f-fj2g-mc7p — brace-expansion denial of service.
+  brace-expansion@^5.0.0: ^5.0.12
+  # GHSA-68fv-2mgg-jv7q — indexed source-map offset denial of service.
+  source-map-js: ^1.2.2
+  # GHSA-238p-pmpm-9mq7 — Mermaid's KaTeX version permits trust bypass after prototype pollution.
+  katex: ^0.19.0
 
 blockExoticSubdeps: true
 minimumReleaseAge: 10080
@@ -61,21 +67,24 @@ trustPolicyExclude:
   - cytoscape@3.34.1
 
 catalog:
-  '@changesets/cli': ^3.0.1
-  '@types/node': ^26.2.0
-  '@vitest/coverage-v8': ^4.1.11
-  cac: ^7.0.0
-  es-toolkit: 1.51.0
-  oxfmt: ^0.64.0
-  oxlint: ^1.79.0
-  ts-pattern: 5.9.0
-  tsdown: 0.22.14
-  tsx: ^4.23.12
-  turbo: ^2.10.11
+  '@changesets/cli': ^3.0.3
+  '@types/node': ^26.6.5
+  '@vitest/coverage-v8': ^5.0.4
+  cac: ^7.1.0
+  es-toolkit: 1.52.0
+  oxfmt: ^0.73.0
+  oxlint: ^1.88.0
+  ts-pattern: 5.9.2
+  tsdown: 0.23.1
+  tsx: ^4.23.15
+  turbo: ^2.11.8
   typescript: ^7.0.2
-  vitest: ^4.1.11
+  vitest: ^5.0.4
   zx: ^8.8.5
 
 allowBuilds:
   esbuild: true
   lefthook: true
+
+patchedDependencies:
+  braces@3.0.3: patches/braces@3.0.3.patch

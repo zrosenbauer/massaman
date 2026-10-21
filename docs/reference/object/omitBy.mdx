@@ -44,8 +44,8 @@ const nonAdmins = omitBy(data, (value, key) => key.startsWith('admin'));
 The object to filter properties from.
 </Field>
 
-<Field name="shouldOmit" type="(value: T[keyof T], key: keyof T) =&gt; boolean" required>
-A condition function that determines whether to exclude a property. Receives the value and key, and returns `true` to exclude, `false` to keep.
+<Field name="shouldOmit" type="(value: T[keyof T], key: ObjectKeys&lt;T&gt;) =&gt; boolean" required>
+A condition function that determines whether to exclude a property. Receives the value and key, and returns `true` to exclude, `false` to keep. Numeric keys are passed to the condition function as strings (see [`ObjectKeys<T>`](https://es-toolkit.dev/types/reference/objects/ObjectKeys.html)).
 </Field>
 
 #### Returns
