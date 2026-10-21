@@ -1,5 +1,11 @@
 # massaman
 
+## 0.5.5
+
+### Patch Changes
+
+- [#33](https://github.com/zrosenbauer/massaman/pull/33) [`ddb30f0`](https://github.com/zrosenbauer/massaman/commit/ddb30f06819c9a7215162c92cbe8c5e7be58e27c) Thanks [@zrosenbauer](https://github.com/zrosenbauer)! - Add standalone Result continuation, recovery, fallback, collection, and partition helpers with typed error preservation.
+
 ## 0.5.4
 
 ### Patch Changes
