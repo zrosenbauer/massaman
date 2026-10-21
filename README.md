@@ -70,6 +70,40 @@ if (isOk(result)) {
 }
 ```
 
+### Compose and collect Results
+
+Use standalone helpers with ordinary Result objects—no methods or chaining wrappers:
+
+```ts
+import {
+  andThen,
+  collectResults,
+  err,
+  ok,
+  orElse,
+  partitionResults,
+  unwrapOr,
+} from 'massaman/control'
+
+const next = andThen(ok(41), (value) => ok(value + 1))
+// Ok(42); an Err would skip the callback.
+
+const recovered = orElse(err('missing'), () => ok(0))
+const count = unwrapOr(recovered, 0) // 0; a plain value, not a Result.
+
+collectResults([ok(1), ok(2)]) // Ok([1, 2])
+collectResults([ok(1), err('bad'), err('later')]) // First Err only.
+
+partitionResults([ok(1), err('bad'), ok(3)])
+// { values: [1, 3], errors: [Error('bad')] }
+```
+
+`andThen` preserves input and continuation error types as a union. `orElse` replaces handled errors with the recovery operation's error type. Both callbacks return synchronous Results; unexpected exceptions still propagate. Await asynchronous Results before composing them.
+
+`collectResults` requires every item to succeed; `partitionResults` retains every success and every error. Both accept readonly arrays without mutation. They combine already-created outcomes, not execution: `rows.map(parseRow)` has processed every row before collection begins. `unwrapOr` evaluates its fallback eagerly, even on success.
+
+All five helpers are also exported from `massaman`. See [Result & Errors](docs/concepts/result.md) for typed examples, batch behavior, and API references.
+
 ### Typed errors without subclasses
 
 ```ts

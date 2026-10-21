@@ -1,0 +1,54 @@
+---
+description: "Extract the value from an Ok, or return a fallback for an Err."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# unwrapOr
+
+Extract the value from an `Ok`, or return a fallback for an `Err`. Unlike `unwrap`, failure does not throw. Mirrors Rust's `Result::unwrap_or`.
+
+## Usage
+
+### `unwrapOr(result, fallback)`
+
+```typescript
+import { err, ok, unwrapOr } from 'massaman/control'
+
+unwrapOr(ok(42), 0)      // 42
+unwrapOr(err('bad'), 0)  // 0
+unwrapOr(ok(null), 0)    // null
+unwrapOr(ok(false), true) // false
+```
+
+This checks the Result's `ok` discriminant, not the truthiness of its value. Successful `null`, `undefined`, `false`, `0`, and empty strings are preserved.
+
+#### Parameters
+
+<Field name="result" type="Result&lt;T, E&gt;" required>
+The result to unwrap.
+</Field>
+
+<Field name="fallback" type="U" required>
+The value to return on failure. It can have a different type from the success value.
+</Field>
+
+#### Returns
+
+`T | U`, not a Result. Values are returned by reference. Function values are returned, never invoked.
+
+#### Eager fallback evaluation
+
+JavaScript evaluates the fallback expression before calling `unwrapOr`, even on success:
+
+```typescript
+unwrapOr(ok(42), computeDefault()) // computeDefault runs too.
+```
+
+Prefer literals or already-computed defaults. For conditional recovery work, use `orElse(result, () => ok(computeDefault()))`. If evaluating the fallback throws, the exception occurs before `unwrapOr` runs.
+
+## See also
+
+- [`unwrap`](./unwrap.md) — throw on failure instead
+- [`orElse`](./orElse.md) — perform recovery only on failure
+- [Result & Errors](../../concepts/result.md)

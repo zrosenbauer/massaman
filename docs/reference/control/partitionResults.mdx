@@ -1,0 +1,62 @@
+---
+description: "Separate an array of Results into success values and errors."
+---
+
+import { Field } from '@ciderpress/ui/theme'
+
+# partitionResults
+
+Separate an array of Results into success values and errors. Every outcome is retained, in its original order within each group. Similar to Rust's `itertools::Itertools::partition_result`, but returns named fields rather than a tuple.
+
+## Usage
+
+### `partitionResults(results)`
+
+```typescript
+import { err, ok, partitionResults } from 'massaman/control'
+
+const invalidEmail = new Error('invalid email')
+const missingName = new Error('missing name')
+
+const { values, errors } = partitionResults([
+  ok({ id: '1' }),
+  err(invalidEmail),
+  err(missingName),
+  ok({ id: '4' }),
+])
+// values: [{ id: '1' }, { id: '4' }]
+// errors: [invalidEmail, missingName]
+
+partitionResults([])
+// { values: [], errors: [] }
+```
+
+#### Parameters
+
+<Field name="results" type="readonly Result&lt;T, E&gt;[]" required>
+The already-created Results to separate. Accepts readonly arrays and does not mutate inputs.
+</Field>
+
+#### Returns
+
+```typescript
+{ values: T[]; errors: E[] }
+```
+
+A plain object, not a Result. Both arrays are new; their elements retain the original value and error references. Typed error fields and distinct error unions are preserved, with no normalization. An all-success input has an empty errors array; an all-failure input has an empty values array. Successful `null` and `undefined` values stay in `values`.
+
+#### Batch processing
+
+```typescript
+const { values, errors } = partitionResults(rows.map(parseRow))
+```
+
+Use this when partial success is meaningful: process valid rows while reporting every rejected row. If you need source positions, attach row metadata to the value or domain error before partitioning; cross-group positions are not retained automatically.
+
+All input operations have already executed. This helper neither catches exceptions nor awaits Promises. Wrap unsafe row parsing with `attempt`, or await asynchronous Results before partitioning.
+
+## See also
+
+- [`collectResults`](./collectResults.md) — require all successes, returning only the first failure
+- [`isOk`](./isOk.md) / [`isErr`](./isErr.md) — narrow individual Results
+- [Result & Errors](../../concepts/result.md)

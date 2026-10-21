@@ -69,6 +69,22 @@ const loadUser = flowAsync(
 )
 ```
 
+## Composing fallible operations
+
+`flow` and `flowAsync` do not automatically unwrap Results or stop on `Err`. Use standalone `andThen` and `orElse` for Result-aware continuation and recovery:
+
+```typescript
+import { andThen, flow, orElse } from 'massaman'
+
+const register = flow(
+  parseUser,
+  (result) => andThen(result, saveUser),
+  (result) => orElse(result, recoverUser),
+)
+```
+
+Here `parseUser`, `saveUser`, and `recoverUser` return synchronous Results. A parse failure skips `saveUser`; either a parse or save failure reaches `recoverUser`. Results stay plain objects, and the pipeline returns a Result too. For extraction and batch collection, see [Result & Errors](./result.md).
+
 ## When not to use it
 
 Do not create a pipeline for a single ordinary call or hide unrelated side effects inside transformation steps. If several stages need the same intermediate value, a small named function may communicate the control flow better than forcing it through `flow`.

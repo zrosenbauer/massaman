@@ -42,3 +42,9 @@ export interface Err<E extends Error = Error> {
  * ```
  */
 export type Result<T, E extends Error = Error> = Ok<T> | Err<E>
+
+/** @private Extracts only success payloads, excluding the failure variant's null field. */
+export type ResultValue<R extends Result<unknown>> = Extract<R, { ok: true }>['value']
+
+/** @private Extracts only failure payloads, excluding the success variant's null field. */
+export type ResultError<R extends Result<unknown>> = Extract<R, { ok: false }>['error']
