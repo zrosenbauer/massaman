@@ -11,12 +11,12 @@
 
 ## Features
 
-- Rust's `match` in TypeScript: exhaustive pattern matching via re-exported [ts-pattern](https://github.com/gvergnaud/ts-pattern).
-- Rust's `Result` in TypeScript: compose fallible operations without throws (`attempt`, `attemptAsync`, `ok`, `err`, `isOk`, `unwrap`).
-- Typed errors without subclasses: `createError`, `defineError`, and `ErrorWith` preserve domain data on native errors.
-- Functional programming, fully typed: `flow`, `flowAsync`, `tap`, `when`, `ifElse`, and point-free combinators with end-to-end inference.
-- The missing pieces around [es-toolkit](https://es-toolkit.dev): variadic-narrowing predicates, async composition, and consistent error normalization alongside its array, object, string, and math utilities.
-- Tree-shakeable: focused subpath exports, ESM-only, `sideEffects: false`. Import only what you use.
+- **Rust-inspired pattern matching:** match unions, nested objects, and arrays with exhaustive checking powered by [ts-pattern](https://github.com/gvergnaud/ts-pattern).
+- **Errors as values:** Rust-style `Result`, `Ok`, and `Err` make expected failure explicit. Handle both outcomes with `P.ok` and `P.err`.
+- **Composable functions:** build typed sync and async pipelines with `flow`, `flowAsync`, and branching combinators.
+- **Functional data transformations:** array, object, string, and math utilities from [es-toolkit](https://es-toolkit.dev), alongside predicates that preserve type narrowing.
+- **Typed errors without subclasses:** create native errors with named variants and domain data using `createError` and `defineError`.
+- **Import only what you use:** tree-shakeable ESM with focused subpath exports.
 
 ## Install
 
