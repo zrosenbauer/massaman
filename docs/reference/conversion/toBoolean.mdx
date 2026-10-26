@@ -8,8 +8,8 @@ import { Field } from '@ciderpress/ui/theme'
 
 Converts a value to a boolean.
 
-Thin wrapper over `Boolean(value)` — kept as a stable surface against
-future global-constructor changes.
+A thin wrapper over `Boolean(value)` for a consistent, function-based API
+without calling the global constructor directly.
 
 ```typescript
 toBoolean(1) // true
@@ -23,8 +23,8 @@ toBoolean('') // false
 
 Converts a value to a boolean.
 
-Thin wrapper over `Boolean(value)` — kept as a stable surface against
-future global-constructor changes.
+A thin wrapper over `Boolean(value)` for a consistent, function-based API
+without calling the global constructor directly.
 
 ```typescript
 import { toBoolean } from 'massaman'

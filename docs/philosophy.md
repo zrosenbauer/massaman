@@ -1,6 +1,6 @@
 # Philosophy
 
-Massaman is opinionated about how JavaScript should be written, but it does not invent a new world for your application to live in.
+Massaman is a library of small, single-purpose functions. Use one helper or compose them to build complex applications in a functional programming style, without being forced to adopt the whole library.
 
 ## Take what works
 

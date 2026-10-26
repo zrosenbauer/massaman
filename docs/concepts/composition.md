@@ -8,7 +8,7 @@ Massaman includes the standard synchronous tools from `es-toolkit` and adds asyn
 
 A composed operation describes data flow from left to right. Individual steps remain easy to name, test, reuse, and replace, while side effects can stay visible at the edge or in an intentional `tap`.
 
-Composition is useful when the sequence itself is the abstraction. It should make the transformation easier to read, not hide a handful of straightforward expressions behind combinators.
+Use composition when you want to name and reuse a sequence of transformations. It should make the transformation easier to read, not hide a handful of straightforward expressions behind combinators.
 
 ## Core tools
 
@@ -33,7 +33,7 @@ Use composition for:
 - async workflows where each step depends on the previous result
 - conditional transformations that should remain expressions
 
-Name substantial steps instead of building a wall of anonymous callbacks. A pipeline should expose its stages like a flight plan.
+Give each transformation a descriptive name so the pipeline reads as a sequence of steps.
 
 ## Complete example
 

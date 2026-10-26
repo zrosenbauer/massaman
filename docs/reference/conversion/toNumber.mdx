@@ -8,9 +8,8 @@ import { Field } from '@ciderpress/ui/theme'
 
 Converts a value to a number.
 
-Thin wrapper over `Number(value)` — kept as a stable surface so callers
-don't depend directly on the global constructor's semantics (which have
-shifted in the past, e.g. `Number(BigInt)`, and may again).
+A thin wrapper over `Number(value)` for a consistent, function-based API
+without calling the global constructor directly.
 
 ```typescript
 toNumber('42') // 42
@@ -23,9 +22,8 @@ toNumber(null) // 0
 
 Converts a value to a number.
 
-Thin wrapper over `Number(value)` — kept as a stable surface so callers
-don't depend directly on the global constructor's semantics (which have
-shifted in the past, e.g. `Number(BigInt)`, and may again).
+A thin wrapper over `Number(value)` for a consistent, function-based API
+without calling the global constructor directly.
 
 ```typescript
 import { toNumber } from 'massaman'

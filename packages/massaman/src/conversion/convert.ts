@@ -123,9 +123,8 @@ function toSerializable(value: unknown, seen: WeakSet<object> = new WeakSet()): 
 /**
  * Converts a value to a number.
  *
- * Thin wrapper over `Number(value)` — kept as a stable surface so callers
- * don't depend directly on the global constructor's semantics (which have
- * shifted in the past, e.g. `Number(BigInt)`, and may again).
+ * A thin wrapper over `Number(value)` for a consistent, function-based API
+ * without calling the global constructor directly.
  *
  * @example
  * ```ts
@@ -140,8 +139,8 @@ export function toNumber(value: unknown): number {
 /**
  * Converts a value to a string.
  *
- * Thin wrapper over `String(value)` — kept as a stable surface against
- * future global-constructor changes.
+ * A thin wrapper over `String(value)` for a consistent, function-based API
+ * without calling the global constructor directly.
  *
  * @example
  * ```ts
@@ -217,8 +216,8 @@ export function toArray<T>(value: Iterable<T> | T | null | undefined): T[] {
 /**
  * Converts a value to a boolean.
  *
- * Thin wrapper over `Boolean(value)` — kept as a stable surface against
- * future global-constructor changes.
+ * A thin wrapper over `Boolean(value)` for a consistent, function-based API
+ * without calling the global constructor directly.
  *
  * @example
  * ```ts

@@ -108,9 +108,8 @@ export default defineConfig({
             link: '/reference',
           },
           {
-            title: 'Types stay sharp',
-            description:
-              'Variadic predicates and type-level tests preserve inference through the pipeline.',
+            title: 'Combine type guards',
+            description: "Combine predicates without losing TypeScript's type narrowing.",
             icon: { id: 'pixelarticons:check-double', color: brandColor },
             link: '/reference/predicate',
           },

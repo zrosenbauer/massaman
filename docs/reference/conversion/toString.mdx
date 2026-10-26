@@ -8,8 +8,8 @@ import { Field } from '@ciderpress/ui/theme'
 
 Converts a value to a string.
 
-Thin wrapper over `String(value)` — kept as a stable surface against
-future global-constructor changes.
+A thin wrapper over `String(value)` for a consistent, function-based API
+without calling the global constructor directly.
 
 ```typescript
 toString(42) // '42'
@@ -22,8 +22,8 @@ toString(null) // 'null'
 
 Converts a value to a string.
 
-Thin wrapper over `String(value)` — kept as a stable surface against
-future global-constructor changes.
+A thin wrapper over `String(value)` for a consistent, function-based API
+without calling the global constructor directly.
 
 ```typescript
 import { toString } from 'massaman'
